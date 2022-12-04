@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/NoteListFragment">
+
+    <fragment
+        android:id="@+id/NoteListFragment"
+        android:name="com.android.note.keeper.ui.notelist.NoteListFragment"
+        android:label="Notes"
+        tools:layout="@layout/fragment_note_list">
+        <action
+            android:id="@+id/action_NoteListFragment_to_NoteDetailFragment"
+            app:destination="@id/NoteDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/NoteDetailFragment"
+        android:name="com.android.note.keeper.ui.notedetail.NoteDetailFragment"
+        android:label="Detail"
+        tools:layout="@layout/fragment_note_detail">
+        <action
+            android:id="@+id/action_NoteDetailFragment_to_NoteListFragment"
+            app:destination="@id/NoteListFragment" />
+        <argument android:name="Note"
+            app:argType="com.android.note.keeper.data.model.Note"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+</navigation>
