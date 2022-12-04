@@ -13,7 +13,9 @@ import android.view.MenuItem
 import androidx.navigation.fragment.NavHostFragment
 import com.android.note.keeper.R
 import com.android.note.keeper.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration

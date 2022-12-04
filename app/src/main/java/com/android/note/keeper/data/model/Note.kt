@@ -8,10 +8,10 @@ import java.text.DateFormat
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(tableName = "task_table")
+@Entity(tableName = Constants.TABLE_NAME)
 data class Note(
     @PrimaryKey(autoGenerate = true)
-    val _id: Int,
+    val _id: Int = 0,
     val title: String,
     val content: String,
     val tag: Int = Constants.TAG_NOTE, // 1 -> note ; 2 -> checkList
