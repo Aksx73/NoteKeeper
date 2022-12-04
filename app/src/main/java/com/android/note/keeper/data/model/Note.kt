@@ -1,12 +1,14 @@
 package com.android.note.keeper.data.model
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.android.note.keeper.util.Constants
 import java.text.DateFormat
 import kotlinx.parcelize.Parcelize
 
+@Keep
 @Parcelize
 @Entity(tableName = Constants.TABLE_NAME)
 data class Note(

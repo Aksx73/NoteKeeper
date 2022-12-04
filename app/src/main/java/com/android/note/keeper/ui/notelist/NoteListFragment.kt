@@ -5,6 +5,7 @@ import android.view.*
 import androidx.core.view.MenuHost
 import androidx.fragment.app.Fragment
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -12,10 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.note.keeper.R
 import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.databinding.FragmentNoteListBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
+@AndroidEntryPoint
 class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnItemClickListener,
     MenuProvider {
 
@@ -29,10 +32,8 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentNoteListBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,14 +54,18 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
             }
 
             fab.setOnClickListener {
-                val action = NoteListFragmentDirections.actionNoteListFragmentToNoteDetailFragment()
+                val action = NoteListFragmentDirections.actionNoteListFragmentToNoteDetailFragment(null)
                 findNavController().navigate(action)
             }
 
         }
 
-        //observe notes from view model
+        viewModel.notes.observe(viewLifecycleOwner) { notes ->
+            noteAdapter.submitList(notes)
+            binding.emptyView.isVisible = notes.isEmpty()
+        }
 
+        //todo observe other events
 
 
     }
@@ -71,18 +76,29 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        TODO("Not yet implemented")
+        menuInflater.inflate(R.menu.menu_list, menu)
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        TODO("Not yet implemented")
+        return when (menuItem.itemId) {
+            R.id.action_sort -> {
+               //todo
+                true
+            }
+            R.id.action_setting -> {
+                //todo
+                true
+            }
+            else -> false
+        }
     }
 
     override fun onItemClick(task: Note) {
-        TODO("Not yet implemented")
+        val action = NoteListFragmentDirections.actionNoteListFragmentToNoteDetailFragment(task)
+        findNavController().navigate(action)
     }
 
     override fun onOptionClick(task: Note) {
-        TODO("Not yet implemented")
+        //todo show bottomSheet with options -> delete,add/update password, mark as complete,etc
     }
 }

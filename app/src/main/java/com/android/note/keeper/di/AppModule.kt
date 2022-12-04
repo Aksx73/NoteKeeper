@@ -6,6 +6,7 @@ import com.android.note.keeper.data.local.NoteDao
 import com.android.note.keeper.data.local.NoteDatabase
 import com.android.note.keeper.data.repository.NoteRepository
 import com.android.note.keeper.data.repository.NoteRepositoryImpl
+import com.android.note.keeper.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,7 +26,7 @@ object AppModule {
         return Room.databaseBuilder(
             app,
             NoteDatabase::class.java,
-            "task_db"
+            Constants.DATABASE_NAME
         ).fallbackToDestructiveMigration()
             .addCallback(callback)
             .build()

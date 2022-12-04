@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.android.note.keeper.ui.MainActivity">
+    <item
+        android:id="@+id/action_edit"
+        android:orderInCategory="100"
+        android:title="Edit"
+        android:icon="@drawable/ic_edit_24"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_sort"
+        android:orderInCategory="100"
+        android:title="Sort"
+        android:icon="@drawable/ic_search_24"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_setting"
+        android:orderInCategory="100"
+        android:title="Settings"
+        android:icon="@drawable/ic_search_24"
+        app:showAsAction="never" />
+</menu>
