@@ -1,6 +1,7 @@
 package com.android.note.keeper.ui.notedetail
 
 import android.os.Bundle
+import android.text.method.KeyListener
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat.getSystemService
@@ -34,6 +35,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
     private val args: NoteDetailFragmentArgs by navArgs()
     private var note: Note? = null
     private var editMode: Boolean = false
+    private lateinit var keyListener : KeyListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,9 +54,14 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         note = args.note
+        keyListener = binding.etTitle.keyListener
 
         note?.let {
             binding.apply {
+
+                //todo -> get toolbar reference from activity and make 'read mode' tag textview visible
+
+                editMode = false
                 etTitle.setText(it.title)
                 etContent.setText(it.content)
                 etTitle.keyListener = null
@@ -64,10 +71,14 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
         binding.parent.setOnClickListener {
             if (note == null || editMode) {
+                //todo -> get toolbar reference from activity and make 'read mode' tag textview invisible
+
                 binding.etContent.requestFocus()
                 Utils.showKeyboard(requireActivity(), binding.etContent)
             }
         }
+
+
 
 
     }
@@ -81,6 +92,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         return when (menuItem.itemId) {
             R.id.action_edit -> {
                 editMode = true
+                binding.etTitle.keyListener = keyListener
+                binding.etContent.keyListener = keyListener
                 //todo
                 true
             }

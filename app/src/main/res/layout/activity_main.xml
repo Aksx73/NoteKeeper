@@ -15,7 +15,23 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" />
+            android:layout_height="?attr/actionBarSize">
+
+            <TextView
+                android:id="@+id/currentMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:text="Read mode"
+                android:visibility="gone"
+                android:background="@drawable/rounded_corner_stroke_bkg"
+                android:layout_marginEnd="16dp"
+                android:paddingVertical="4dp"
+                android:paddingHorizontal="8dp"
+                android:textAppearance="?textAppearanceLabelSmall" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -25,12 +41,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:defaultNavHost="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/nav_graph"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:navGraph="@navigation/nav_graph" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
