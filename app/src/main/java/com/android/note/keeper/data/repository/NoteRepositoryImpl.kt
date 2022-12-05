@@ -19,7 +19,6 @@ class NoteRepositoryImpl @Inject constructor(private val dao: NoteDao) : NoteRep
 
     override suspend fun delete(note: Note) = dao.delete(note)
 
-    override suspend fun updatePassword(id: Int, password: String) =
-        dao.updatePassword(id, password)
+   // override suspend fun updatePassword(id: Int, isProtected: Boolean) = dao.updatePassword(id, isProtected)
 
 }

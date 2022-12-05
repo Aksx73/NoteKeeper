@@ -42,7 +42,7 @@ abstract class NoteDatabase : RoomDatabase() {
                         title = "Wash the dishes",
                         content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris\n" +
                                 " volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus",
-                        isPasswordProtected = true, password = "123"
+                        isPasswordProtected = true
                     )
                 )
                 dao.insert(Note(title = "Wash the dishes", content = "note description"))
@@ -58,7 +58,7 @@ abstract class NoteDatabase : RoomDatabase() {
                         title = "Wash the dishes",
                         content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris\n" +
                                 " volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus",
-                        isPasswordProtected = true, password = "123"
+                        isPasswordProtected = true
                     )
                 )
                 dao.insert(Note(title = "Wash the dishes", content = ""))

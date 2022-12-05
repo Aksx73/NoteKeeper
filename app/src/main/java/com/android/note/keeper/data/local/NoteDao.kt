@@ -25,8 +25,8 @@ interface NoteDao {
     @Delete
     suspend fun delete(note: Note)
 
-    //to update,add or remove password of note with given '_id'
-    @Query("UPDATE notes_table SET password=:password WHERE _id=:id")
-    suspend fun updatePassword(id: Int, password: String)
+    /*//to enable/disable password of note with given '_id'
+    @Query("UPDATE notes_table SET isPasswordProtected=:protected WHERE _id=:id")
+    suspend fun updatePassword(id: Int, protected: Boolean)*/
 
 }

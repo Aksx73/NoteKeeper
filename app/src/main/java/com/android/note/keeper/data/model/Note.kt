@@ -18,7 +18,6 @@ data class Note(
     val content: String,
     val tag: Int = Constants.TAG_NOTE, // 1 -> note ; 2 -> checkList
     val isPasswordProtected: Boolean = false,
-    val password: String? = null,
     val created: Long = System.currentTimeMillis()
 ) : Parcelable {
     val formattedDate: String

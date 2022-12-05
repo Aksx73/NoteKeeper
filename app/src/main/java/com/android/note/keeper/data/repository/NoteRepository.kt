@@ -13,6 +13,6 @@ interface NoteRepository {
 
     suspend fun delete(note: Note)
 
-    suspend fun updatePassword(id: Int, password: String)
+  //  suspend fun updatePassword(id: Int, isProtected: Boolean)
 
 }

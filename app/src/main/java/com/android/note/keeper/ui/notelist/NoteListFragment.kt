@@ -2,6 +2,7 @@ package com.android.note.keeper.ui.notelist
 
 import android.os.Bundle
 import android.view.*
+import android.widget.TextView
 import androidx.core.view.MenuHost
 import androidx.fragment.app.Fragment
 import androidx.core.view.MenuProvider
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.note.keeper.R
 import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.databinding.FragmentNoteListBinding
+import com.android.note.keeper.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -40,6 +42,8 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         super.onViewCreated(view, savedInstanceState)
 
         val binding = FragmentNoteListBinding.bind(view)
+
+        (activity as MainActivity).toolbar.findViewById<TextView>(R.id.currentMode).isVisible = false
 
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
