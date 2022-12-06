@@ -3,9 +3,7 @@ package com.android.note.keeper.ui.notedetail
 import android.os.Bundle
 import android.text.method.KeyListener
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -13,13 +11,15 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.android.note.keeper.R
 import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.databinding.FragmentNoteDetailBinding
 import com.android.note.keeper.ui.MainActivity
 import com.android.note.keeper.util.Utils
-import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -38,8 +38,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
     private val viewModel by viewModels<NoteDetailViewModel>()
     private val args: NoteDetailFragmentArgs by navArgs()
-    private var note: Note? = null
-    private var editMode: Boolean = true
+    //private var note: Note? = null
+
     private lateinit var keyListener: KeyListener
     private lateinit var readOnlyTag: TextView
 
@@ -64,24 +64,22 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
         readOnlyTag = (activity as MainActivity).toolbar.findViewById(R.id.currentMode)
 
-        note = args.note
+        viewModel.setCurrentNote(args.note)
         keyListener = binding.etTitle.keyListener
 
-        note?.let {
+        viewModel.currentNote.value?.let {
             binding.apply {
-
-                //todo -> get toolbar reference from activity and make 'read mode' tag textview visible
                 readOnlyTag.isVisible = true
-                editMode = false
+                //editMode = false
+                viewModel.setEditMode(false)
                 etTitle.setText(it.title)
                 etContent.setText(it.content)
-                etTitle.keyListener = null
-                etContent.keyListener = null
+                disableInputs()
             }
         }
 
         binding.parent.setOnClickListener {
-            if (note == null || editMode) {
+            if (viewModel.currentNote.value == null || viewModel.editMode.value == true) {
                 //todo -> get toolbar reference from activity and make 'read mode' tag textview invisible
 
                 binding.etContent.requestFocus()
@@ -91,6 +89,9 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
 
         //todo move editMode variable to viewmodel and observe the change to set action as per
+        viewModel.editMode.observe(viewLifecycleOwner) {
+            updateUIState(it)
+        }
 
 
     }
@@ -98,13 +99,17 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
     private fun updateMenuEditSave() {
         // menuSave?.isVisible = editMode
         menuEdit?.icon =
-            if (editMode) ResourcesCompat.getDrawable(
+            if (viewModel.editMode.value == true) ResourcesCompat.getDrawable(
                 resources,
                 R.drawable.ic_check_24,
                 null
-            ) else resources.getDrawable(R.drawable.ic_edit_24)
+            ) else ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_edit_24,
+                null
+            )
         // menuEdit?.isVisible = !editMode
-        readOnlyTag.isVisible = !editMode
+        readOnlyTag.isVisible = !viewModel.editMode.value!!
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -123,40 +128,104 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         binding.etContent.isCursorVisible = false
     }
 
-    private fun enableInputs(){
+    private fun enableInputs() {
         binding.etTitle.keyListener = keyListener
         binding.etContent.keyListener = keyListener
+        binding.etContent.isCursorVisible = true
+        binding.etTitle.isCursorVisible = true
     }
+
+    private fun updateUIState(edited: Boolean) {
+        if (edited) {
+            enableInputs()
+            updateMenuEditSave()
+            Utils.showKeyboard(requireActivity(), binding.etContent)
+        } else {
+            disableInputs()
+            updateMenuEditSave()
+            Utils.hideKeyboard(requireActivity())
+        }
+    }
+
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.action_edit -> {
 
-                if (editMode) {
+                if (viewModel.editMode.value == true) {
                     //save note
-                    editMode = false
-                    disableInputs()
-                    updateMenuEditSave()
-                    //todo update/save note
-                    viewModel.onSaveClick()
+                    val title = binding.etTitle.text.toString()
+                    val content = binding.etContent.text.toString()
+
+                    if (title.isNotBlank() || content.isNotBlank()) {
+                        if (viewModel.currentNote.value != null) {  //update note
+                            val updatedNote =
+                                viewModel.currentNote.value!!.copy(title = title, content = content)
+                            viewModel.setCurrentNote(updatedNote)
+                            viewModel.onUpdateClick(updatedNote)
+                            viewModel.setEditMode(false)
+                            Snackbar.make(binding.parent, "Note updated", Snackbar.LENGTH_SHORT)
+                                .show()
+                        } else {  //create new note
+                            val newNote = Note(title = title, content = content)
+                            viewModel.onSaveClick(newNote)
+                            viewModel.setCurrentNote(newNote)
+                            viewModel.setEditMode(false)
+                            Snackbar.make(binding.parent, "Note saved", Snackbar.LENGTH_SHORT)
+                                .show()
+                        }
+                    } else {
+                        Snackbar.make(
+                            binding.parent,
+                            "Note content cannot be blank",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+
                 } else {
                     //here we enable editing
-                    editMode = true
-                    enableInputs()
-                    updateMenuEditSave()
+                    viewModel.setEditMode(true)
                 }
 
                 true
             }
             R.id.action_save -> {
-                editMode = false
-                updateMenuEditSave()
-                //todo save note
+                /*val title = binding.etTitle.text.toString()
+                val content = binding.etContent.toString()
+                if (title.isNotBlank() || content.isNotBlank()){
+                    //save note
+                    viewModel.onSaveClick(Note(title = title, content = content))
+                    editMode = false
+                    updateMenuEditSave()
+                }else{
+                    Snackbar.make(binding.parent,"Note content cannot be blank",Snackbar.LENGTH_SHORT).show()
+                }*/
+                true
+            }
+            R.id.action_delete -> {
+                val alertDialog = MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Delete this note?")
+                    .setPositiveButton("Yes") { _, _ ->
+                        if (viewModel.currentNote.value != null) {
+                            viewModel.onDeleteClick(viewModel.currentNote.value!!)
+                        }
+                        findNavController().popBackStack()
+                    }
+                    .setNegativeButton("No") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                alertDialog.show()
+
+                true
+            }
+            R.id.action_password -> {
+                //todo
                 true
             }
             else -> false
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

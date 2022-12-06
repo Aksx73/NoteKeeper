@@ -19,16 +19,17 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_sort"
+        android:id="@+id/action_delete"
         android:orderInCategory="100"
-        android:title="Sort"
+        android:title="Delete"
         android:icon="@drawable/ic_search_24"
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_setting"
+        android:id="@+id/action_password"
         android:orderInCategory="100"
-        android:title="Settings"
+        android:title="Add password"
         android:icon="@drawable/ic_search_24"
         app:showAsAction="never" />
+
 </menu>
