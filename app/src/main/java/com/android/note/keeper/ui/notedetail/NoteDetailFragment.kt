@@ -3,12 +3,14 @@ package com.android.note.keeper.ui.notedetail
 import android.os.Bundle
 import android.text.method.KeyListener
 import android.view.*
+import android.widget.EditText
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.findFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -18,8 +20,12 @@ import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.databinding.FragmentNoteDetailBinding
 import com.android.note.keeper.ui.MainActivity
 import com.android.note.keeper.util.Utils
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -139,6 +145,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         if (edited) {
             enableInputs()
             updateMenuEditSave()
+            binding.etContent.setSelection(binding.etContent.length())
             Utils.showKeyboard(requireActivity(), binding.etContent)
         } else {
             disableInputs()
@@ -219,6 +226,17 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 true
             }
             R.id.action_password -> {
+                val bottomSheetDialog = BottomSheetDialog(requireContext())
+                val bottomsheet: View = LayoutInflater.from(context).inflate(R.layout.bs_add_password, null)
+
+                val et_password = bottomsheet.findViewById<TextInputEditText>(R.id.et_addPassword)
+                val ly_password = bottomsheet.findViewById<TextInputLayout>(R.id.lyt_addPassword)
+                val bt_save = bottomsheet.findViewById<MaterialButton>(R.id.bt_save)
+
+
+                bottomSheetDialog.setContentView(bottomsheet)
+                bottomSheetDialog.show()
+
                 //todo
                 true
             }
