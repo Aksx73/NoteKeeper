@@ -17,6 +17,8 @@ data class Note(
     val title: String,
     val content: String,
     val tag: Int = Constants.TAG_NOTE, // 1 -> note ; 2 -> checkList
+    val pin:Boolean = false,  // pin the note or not
+    val markAsComplete : Boolean = false,  // mark as completed to show at bottom
     val isPasswordProtected: Boolean = false,
     val created: Long = System.currentTimeMillis()
 ) : Parcelable {

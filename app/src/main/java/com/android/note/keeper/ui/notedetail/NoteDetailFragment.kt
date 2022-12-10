@@ -1,16 +1,17 @@
 package com.android.note.keeper.ui.notedetail
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.method.KeyListener
 import android.view.*
-import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.findFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -19,6 +20,7 @@ import com.android.note.keeper.R
 import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.databinding.FragmentNoteDetailBinding
 import com.android.note.keeper.ui.MainActivity
+import com.android.note.keeper.util.DemoUtils
 import com.android.note.keeper.util.Utils
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
@@ -57,6 +59,9 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentNoteDetailBinding.inflate(inflater, container, false)
+
+        DemoUtils.addBottomSpaceInsetsIfNeeded(binding.root as ViewGroup, container)
+
         return binding.root
     }
 
@@ -99,8 +104,32 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             updateUIState(it)
         }
 
-
+        setUpBottomAction()
     }
+
+    private fun setUpBottomAction() {
+        binding.bottomActionBar.apply {
+
+            viewModel.currentNote.value?.let {
+                if (it.isPasswordProtected) btPassword.icon =
+                    AppCompatResources.getDrawable(requireContext(), R.drawable.ic_lock_filled_24)
+                else AppCompatResources.getDrawable(requireContext(), R.drawable.ic_lock_open_24)
+            }
+
+            btColor.setOnClickListener {
+                //todo
+            }
+
+            btDelete.setOnClickListener {
+                deleteNote()
+            }
+
+            btPassword.setOnClickListener {
+                addPassword()
+            }
+        }
+    }
+
 
     private fun updateMenuEditSave() {
         // menuSave?.isVisible = editMode
@@ -118,7 +147,11 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         readOnlyTag.isVisible = !viewModel.editMode.value!!
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        if (menu is MenuBuilder) {
+            menu.setOptionalIconsVisible(true)
+        }
         menuInflater.inflate(R.menu.menu_detail, menu)
 
         // menuSave = menu.findItem(R.id.action_save)
@@ -171,15 +204,21 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                             viewModel.setCurrentNote(updatedNote)
                             viewModel.onUpdateClick(updatedNote)
                             viewModel.setEditMode(false)
-                            Snackbar.make(binding.parent, "Note updated", Snackbar.LENGTH_SHORT)
-                                .show()
+                            Utils.showSnackBar(
+                                binding.parent,
+                                "Note updated",
+                                binding.bottomActionBar.bottomActionBar
+                            )
                         } else {  //create new note
                             val newNote = Note(title = title, content = content)
                             viewModel.onSaveClick(newNote)
                             viewModel.setCurrentNote(newNote)
                             viewModel.setEditMode(false)
-                            Snackbar.make(binding.parent, "Note saved", Snackbar.LENGTH_SHORT)
-                                .show()
+                            Utils.showSnackBar(
+                                binding.parent,
+                                "Note saved",
+                                binding.bottomActionBar.bottomActionBar
+                            )
                         }
                     } else {
                         Snackbar.make(
@@ -209,39 +248,47 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 }*/
                 true
             }
-            R.id.action_delete -> {
-                val alertDialog = MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Delete this note?")
-                    .setPositiveButton("Yes") { _, _ ->
-                        if (viewModel.currentNote.value != null) {
-                            viewModel.onDeleteClick(viewModel.currentNote.value!!)
-                        }
-                        findNavController().popBackStack()
-                    }
-                    .setNegativeButton("No") { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                alertDialog.show()
+            /* R.id.action_delete -> {
 
-                true
-            }
-            R.id.action_password -> {
-                val bottomSheetDialog = BottomSheetDialog(requireContext())
-                val bottomsheet: View = LayoutInflater.from(context).inflate(R.layout.bs_add_password, null)
+                 true
+             }
+             R.id.action_password -> {
 
-                val et_password = bottomsheet.findViewById<TextInputEditText>(R.id.et_addPassword)
-                val ly_password = bottomsheet.findViewById<TextInputLayout>(R.id.lyt_addPassword)
-                val bt_save = bottomsheet.findViewById<MaterialButton>(R.id.bt_save)
-
-
-                bottomSheetDialog.setContentView(bottomsheet)
-                bottomSheetDialog.show()
-
-                //todo
-                true
-            }
+                 true
+             }*/
             else -> false
         }
+    }
+
+    private fun addPassword() {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val bottomsheet: View =
+            LayoutInflater.from(context).inflate(R.layout.bs_add_password, null)
+
+        val et_password = bottomsheet.findViewById<TextInputEditText>(R.id.et_addPassword)
+        val ly_password = bottomsheet.findViewById<TextInputLayout>(R.id.lyt_addPassword)
+        val bt_save = bottomsheet.findViewById<MaterialButton>(R.id.bt_save)
+
+
+        bottomSheetDialog.setContentView(bottomsheet)
+        bottomSheetDialog.show()
+
+        //todo
+    }
+
+    private fun deleteNote() {
+        val alertDialog = MaterialAlertDialogBuilder(requireContext())
+            .setMessage("Delete this note?")
+            .setPositiveButton("Yes") { _, _ ->
+                if (viewModel.currentNote.value != null) {
+                    viewModel.onDeleteClick(viewModel.currentNote.value!!)
+                }
+                findNavController().popBackStack()
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+        alertDialog.show()
     }
 
 

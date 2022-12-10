@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_action_bar"
+    android:layout_width="match_parent"
+    android:layout_height="54dp"
+    android:background="?colorSurfaceVariant">
+
+    <LinearLayout
+        android:id="@+id/lyt_action_item"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="4dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/bt_color"
+            style="?attr/materialIconButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tooltipText="Change color"
+            app:icon="@drawable/ic_color_24"
+            app:iconTint="?colorControlNormal" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/bt_password"
+            style="?attr/materialIconButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:saveEnabled="false"
+            android:tooltipText="Add password"
+            app:icon="@drawable/ic_lock_open_24"
+            app:iconTint="?colorControlNormal" />
+
+        <Button
+            android:id="@+id/bt_delete"
+            style="?attr/materialIconButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tooltipText="Delete"
+            app:icon="@drawable/ic_search_24"
+            app:iconTint="?colorControlNormal" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="sans-serif"
+        android:text="Edited 1 Nov"
+        android:textAppearance="?textAppearanceLabelMedium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

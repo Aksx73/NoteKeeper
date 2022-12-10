@@ -15,6 +15,11 @@ import com.android.note.keeper.R
 import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.databinding.FragmentNoteListBinding
 import com.android.note.keeper.ui.MainActivity
+import com.android.note.keeper.util.DemoUtils
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -35,6 +40,9 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentNoteListBinding.inflate(inflater, container, false)
+
+        DemoUtils.addBottomSpaceInsetsIfNeeded(binding.root as ViewGroup, container)
+
         return binding.root
     }
 
@@ -104,5 +112,17 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
 
     override fun onOptionClick(task: Note) {
         //todo show bottomSheet with options -> delete,add/update password, mark as complete,etc
+
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val bottomsheet: View = LayoutInflater.from(context).inflate(R.layout.bs_options, null)
+
+       /* val et_password = bottomsheet.findViewById<TextInputEditText>(R.id.et_addPassword)
+        val ly_password = bottomsheet.findViewById<TextInputLayout>(R.id.lyt_addPassword)
+        val bt_save = bottomsheet.findViewById<MaterialButton>(R.id.bt_save)*/
+
+
+        bottomSheetDialog.setContentView(bottomsheet)
+        bottomSheetDialog.show()
+
     }
 }
