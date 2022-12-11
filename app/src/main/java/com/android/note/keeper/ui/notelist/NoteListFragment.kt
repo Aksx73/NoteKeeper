@@ -93,10 +93,10 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
-            R.id.action_sort -> {
+          /*  R.id.action_sort -> {
                //todo
                 true
-            }
+            }*/
             R.id.action_setting -> {
                 //todo
                 true

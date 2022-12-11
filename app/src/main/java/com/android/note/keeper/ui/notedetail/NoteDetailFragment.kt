@@ -3,17 +3,21 @@ package com.android.note.keeper.ui.notedetail
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.method.KeyListener
+import android.util.Log
 import android.view.*
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.android.note.keeper.R
@@ -25,10 +29,13 @@ import com.android.note.keeper.util.Utils
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 
 /**
@@ -53,6 +60,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
     //private var menuSave: MenuItem? = null
     private var menuEdit: MenuItem? = null
+
+    private var tempNote: Note? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -104,17 +113,12 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             updateUIState(it)
         }
 
-        setUpBottomAction()
+        updatePasswordIcon()
+        bottomActionClickEvent()
     }
 
-    private fun setUpBottomAction() {
+    private fun bottomActionClickEvent() {
         binding.bottomActionBar.apply {
-
-            viewModel.currentNote.value?.let {
-                if (it.isPasswordProtected) btPassword.icon =
-                    AppCompatResources.getDrawable(requireContext(), R.drawable.ic_lock_filled_24)
-                else AppCompatResources.getDrawable(requireContext(), R.drawable.ic_lock_open_24)
-            }
 
             btColor.setOnClickListener {
                 //todo
@@ -128,6 +132,23 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 addPassword()
             }
         }
+    }
+
+    private fun updatePasswordIcon() {
+        viewModel.currentNote.value?.let {
+            if (it.isPasswordProtected)
+                binding.bottomActionBar.btPassword.icon =
+                    AppCompatResources.getDrawable(requireContext(), R.drawable.ic_lock_filled_24)
+            else AppCompatResources.getDrawable(requireContext(), R.drawable.ic_lock_open_24)
+        }
+
+        tempNote?.let {
+            if (it.isPasswordProtected)
+                binding.bottomActionBar.btPassword.icon =
+                    AppCompatResources.getDrawable(requireContext(), R.drawable.ic_lock_filled_24)
+            else AppCompatResources.getDrawable(requireContext(), R.drawable.ic_lock_open_24)
+        }
+
     }
 
 
@@ -214,18 +235,11 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                             viewModel.onSaveClick(newNote)
                             viewModel.setCurrentNote(newNote)
                             viewModel.setEditMode(false)
-                            Utils.showSnackBar(
-                                binding.parent,
-                                "Note saved",
-                                binding.bottomActionBar.bottomActionBar
-                            )
+                            //todo here consider @tempNote properties
+                            Utils.showSnackBar(binding.parent, "Note saved", binding.bottomActionBar.bottomActionBar)
                         }
                     } else {
-                        Snackbar.make(
-                            binding.parent,
-                            "Note content cannot be blank",
-                            Snackbar.LENGTH_SHORT
-                        ).show()
+                        Snackbar.make(binding.parent, "Note content cannot be blank", Snackbar.LENGTH_SHORT).show()
                     }
 
                 } else {
@@ -261,13 +275,187 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
     }
 
     private fun addPassword() {
+        var password: String? = null
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            password = viewModel.masterPasswordFlow.first()
+            Log.d("TAG", "addPassword: $password")
+        }
+
         val bottomSheetDialog = BottomSheetDialog(requireContext())
         val bottomsheet: View =
             LayoutInflater.from(context).inflate(R.layout.bs_add_password, null)
+        bottomSheetDialog.setCancelable(false)
 
+        val title = bottomsheet.findViewById<TextView>(R.id.txtTitle)
+        val subtitle = bottomsheet.findViewById<TextView>(R.id.txtSubTitle)
+        val progressBar = bottomsheet.findViewById<LinearProgressIndicator>(R.id.progress)
         val et_password = bottomsheet.findViewById<TextInputEditText>(R.id.et_addPassword)
         val ly_password = bottomsheet.findViewById<TextInputLayout>(R.id.lyt_addPassword)
         val bt_save = bottomsheet.findViewById<MaterialButton>(R.id.bt_save)
+        val bt_cancel = bottomsheet.findViewById<MaterialButton>(R.id.bt_cancel)
+
+        val currentNote = viewModel.currentNote.value
+        if (currentNote != null) { //already existing note
+            if (currentNote.isPasswordProtected) { //remove password
+                title.text = "Remove password protection"
+                subtitle.text =
+                    "Confirm your current master password to remove password protection for this note"
+                bt_save.text = "Remove"
+
+                bt_save.setOnClickListener {
+                    //todo remove password
+
+                    ly_password.isErrorEnabled = false
+                    ly_password.error = null
+                    if (password != null) {
+                        if (et_password.text.toString() == password) {
+                            val updatedNote = currentNote.copy(isPasswordProtected = false)
+                            viewModel.setCurrentNote(updatedNote)
+                            viewModel.onUpdateClick(updatedNote)
+                            viewModel.setEditMode(false)
+                            updatePasswordIcon()
+                            Utils.showSnackBar(
+                                binding.parent,
+                                "Password disabled",
+                                binding.bottomActionBar.bottomActionBar
+                            )
+                            bottomSheetDialog.dismiss()
+                        } else {
+                            ly_password.error = "Wrong master password!"
+                        }
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "master password not retrieved wait a moment",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            } else { //enable password
+                title.text = "Add password protection"
+                subtitle.text =
+                    "Confirm your current master password to enable password protection for this note"
+                bt_save.text = "Add"
+
+                bt_save.setOnClickListener {
+                    //todo add password
+
+                    ly_password.isErrorEnabled = false
+                    ly_password.error = null
+                    if (password != null) {
+                        if (et_password.text.toString() == password) {
+                            val updatedNote = currentNote.copy(isPasswordProtected = true)
+                            viewModel.setCurrentNote(updatedNote)
+                            viewModel.onUpdateClick(updatedNote)
+                            viewModel.setEditMode(false)
+                            updatePasswordIcon()
+                            Utils.showSnackBar(
+                                binding.parent,
+                                "Password enabled",
+                                binding.bottomActionBar.bottomActionBar
+                            )
+                            bottomSheetDialog.dismiss()
+                        } else {
+                            ly_password.error = "Wrong master password!"
+                        }
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "master password not retrieved wait a moment",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        } else { //new note
+            //create temp note object as set it to current note in viewModel
+            //todo
+            if (tempNote == null) {
+                title.text = "Add password protection"
+                subtitle.text =
+                    "Confirm your current master password to enable password protection for this note"
+                bt_save.text = "Add"
+
+                bt_save.setOnClickListener {
+                    //todo add password
+
+                    ly_password.isErrorEnabled = false
+                    ly_password.error = null
+                    if (password != null) {
+                        if (et_password.text.toString() == password) {
+                            tempNote = Note(title = "", content = "", isPasswordProtected = true)
+                            updatePasswordIcon()
+                            Utils.showSnackBar(
+                                binding.parent,
+                                "Password enabled",
+                                binding.bottomActionBar.bottomActionBar
+                            )
+                            bottomSheetDialog.dismiss()
+                        } else {
+                            ly_password.error = "Wrong master password!"
+                        }
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "master password not retrieved wait a moment",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            } else {
+                if (tempNote!!.isPasswordProtected) { //remove
+                    title.text = "Remove password protection"
+                    subtitle.text =
+                        "Confirm your current master password to remove password protection for this note"
+                    bt_save.text = "Remove"
+
+                    bt_save.setOnClickListener {
+                        //todo remove password
+
+                        ly_password.isErrorEnabled = false
+                        ly_password.error = null
+                        if (password != null) {
+                            if (et_password.text.toString() == password) {
+                                tempNote = Note(
+                                    title = tempNote!!.title,
+                                    content = tempNote!!.content,
+                                    isPasswordProtected = false
+                                )
+                                updatePasswordIcon()
+                                Utils.showSnackBar(
+                                    binding.parent,
+                                    "Password disabled",
+                                    binding.bottomActionBar.bottomActionBar
+                                )
+                                bottomSheetDialog.dismiss()
+                            } else {
+                                ly_password.error = "Wrong master password!"
+                            }
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "master password not retrieved wait a moment",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+
+                    }
+                }
+            }
+
+        }
+
+        et_password.doOnTextChanged { text, start, before, count ->
+            ly_password.isErrorEnabled = false
+            ly_password.error = null
+        }
+
+
+        bt_cancel.setOnClickListener {
+            bottomSheetDialog.dismiss()
+        }
 
 
         bottomSheetDialog.setContentView(bottomsheet)

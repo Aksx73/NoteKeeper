@@ -1,9 +1,7 @@
 package com.android.note.keeper.ui.notedetail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.android.note.keeper.data.PreferenceManager
 import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.data.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NoteDetailViewModel @Inject constructor(
+    private val preferenceManager: PreferenceManager,
     private val repository: NoteRepository
 ) : ViewModel() {
 
@@ -20,6 +19,8 @@ class NoteDetailViewModel @Inject constructor(
 
     private val mutableEditMode = MutableLiveData(true)
     val editMode: LiveData<Boolean> get() = mutableEditMode
+
+    val masterPasswordFlow = preferenceManager.masterPasswordFlow
 
     fun setEditMode(isEditable: Boolean) {
         mutableEditMode.value = isEditable
@@ -63,6 +64,11 @@ class NoteDetailViewModel @Inject constructor(
         repository.delete(note)
         //todo navigate back to home with task result
     }
+
+
+    /*fun updateMasterPassword(password: String) = viewModelScope.launch {
+        preferenceManager.updateMasterPassword(password)
+    }*/
 
     private fun updatePasswordProtection(id: Int, isProtected: Boolean) = viewModelScope.launch {
         //repository.updatePassword(id,isProtected)

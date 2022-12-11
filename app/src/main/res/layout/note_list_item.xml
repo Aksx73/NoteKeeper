@@ -61,7 +61,7 @@
                 android:layout_height="18dp"
                 android:layout_marginEnd="8dp"
                 android:visibility="visible"
-                app:srcCompat="@drawable/ic_lock_24" />
+                app:srcCompat="@drawable/ic_lock_filled_24" />
 
             <TextView
                 android:id="@+id/txt_date"

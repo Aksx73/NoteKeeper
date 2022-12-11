@@ -4,22 +4,25 @@
     tools:context="com.android.note.keeper.ui.MainActivity">
     <item
         android:id="@+id/action_search"
-        android:orderInCategory="100"
-        android:title="Search"
         android:icon="@drawable/ic_search_24"
+        android:title="Search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="always|collapseActionView" />
+    <item
+        android:id="@+id/action_view"
+        android:icon="@drawable/ic_search_24"
+        android:title="List view"
+        app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_sort"
-        android:orderInCategory="100"
-        android:title="Sort"
-        android:icon="@drawable/ic_search_24"
+        android:id="@+id/action_hide_completed"
+        android:checkable="true"
+        android:title="Hide completed"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_setting"
-        android:orderInCategory="100"
-        android:title="Settings"
         android:icon="@drawable/ic_search_24"
+        android:title="Settings"
         app:showAsAction="never" />
 </menu>
