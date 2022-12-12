@@ -21,6 +21,13 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_master_password"
+        android:icon="@drawable/ic_lock_filled_24"
+        tools:title="Create master password"
+        app:showAsAction="never"
+        android:title="" />
+
+    <item
         android:id="@+id/action_setting"
         android:icon="@drawable/ic_search_24"
         android:title="Settings"

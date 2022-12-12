@@ -66,9 +66,9 @@ class NoteDetailViewModel @Inject constructor(
     }
 
 
-    /*fun updateMasterPassword(password: String) = viewModelScope.launch {
-        preferenceManager.updateMasterPassword(password)
-    }*/
+    fun setMasterPassword(password: String) = viewModelScope.launch {
+        preferenceManager.setMasterPassword(password)
+    }
 
     private fun updatePasswordProtection(id: Int, isProtected: Boolean) = viewModelScope.launch {
         //repository.updatePassword(id,isProtected)

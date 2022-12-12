@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var toolbar: MaterialToolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        //WindowCompat.setDecorFitsSystemWindows(window, false)
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 

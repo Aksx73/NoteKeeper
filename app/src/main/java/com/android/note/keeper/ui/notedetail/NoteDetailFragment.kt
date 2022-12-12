@@ -36,6 +36,7 @@ import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 /**
@@ -236,10 +237,18 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                             viewModel.setCurrentNote(newNote)
                             viewModel.setEditMode(false)
                             //todo here consider @tempNote properties
-                            Utils.showSnackBar(binding.parent, "Note saved", binding.bottomActionBar.bottomActionBar)
+                            Utils.showSnackBar(
+                                binding.parent,
+                                "Note saved",
+                                binding.bottomActionBar.bottomActionBar
+                            )
                         }
                     } else {
-                        Snackbar.make(binding.parent, "Note content cannot be blank", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(
+                            binding.parent,
+                            "Note content cannot be blank",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
                     }
 
                 } else {
@@ -277,11 +286,76 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
     private fun addPassword() {
         var password: String? = null
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        runBlocking {
             password = viewModel.masterPasswordFlow.first()
             Log.d("TAG", "addPassword: $password")
         }
+        password?.let {
+            if (password!!.isBlank()) {
+                //todo create password
+                bottomSheetCreateMasterPassword()
+            } else {
+                //todo enable lock
+                bottomSheetEnableDisableLock(it)
+            }
+        }
 
+
+    }
+
+    private fun bottomSheetCreateMasterPassword() {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val bottomsheet: View =
+            LayoutInflater.from(context).inflate(R.layout.bs_create_password, null)
+        bottomSheetDialog.setCancelable(false)
+
+        val et_password = bottomsheet.findViewById<TextInputEditText>(R.id.et_addPassword)
+        val ly_password = bottomsheet.findViewById<TextInputLayout>(R.id.lyt_addPassword)
+        val et_confirm = bottomsheet.findViewById<TextInputEditText>(R.id.et_confirmPassword)
+        val ly_confirm = bottomsheet.findViewById<TextInputLayout>(R.id.lyt_confirmPassword)
+        val bt_save = bottomsheet.findViewById<MaterialButton>(R.id.bt_save)
+        val bt_cancel = bottomsheet.findViewById<MaterialButton>(R.id.bt_cancel)
+
+        //todo
+
+        bt_save.setOnClickListener {
+            if (et_password.text.toString().isNotBlank() && et_confirm.text.toString()
+                    .isNotBlank()
+            ) {
+                if (et_password.text.toString() == et_confirm.text.toString()) {
+                    //todo save to datastore
+                    viewModel.setMasterPassword(et_password.text.toString())
+                    Snackbar.make(binding.parent,"Master password added! Click on lock option again to enable lock",Snackbar.LENGTH_LONG)
+                        .setAnchorView(binding.bottomActionBar.bottomActionBar)
+                        .show()
+                    bottomSheetDialog.dismiss()
+                } else { //password not match
+                    ly_confirm.isErrorEnabled = true
+                    ly_confirm.error = "Password doesn't match"
+                }
+            } else { // show error for edit text
+                ly_confirm.isErrorEnabled = true
+                ly_confirm.error = "Re-enter password here"
+            }
+
+        }
+
+        et_confirm.doOnTextChanged { text, start, before, count ->
+            ly_confirm.isErrorEnabled = false
+            ly_confirm.error = null
+        }
+
+
+        bt_cancel.setOnClickListener {
+            bottomSheetDialog.dismiss()
+        }
+
+
+        bottomSheetDialog.setContentView(bottomsheet)
+        bottomSheetDialog.show()
+    }
+
+    private fun bottomSheetEnableDisableLock(password: String) {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
         val bottomsheet: View =
             LayoutInflater.from(context).inflate(R.layout.bs_add_password, null)
@@ -417,11 +491,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                         ly_password.error = null
                         if (password != null) {
                             if (et_password.text.toString() == password) {
-                                tempNote = Note(
-                                    title = tempNote!!.title,
-                                    content = tempNote!!.content,
-                                    isPasswordProtected = false
-                                )
+                                tempNote = tempNote!!.copy(isPasswordProtected = false)
                                 updatePasswordIcon()
                                 Utils.showSnackBar(
                                     binding.parent,
@@ -460,8 +530,6 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
         bottomSheetDialog.setContentView(bottomsheet)
         bottomSheetDialog.show()
-
-        //todo
     }
 
     private fun deleteNote() {

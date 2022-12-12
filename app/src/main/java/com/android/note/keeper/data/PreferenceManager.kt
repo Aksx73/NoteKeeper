@@ -36,7 +36,7 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
             }
         }
 
-    suspend fun updateMasterPassword(pass: String) {
+    suspend fun setMasterPassword(pass: String) {
         dataStore.edit { preferences ->
             preferences[MASTER_PASSWORD] = pass
         }
@@ -44,6 +44,6 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
 
     companion object {
         val MASTER_PASSWORD = stringPreferencesKey("master_password")
-        const val DEFAULT_PASSWORD = "12345678"
+        const val DEFAULT_PASSWORD = ""
     }
 }
