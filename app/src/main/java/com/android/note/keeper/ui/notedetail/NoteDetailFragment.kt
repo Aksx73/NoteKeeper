@@ -232,7 +232,11 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                                 binding.bottomActionBar.bottomActionBar
                             )
                         } else {  //create new note
-                            val newNote = Note(title = title, content = content, isPasswordProtected = tempNote.isPasswordProtected)
+                            val newNote = Note(
+                                title = title,
+                                content = content,
+                                isPasswordProtected = tempNote.isPasswordProtected
+                            )
                             viewModel.onSaveClick(newNote)
                             viewModel.setCurrentNote(newNote)
                             viewModel.setEditMode(false)
@@ -258,14 +262,14 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
                 true
             }
-             R.id.action_pin -> {
+            R.id.action_pin -> {
 
-                 true
-             }
-             /*R.id.action_archieve -> {
+                true
+            }
+            /*R.id.action_archieve -> {
 
-                 true
-             }*/
+                true
+            }*/
             else -> false
         }
     }
@@ -312,7 +316,11 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 if (et_password.text.toString() == et_confirm.text.toString()) {
                     //todo save to datastore
                     viewModel.setMasterPassword(et_password.text.toString())
-                    Snackbar.make(binding.parent,"Master password added! Click on lock option again to enable lock",Snackbar.LENGTH_LONG)
+                    Snackbar.make(
+                        binding.parent,
+                        "Master password added! Click on lock option again to enable lock",
+                        Snackbar.LENGTH_LONG
+                    )
                         .setAnchorView(binding.bottomActionBar.bottomActionBar)
                         .show()
                     bottomSheetDialog.dismiss()
@@ -442,9 +450,10 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
 
                 }
-            }else { //add password to new note
+            } else { //add password to new note
                 title.text = "Add password protection"
-                subtitle.text = "Confirm your current master password to enable password protection for this note"
+                subtitle.text =
+                    "Confirm your current master password to enable password protection for this note"
                 bt_save.text = "Add"
 
                 bt_save.setOnClickListener {
@@ -501,9 +510,37 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
 
     override fun onDestroyView() {
+        //todo save note
+        if (viewModel.editMode.value == true) {
+            //save note
+            val title = binding.etTitle.text.toString()
+            val content = binding.etContent.text.toString()
+
+            if (viewModel.currentNote.value != null) { // Old Note
+                if (title.isBlank() && content.isBlank()) {
+                    // If the user removed everything from the note
+                    //todo delete note
+                    viewModel.onDeleteClick(viewModel.currentNote.value!!)
+                } else {
+                    //todo update note
+                    val updatedNote =
+                        viewModel.currentNote.value!!.copy(title = title, content = content)
+                    viewModel.onUpdateClick(updatedNote)
+                }
+            } else { //new note
+                if (title.isNotBlank() || content.isNotBlank()) {
+                    //todo save new note
+                    val newNote = Note(
+                        title = title,
+                        content = content,
+                        isPasswordProtected = tempNote.isPasswordProtected
+                    )
+                    viewModel.onSaveClick(newNote)
+                }
+
+            }
+        }
         super.onDestroyView()
         _binding = null
-
-        //todo save note
     }
 }
