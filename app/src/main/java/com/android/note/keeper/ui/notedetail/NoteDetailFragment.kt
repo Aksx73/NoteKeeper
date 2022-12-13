@@ -62,7 +62,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
     //private var menuSave: MenuItem? = null
     private var menuEdit: MenuItem? = null
 
-    private var tempNote: Note? = null
+    private var tempNote: Note = Note(title = "", content = "")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -232,7 +232,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                                 binding.bottomActionBar.bottomActionBar
                             )
                         } else {  //create new note
-                            val newNote = Note(title = title, content = content)
+                            val newNote = Note(title = title, content = content, isPasswordProtected = tempNote.isPasswordProtected)
                             viewModel.onSaveClick(newNote)
                             viewModel.setCurrentNote(newNote)
                             viewModel.setEditMode(false)
@@ -258,24 +258,11 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
                 true
             }
-            R.id.action_save -> {
-                /*val title = binding.etTitle.text.toString()
-                val content = binding.etContent.toString()
-                if (title.isNotBlank() || content.isNotBlank()){
-                    //save note
-                    viewModel.onSaveClick(Note(title = title, content = content))
-                    editMode = false
-                    updateMenuEditSave()
-                }else{
-                    Snackbar.make(binding.parent,"Note content cannot be blank",Snackbar.LENGTH_SHORT).show()
-                }*/
-                true
-            }
-            /* R.id.action_delete -> {
+             R.id.action_pin -> {
 
                  true
              }
-             R.id.action_password -> {
+             /*R.id.action_archieve -> {
 
                  true
              }*/
@@ -382,28 +369,20 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
                     ly_password.isErrorEnabled = false
                     ly_password.error = null
-                    if (password != null) {
-                        if (et_password.text.toString() == password) {
-                            val updatedNote = currentNote.copy(isPasswordProtected = false)
-                            viewModel.setCurrentNote(updatedNote)
-                            viewModel.onUpdateClick(updatedNote)
-                            viewModel.setEditMode(false)
-                            updatePasswordIcon()
-                            Utils.showSnackBar(
-                                binding.parent,
-                                "Password disabled",
-                                binding.bottomActionBar.bottomActionBar
-                            )
-                            bottomSheetDialog.dismiss()
-                        } else {
-                            ly_password.error = "Wrong master password!"
-                        }
+                    if (et_password.text.toString() == password) {
+                        val updatedNote = currentNote.copy(isPasswordProtected = false)
+                        viewModel.setCurrentNote(updatedNote)
+                        viewModel.onUpdateClick(updatedNote)
+                        viewModel.setEditMode(false)
+                        updatePasswordIcon()
+                        Utils.showSnackBar(
+                            binding.parent,
+                            "Lock disabled",
+                            binding.bottomActionBar.bottomActionBar
+                        )
+                        bottomSheetDialog.dismiss()
                     } else {
-                        Toast.makeText(
-                            context,
-                            "master password not retrieved wait a moment",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        ly_password.error = "Wrong master password!"
                     }
                 }
             } else { //enable password
@@ -417,38 +396,55 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
                     ly_password.isErrorEnabled = false
                     ly_password.error = null
-                    if (password != null) {
-                        if (et_password.text.toString() == password) {
-                            val updatedNote = currentNote.copy(isPasswordProtected = true)
-                            viewModel.setCurrentNote(updatedNote)
-                            viewModel.onUpdateClick(updatedNote)
-                            viewModel.setEditMode(false)
-                            updatePasswordIcon()
-                            Utils.showSnackBar(
-                                binding.parent,
-                                "Password enabled",
-                                binding.bottomActionBar.bottomActionBar
-                            )
-                            bottomSheetDialog.dismiss()
-                        } else {
-                            ly_password.error = "Wrong master password!"
-                        }
+                    if (et_password.text.toString() == password) {
+                        val updatedNote = currentNote.copy(isPasswordProtected = true)
+                        viewModel.setCurrentNote(updatedNote)
+                        viewModel.onUpdateClick(updatedNote)
+                        viewModel.setEditMode(false)
+                        updatePasswordIcon()
+                        Utils.showSnackBar(
+                            binding.parent,
+                            "Lock enabled",
+                            binding.bottomActionBar.bottomActionBar
+                        )
+                        bottomSheetDialog.dismiss()
                     } else {
-                        Toast.makeText(
-                            context,
-                            "master password not retrieved wait a moment",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        ly_password.error = "Wrong master password!"
                     }
                 }
             }
         } else { //new note
             //create temp note object as set it to current note in viewModel
             //todo
-            if (tempNote == null) {
-                title.text = "Add password protection"
+            if (tempNote.isPasswordProtected) { //remove
+                title.text = "Remove password protection"
                 subtitle.text =
-                    "Confirm your current master password to enable password protection for this note"
+                    "Confirm your current master password to remove password protection for this note"
+                bt_save.text = "Remove"
+
+                bt_save.setOnClickListener {
+                    //todo remove password
+
+                    ly_password.isErrorEnabled = false
+                    ly_password.error = null
+                    if (et_password.text.toString() == password) {
+                        tempNote = tempNote.copy(isPasswordProtected = false)
+                        updatePasswordIcon()
+                        Utils.showSnackBar(
+                            binding.parent,
+                            "Lock disabled",
+                            binding.bottomActionBar.bottomActionBar
+                        )
+                        bottomSheetDialog.dismiss()
+                    } else {
+                        ly_password.error = "Wrong master password!"
+                    }
+
+
+                }
+            }else { //add password to new note
+                title.text = "Add password protection"
+                subtitle.text = "Confirm your current master password to enable password protection for this note"
                 bt_save.text = "Add"
 
                 bt_save.setOnClickListener {
@@ -456,61 +452,17 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
                     ly_password.isErrorEnabled = false
                     ly_password.error = null
-                    if (password != null) {
-                        if (et_password.text.toString() == password) {
-                            tempNote = Note(title = "", content = "", isPasswordProtected = true)
-                            updatePasswordIcon()
-                            Utils.showSnackBar(
-                                binding.parent,
-                                "Password enabled",
-                                binding.bottomActionBar.bottomActionBar
-                            )
-                            bottomSheetDialog.dismiss()
-                        } else {
-                            ly_password.error = "Wrong master password!"
-                        }
+                    if (et_password.text.toString() == password) {
+                        tempNote = tempNote.copy(isPasswordProtected = true)
+                        updatePasswordIcon()
+                        Utils.showSnackBar(
+                            binding.parent,
+                            "Lock enabled",
+                            binding.bottomActionBar.bottomActionBar
+                        )
+                        bottomSheetDialog.dismiss()
                     } else {
-                        Toast.makeText(
-                            context,
-                            "master password not retrieved wait a moment",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            } else {
-                if (tempNote!!.isPasswordProtected) { //remove
-                    title.text = "Remove password protection"
-                    subtitle.text =
-                        "Confirm your current master password to remove password protection for this note"
-                    bt_save.text = "Remove"
-
-                    bt_save.setOnClickListener {
-                        //todo remove password
-
-                        ly_password.isErrorEnabled = false
-                        ly_password.error = null
-                        if (password != null) {
-                            if (et_password.text.toString() == password) {
-                                tempNote = tempNote!!.copy(isPasswordProtected = false)
-                                updatePasswordIcon()
-                                Utils.showSnackBar(
-                                    binding.parent,
-                                    "Password disabled",
-                                    binding.bottomActionBar.bottomActionBar
-                                )
-                                bottomSheetDialog.dismiss()
-                            } else {
-                                ly_password.error = "Wrong master password!"
-                            }
-                        } else {
-                            Toast.makeText(
-                                context,
-                                "master password not retrieved wait a moment",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-
-
+                        ly_password.error = "Wrong master password!"
                     }
                 }
             }
@@ -551,5 +503,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+
+        //todo save note
     }
 }

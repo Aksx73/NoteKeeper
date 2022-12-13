@@ -81,7 +81,7 @@
             android:orientation="vertical">
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/open_with"
+                android:id="@+id/add_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -96,7 +96,7 @@
                 android:text="Add password" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/revealInFiles"
+                android:id="@+id/delete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?selectableItemBackground"
