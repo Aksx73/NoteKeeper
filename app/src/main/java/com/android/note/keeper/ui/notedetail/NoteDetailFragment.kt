@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.view.menu.MenuBuilder
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -156,15 +157,11 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
     private fun updateMenuEditSave() {
         // menuSave?.isVisible = editMode
         menuEdit?.icon =
-            if (viewModel.editMode.value == true) ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.ic_check_24,
-                null
-            ) else ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.ic_edit_24,
-                null
+            if (viewModel.editMode.value == true) ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.ic_check_24
             )
+            else ContextCompat.getDrawable(requireContext(), R.drawable.ic_edit_24)
         // menuEdit?.isVisible = !editMode
         readOnlyTag.isVisible = !viewModel.editMode.value!!
     }

@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:background="?selectableItemBackground"
                 android:clickable="true"
-                android:drawableStart="@drawable/ic_search_24"
+                android:drawableStart="@drawable/ic_delete_24"
                 android:drawablePadding="16dp"
                 android:focusable="true"
                 android:gravity="center_vertical"

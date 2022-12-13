@@ -4,7 +4,6 @@
     tools:context="com.android.note.keeper.ui.MainActivity">
     <item
         android:id="@+id/action_pin"
-        android:orderInCategory="100"
         android:title="Pin"
         android:visible="true"
         android:icon="@drawable/ic_outline_pin_24"
@@ -12,18 +11,16 @@
 
     <item
         android:id="@+id/action_edit"
-        android:orderInCategory="100"
         android:title="Edit"
         android:visible="true"
         android:icon="@drawable/ic_edit_24"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_save"
-        android:orderInCategory="100"
-        android:title="Save"
+        android:id="@+id/action_label"
+        android:title="Label"
         android:visible="false"
-        app:actionLayout="@layout/menu_save_icon"
-        app:showAsAction="always" />
+        android:icon="@drawable/ic_label_24"
+        app:showAsAction="never" />
 
 </menu>
