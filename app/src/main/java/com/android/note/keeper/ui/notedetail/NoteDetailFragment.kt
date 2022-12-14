@@ -38,6 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.text.DateFormat
 
 
 /**
@@ -89,7 +90,33 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         viewModel.setCurrentNote(args.note)
         keyListener = binding.etTitle.keyListener
 
-        viewModel.currentNote.value?.let {
+        if (viewModel.currentNote.value != null){
+            viewModel.currentNote.value?.let {
+                binding.apply {
+                    readOnlyTag.isVisible = true
+                    //editMode = false
+                    viewModel.setEditMode(false)
+                    etTitle.setText(it.title)
+                    etContent.setText(it.content)
+                    disableInputs()
+                    binding.bottomActionBar.txtTime.text = "Edited ${Utils.getFormattedDate(it.created)}"
+                }
+            }
+        }else {
+            binding.parent.setOnClickListener {
+                if (viewModel.currentNote.value == null || viewModel.editMode.value == true) {
+                    //todo -> get toolbar reference from activity and make 'read mode' tag textview invisible
+
+                    binding.etContent.requestFocus()
+                    Utils.showKeyboard(requireActivity(), binding.etContent)
+                }
+            }
+
+            binding.bottomActionBar.txtTime.text = "Edited ${Utils.getFormattedTime(System.currentTimeMillis())}"
+
+        }
+
+        /*viewModel.currentNote.value?.let {
             binding.apply {
                 readOnlyTag.isVisible = true
                 //editMode = false
@@ -97,6 +124,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 etTitle.setText(it.title)
                 etContent.setText(it.content)
                 disableInputs()
+                binding.bottomActionBar.txtTime.text = "Edited ${Utils.getFormattedDate(it.created)}"
             }
         }
 
@@ -107,7 +135,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 binding.etContent.requestFocus()
                 Utils.showKeyboard(requireActivity(), binding.etContent)
             }
-        }
+        }*/
 
 
         //todo move editMode variable to viewmodel and observe the change to set action as per

@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.Material3.CardView.Outlined"
     android:layout_width="match_parent"
-    android:clickable="true"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="4dp"
     android:background="?selectableItemBackground"
-    android:layout_marginHorizontal="16dp"
-    android:layout_marginVertical="6dp"
-    android:layout_height="wrap_content">
+    android:clickable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:paddingVertical="16dp"
-        android:paddingStart="16dp"
-        android:layout_height="wrap_content">
+        android:paddingStart="16dp">
 
 
         <TextView
@@ -22,36 +22,37 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:singleLine="true"
             android:ellipsize="end"
-            android:textAppearance="?textAppearanceBodyMedium"
-            tools:text="@tools:sample/lorem"
             android:fontFamily="sans-serif-medium"
+            android:paddingBottom="8dp"
+            android:singleLine="true"
             android:textColor="?android:textColorPrimary"
+            android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/img_option"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@tools:sample/lorem" />
 
         <TextView
             android:id="@+id/txt_subtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:maxLines="2"
             android:ellipsize="end"
-            android:textAppearance="?textAppearanceBodySmall"
-            tools:text="@tools:sample/lorem/random"
-            android:textColor="?android:textColorSecondary"
+            android:fontFamily="sans-serif"
+            android:maxLines="2"
+            android:paddingBottom="8dp"
+            android:textColor="?android:textColorPrimary"
             app:layout_constraintEnd_toStartOf="@+id/img_option"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_title" />
+            app:layout_constraintTop_toBottomOf="@+id/txt_title"
+            tools:text="@tools:sample/lorem/random" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp"
             android:gravity="center"
+            android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_subtitle">
 
@@ -70,8 +71,8 @@
 
                 android:ellipsize="end"
                 android:singleLine="true"
-                tools:text="@tools:sample/date/mmddyy"
-                android:textAppearance="?textAppearanceLabelMedium" />
+                android:textAppearance="?textAppearanceLabelMedium"
+                tools:text="@tools:sample/date/mmddyy" />
 
         </LinearLayout>
 
@@ -80,10 +81,10 @@
             android:id="@+id/img_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="4dp"
             android:layout_marginEnd="8dp"
-            android:clickable="true"
             android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:padding="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

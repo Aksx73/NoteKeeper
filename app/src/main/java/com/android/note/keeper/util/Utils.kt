@@ -14,6 +14,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.NestedScrollView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 object Utils {
@@ -52,5 +54,18 @@ object Utils {
             .setAnchorView(anchor)
             .show()
     }
+
+    fun getFormattedTime(timeMilli:Long): String{ // 12:45 am
+        var date = Date(timeMilli)
+        val timeZoneDate = SimpleDateFormat("HH:mm a", Locale.getDefault())
+        return timeZoneDate.format(date)
+    }
+
+    fun getFormattedDate(timeMilli:Long): String{ // 14 Dec
+        var date = Date(timeMilli)
+        val timeZoneDate = SimpleDateFormat("dd MMM", Locale.getDefault())
+        return timeZoneDate.format(date)
+    }
+
 
 }

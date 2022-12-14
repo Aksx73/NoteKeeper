@@ -47,6 +47,8 @@ class NoteAdapter(
 
         fun bind(note: Note) {
             binding.apply {
+                txtTitle.isVisible = !note.title.isNullOrBlank()
+                txtSubtitle.isVisible = !note.content.isNullOrBlank()
                 txtTitle.text = note.title
                 txtSubtitle.text = note.content
                 txtDate.text = note.formattedDate
