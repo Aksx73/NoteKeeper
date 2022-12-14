@@ -12,12 +12,14 @@
         android:id="@+id/action_view"
         android:icon="@drawable/ic_grid_view_24"
         android:title="List view"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:enabled="false"/>
 
     <item
         android:id="@+id/action_hide_completed"
         android:checkable="true"
         android:title="Hide completed"
+        android:enabled="false"
         app:showAsAction="never" />
 
     <item
@@ -31,5 +33,6 @@
         android:id="@+id/action_setting"
         android:icon="@drawable/ic_settings_24dp"
         android:title="Settings"
+        android:enabled="false"
         app:showAsAction="never" />
 </menu>

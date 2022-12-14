@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:tooltipText="Change color"
             app:icon="@drawable/ic_color_24"
+            android:enabled="false"
             app:iconTint="?colorControlNormal" />
 
         <com.google.android.material.button.MaterialButton
