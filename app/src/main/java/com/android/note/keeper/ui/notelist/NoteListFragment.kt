@@ -7,6 +7,7 @@ import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
@@ -52,6 +53,8 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
     private lateinit var noteAdapter: NoteAdapter
     private val viewModel by viewModels<NoteListViewModel>()
     private lateinit var masterPassword: String
+
+    private lateinit var searchView: SearchView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -100,36 +103,27 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         loadMasterPassword()
 
         //used this to update masterPassword value with updated password
-        viewModel.masterPasswordLiveData.observe(viewLifecycleOwner){
+        viewModel.masterPasswordLiveData.observe(viewLifecycleOwner) {
             masterPassword = it
             Log.d("TAG", "mastPassword live: $masterPassword")
         }
 
-
         //todo observe other events
-
 
     }
 
     private fun loadMasterPassword() {
         //used this to get masterPassword value immediately
-         viewLifecycleOwner.lifecycleScope.launch {
-             masterPassword = viewModel.masterPasswordFlow.first()
-             Log.d("TAG", "masterPasswordFLow: $masterPassword")
-         }
-
-       /* viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.masterPasswordFlow.flatMapLatest {
-                masterPassword = it
-                Log.d("TAG", "addPassword: $masterPassword")
-            }
-        }*/
-
+        viewLifecycleOwner.lifecycleScope.launch {
+            masterPassword = viewModel.masterPasswordFlow.first()
+            Log.d("TAG", "masterPasswordFLow: $masterPassword")
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        searchView.setOnQueryTextListener(null)
     }
 
     @SuppressLint("RestrictedApi")
@@ -138,10 +132,31 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
             menu.setOptionalIconsVisible(true)
         }
         menuInflater.inflate(R.menu.menu_list, menu)
+       val menuSearch = menu.findItem(R.id.action_search)
+        searchView = menuSearch.actionView as SearchView
+        searchView.queryHint = "Search your notes"
 
         val master_password = menu.findItem(R.id.action_master_password)
-        master_password.title =
-            if (masterPassword.isBlank()) "Create master password" else "Update master password"
+
+        master_password.title = if (masterPassword.isBlank()) "Create master password"
+        else "Update master password"
+
+        val pendingQuery = viewModel.searchQuery.value
+        if (pendingQuery != null && pendingQuery.isNotEmpty()) {
+            menuSearch.expandActionView()
+            searchView.setQuery(pendingQuery, false)
+        }
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel.searchQuery.value = newText
+                return true
+            }
+        })
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -408,7 +423,6 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         bottomSheetDialog.setContentView(bottomsheet)
         bottomSheetDialog.show()
     }
-
 
     override fun onItemClick(task: Note) {
         if (task.isPasswordProtected) {

@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NoteDao {
 
-    @Query("SELECT * FROM notes_table ORDER BY created DESC")
-    fun getAllNotes(): Flow<List<Note>>
+    @Query("SELECT * FROM notes_table WHERE title LIKE '%' || :searchQuery || '%' OR content LIKE '%' || :searchQuery || '%' ORDER BY created DESC")
+    fun getAllNotes(searchQuery: String): Flow<List<Note>>
 
     @Insert(onConflict = REPLACE)
     suspend fun insert(note: Note)
@@ -24,9 +24,5 @@ interface NoteDao {
 
     @Delete
     suspend fun delete(note: Note)
-
-    /*//to enable/disable password of note with given '_id'
-    @Query("UPDATE notes_table SET isPasswordProtected=:protected WHERE _id=:id")
-    suspend fun updatePassword(id: Int, protected: Boolean)*/
 
 }

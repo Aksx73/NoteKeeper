@@ -1,22 +1,32 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.android.note.keeper.ui.notelist
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.android.note.keeper.data.PreferenceManager
 import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.data.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NoteListViewModel @Inject constructor(
     private val preferenceManager: PreferenceManager,
-    private val repository: NoteRepository
+    private val repository: NoteRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val noteFlow = repository.getNotes()
+    val searchQuery = savedStateHandle.getLiveData("searchQuery", "")
+
+    private val noteFlow = searchQuery.asFlow().flatMapLatest { query ->
+        repository.getNotes(query)
+    }
+
+    //private val noteFlow = repository.getNotes()
     val notes = noteFlow.asLiveData()
 
     //here both are needed

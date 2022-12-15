@@ -9,8 +9,8 @@ import javax.inject.Inject
  *  Implementation of [NoteRepository]. Single entry point for managing tasks data.
  */
 class NoteRepositoryImpl @Inject constructor(private val dao: NoteDao) : NoteRepository {
-    override fun getNotes(): Flow<List<Note>> {
-        return dao.getAllNotes()
+    override fun getNotes(query: String): Flow<List<Note>> {
+        return dao.getAllNotes(query)
     }
 
     override suspend fun insert(note: Note) = dao.insert(note)

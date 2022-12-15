@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
 
-    fun getNotes(): Flow<List<Note>>
+    fun getNotes(query: String): Flow<List<Note>>
 
     suspend fun insert(note: Note)
 
@@ -13,6 +13,6 @@ interface NoteRepository {
 
     suspend fun delete(note: Note)
 
-  //  suspend fun updatePassword(id: Int, isProtected: Boolean)
+    //  suspend fun updatePassword(id: Int, isProtected: Boolean)
 
 }
