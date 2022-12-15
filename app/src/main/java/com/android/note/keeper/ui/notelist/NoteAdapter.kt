@@ -1,5 +1,6 @@
 package com.android.note.keeper.ui.notelist
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -53,6 +54,7 @@ class NoteAdapter(
                 txtSubtitle.text = note.content
                 txtDate.text = note.formattedDate
                 imgLock.isVisible = note.isPasswordProtected
+                parentCard.setCardBackgroundColor(Color.parseColor(note.color))
             }
         }
     }

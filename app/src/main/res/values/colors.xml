@@ -6,6 +6,7 @@
     <color name="cursor_color">#96000000</color>
 
     <!--Note background colors-->
+    <color name="note_color_default">#00FFFFFF</color>
     <color name="note_color_red">#FD9878</color>
     <color name="note_color_orange">#F6C379</color>
     <color name="note_color_yellow">#FBF074</color>

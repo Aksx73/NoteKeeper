@@ -152,8 +152,17 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         }
 
         viewModel.selectedColor.observe(viewLifecycleOwner) { colorPosition ->
-            val colorInt: Int =colorsUtil.getColor(colorPosition)
+            val colorHex = requireContext().resources.getString(colorsUtil.getColor(colorPosition))
+            val colorInt = Color.parseColor(colorHex)
             binding.parent.setBackgroundColor(colorInt)
+
+            //todo update note color in room table here
+            if (viewModel.currentNote.value!=null){ //old note
+                val updatedNote = viewModel.currentNote.value!!.copy(color = colorHex)
+                viewModel.setCurrentNote(updatedNote)
+            }else{ //new note
+                tempNote = tempNote.copy(color = colorHex)
+            }
         }
 
         updatePasswordIcon()

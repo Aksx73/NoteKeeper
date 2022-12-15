@@ -17,8 +17,7 @@ import com.android.note.keeper.util.Utils
 import com.google.android.material.card.MaterialCardView
 
 
-class ColorPickerAdapter(val context: Context, private val viewModel: NoteDetailViewModel?) :
-    RecyclerView.Adapter<ColorPickerAdapter.ViewHolder>() {
+class ColorPickerAdapter(val context: Context, private val viewModel: NoteDetailViewModel?) : RecyclerView.Adapter<ColorPickerAdapter.ViewHolder>() {
     private var selectedColor = 0
     private val colorsUtil = ColorsUtil()
 
@@ -28,8 +27,7 @@ class ColorPickerAdapter(val context: Context, private val viewModel: NoteDetail
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView =
-            LayoutInflater.from(context).inflate(R.layout.color_circle_list_item, parent, false)
+        val itemView = LayoutInflater.from(context).inflate(R.layout.color_circle_list_item, parent, false)
         return ViewHolder(itemView)
     }
 
@@ -47,7 +45,8 @@ class ColorPickerAdapter(val context: Context, private val viewModel: NoteDetail
                 com.google.android.material.R.attr.colorOutline)
         }
 
-        val colorInt = colorsUtil.getColor(position)
+        val colorHex = context.resources.getString(colorsUtil.getColor(position))
+        val colorInt = Color.parseColor(colorHex)
         holder.colorCard.setCardBackgroundColor(colorInt)
 
         holder.colorCard.setOnClickListener {

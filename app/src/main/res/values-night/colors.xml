@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Note background colors-->
+    <color name="cursor_color">#96FFFFFF</color>
+
     <color name="note_color_red">#E6BD421C</color>
     <color name="note_color_orange">#BA720B</color>
     <color name="note_color_yellow">#A59600</color>
