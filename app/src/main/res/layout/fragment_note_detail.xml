@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".ui.notedetail.NoteDetailFragment">
 
     <androidx.core.widget.NestedScrollView
@@ -32,6 +33,7 @@
                 android:inputType="textCapSentences|textMultiLine"
                 android:paddingHorizontal="4dp"
                 android:paddingVertical="4dp"
+                android:textCursorDrawable="@drawable/cursor"
                 android:textAppearance="?textAppearanceHeadline5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -49,6 +51,7 @@
                 android:paddingHorizontal="4dp"
                 android:paddingTop="6dp"
                 android:paddingBottom="16dp"
+                android:textCursorDrawable="@drawable/cursor"
                 android:textAppearance="?textAppearanceBodyLarge"
                 android:textIsSelectable="true"
                 app:layout_constraintBottom_toBottomOf="parent"

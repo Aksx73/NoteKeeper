@@ -1,6 +1,7 @@
 package com.android.note.keeper.ui.notedetail
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.text.method.KeyListener
 import android.util.Log
@@ -21,10 +22,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.android.note.keeper.R
 import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.databinding.FragmentNoteDetailBinding
 import com.android.note.keeper.ui.MainActivity
+import com.android.note.keeper.util.ColorsUtil
 import com.android.note.keeper.util.DemoUtils
 import com.android.note.keeper.util.Utils
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -66,6 +70,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
     private var tempNote: Note = Note(title = "", content = "")
 
+    private val colorsUtil = ColorsUtil()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -90,7 +96,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         viewModel.setCurrentNote(args.note)
         keyListener = binding.etTitle.keyListener
 
-        if (viewModel.currentNote.value != null){
+        if (viewModel.currentNote.value != null) {
             viewModel.currentNote.value?.let {
                 binding.apply {
                     readOnlyTag.isVisible = true
@@ -99,10 +105,11 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     etTitle.setText(it.title)
                     etContent.setText(it.content)
                     disableInputs()
-                    binding.bottomActionBar.txtTime.text = "Edited ${Utils.getFormattedDate(it.created)}"
+                    binding.bottomActionBar.txtTime.text =
+                        "Edited ${Utils.getFormattedDate(it.created)}"
                 }
             }
-        }else {
+        } else {
             binding.parent.setOnClickListener {
                 if (viewModel.currentNote.value == null || viewModel.editMode.value == true) {
                     //todo -> get toolbar reference from activity and make 'read mode' tag textview invisible
@@ -112,7 +119,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 }
             }
 
-            binding.bottomActionBar.txtTime.text = "Edited ${Utils.getFormattedTime(System.currentTimeMillis())}"
+            binding.bottomActionBar.txtTime.text =
+                "Edited ${Utils.getFormattedTime(System.currentTimeMillis())}"
 
         }
 
@@ -143,6 +151,11 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             updateUIState(it)
         }
 
+        viewModel.selectedColor.observe(viewLifecycleOwner) { colorPosition ->
+            val colorInt: Int =colorsUtil.getColor(colorPosition)
+            binding.parent.setBackgroundColor(colorInt)
+        }
+
         updatePasswordIcon()
         bottomActionClickEvent()
     }
@@ -151,7 +164,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         binding.bottomActionBar.apply {
 
             btColor.setOnClickListener {
-                //todo
+                showColorPaletteBottomSheet()
             }
 
             btDelete.setOnClickListener {
@@ -533,6 +546,20 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         alertDialog.show()
     }
 
+    private fun showColorPaletteBottomSheet() {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val bottomsheet: View =
+            LayoutInflater.from(context).inflate(R.layout.bs_color_palette, null)
+
+        val recyclerView = bottomsheet.findViewById<RecyclerView>(R.id.rv_color_picker)
+
+        val layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = ColorPickerAdapter(requireContext(), viewModel)
+
+        bottomSheetDialog.setContentView(bottomsheet)
+        bottomSheetDialog.show()
+    }
 
     override fun onDestroyView() {
         //todo save note

@@ -3,6 +3,18 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="splash_background">#73A2FF</color>
+    <color name="cursor_color">#96000000</color>
+
+    <!--Note background colors-->
+    <color name="note_color_red">#FD9878</color>
+    <color name="note_color_orange">#F6C379</color>
+    <color name="note_color_yellow">#FBF074</color>
+    <color name="note_color_green">#C0F682</color>
+    <color name="note_color_teal">#A0FDE6</color>
+    <color name="note_color_blue">#E681D8FF</color>
+    <color name="note_color_purple">#E6BA88FF</color>
+    <color name="note_color_gray">#b8c4c9</color>
+
 
     <color name="colorPrimary">@color/m3_ref_palette_primary40</color>
     <color name="colorOnPrimary">@color/m3_ref_palette_primary100</color>

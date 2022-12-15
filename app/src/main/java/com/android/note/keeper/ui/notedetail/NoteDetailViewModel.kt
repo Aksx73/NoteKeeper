@@ -14,6 +14,8 @@ class NoteDetailViewModel @Inject constructor(
     private val repository: NoteRepository
 ) : ViewModel() {
 
+    val selectedColor = MutableLiveData<Int>()
+
     private val mutableNote = MutableLiveData<Note?>()
     val currentNote: LiveData<Note?> get() = mutableNote
 
@@ -21,6 +23,19 @@ class NoteDetailViewModel @Inject constructor(
     val editMode: LiveData<Boolean> get() = mutableEditMode
 
     val masterPasswordFlow = preferenceManager.masterPasswordFlow
+
+    fun getSelectedColor() :Int {
+        if (selectedColor.value == null)
+            selectedColor.value = 0
+        return selectedColor.value!!
+    }
+
+    fun setSelectedColor(color: Int?){
+        if (color == null)
+            selectedColor.value = 0
+        else
+            selectedColor.value = color!!
+    }
 
     fun setEditMode(isEditable: Boolean) {
         mutableEditMode.value = isEditable

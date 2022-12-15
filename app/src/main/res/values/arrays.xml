@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="note_color_palette">
+        <item>#fafafa</item>
+        <item>#ff6d3f</item>
+        <item>#ff9700</item>
+        <item>#ffe900</item>
+        <item>#8ac249</item>
+        <item>#1ce8b5</item>
+        <item>#3fc3ff</item>
+        <item>#b8c4c9</item>
+    </array>
+    <array name="note_color_palette_descriptions">
+        <item>White</item>
+        <item>Red</item>
+        <item>Orange</item>
+        <item>Yellow</item>
+        <item>Green</item>
+        <item>Teal</item>
+        <item>Blue</item>
+        <item>Grey</item>
+    </array>
+
+    <array name="action_bar_color">
+        <item>#bdbdbd</item>
+        <item>#ef5d35</item>
+        <item>#f28a00</item>
+        <item>#efd200</item>
+        <item>#81b242</item>
+        <item>#1ad8a2</item>
+        <item>#33b7e5</item>
+        <item>#8fa3ad</item>
+    </array>
+</resources>

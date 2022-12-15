@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Note background colors-->
+    <color name="note_color_red">#E6BD421C</color>
+    <color name="note_color_orange">#BA720B</color>
+    <color name="note_color_yellow">#A59600</color>
+    <color name="note_color_green">#3F7104</color>
+    <color name="note_color_teal">#00674D</color>
+    <color name="note_color_blue">#E6014D70</color>
+    <color name="note_color_purple">#E6330673</color>
+    <color name="note_color_gray">#5A6265</color>
+
     <color name="colorPrimary">@color/m3_sys_color_dark_primary</color>
     <color name="colorOnPrimary">@color/m3_sys_color_dark_on_primary</color>
     <color name="colorPrimaryInverse">@color/m3_sys_color_dark_inverse_primary</color>
