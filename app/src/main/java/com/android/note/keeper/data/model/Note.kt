@@ -1,16 +1,13 @@
 package com.android.note.keeper.data.model
 
-import android.content.res.Resources
 import android.os.Parcelable
-import androidx.annotation.ColorInt
 import androidx.annotation.Keep
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.android.note.keeper.R
-import com.android.note.keeper.ui.NoteApplication
 import com.android.note.keeper.util.Constants
-import java.text.DateFormat
 import kotlinx.parcelize.Parcelize
+import java.text.DateFormat
+
 
 @Keep
 @Parcelize
@@ -20,7 +17,7 @@ data class Note(
     val _id: Int = 0,
     val title: String,
     val content: String,
-    val color: String = "#00FFFFFF",
+    val color: String = Constants.COLOR_DEFAULT, //default color is colorSurface
     val tag: Int = Constants.TAG_NOTE, // 1 -> note ; 2 -> checkList
     val pin:Boolean = false,  // pin the note or not
     val markAsComplete : Boolean = false,  // mark as completed to show at bottom

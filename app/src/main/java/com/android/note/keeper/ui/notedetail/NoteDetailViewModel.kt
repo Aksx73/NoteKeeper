@@ -19,16 +19,21 @@ class NoteDetailViewModel @Inject constructor(
     private val mutableNote = MutableLiveData<Note?>()
     val currentNote: LiveData<Note?> get() = mutableNote
 
+    private val mutableTempNote = MutableLiveData<Note>(Note(title = "", content = ""))
+    val tempNote: LiveData<Note> get() = mutableTempNote
+
     private val mutableEditMode = MutableLiveData(true)
     val editMode: LiveData<Boolean> get() = mutableEditMode
 
     val masterPasswordFlow = preferenceManager.masterPasswordFlow
+
 
     fun getSelectedColor() :Int {
         if (selectedColor.value == null)
             selectedColor.value = 0
         return selectedColor.value!!
     }
+
 
     fun setSelectedColor(color: Int?){
         if (color == null)
@@ -39,6 +44,10 @@ class NoteDetailViewModel @Inject constructor(
 
     fun setEditMode(isEditable: Boolean) {
         mutableEditMode.value = isEditable
+    }
+
+    fun setTempNote(note: Note) {
+        mutableTempNote.value = note
     }
 
     fun setCurrentNote(note: Note?) {

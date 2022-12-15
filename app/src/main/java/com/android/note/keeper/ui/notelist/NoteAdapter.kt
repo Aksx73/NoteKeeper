@@ -1,5 +1,6 @@
 package com.android.note.keeper.ui.notelist
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,6 +10,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.databinding.NoteListItemBinding
+import com.android.note.keeper.util.ColorsUtil
+import com.android.note.keeper.util.Constants
+import com.android.note.keeper.util.Utils
 
 class NoteAdapter(
     private val listener: OnItemClickListener
@@ -27,7 +31,17 @@ class NoteAdapter(
 
     inner class NoteViewHolder(private val binding: NoteListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        private var colorInt: Int? = null
+        private lateinit var colorsUtil: ColorsUtil
+
         init {
+            colorInt = Utils.getColorFromAttr(
+                binding.root.context,
+                com.google.android.material.R.attr.colorSurface
+            )
+
+            colorsUtil = ColorsUtil()
+
             binding.apply {
                 root.setOnClickListener {
                     val position = adapterPosition
@@ -54,7 +68,15 @@ class NoteAdapter(
                 txtSubtitle.text = note.content
                 txtDate.text = note.formattedDate
                 imgLock.isVisible = note.isPasswordProtected
-                parentCard.setCardBackgroundColor(Color.parseColor(note.color))
+
+                val colorName = note.color
+                if (colorName == Constants.COLOR_DEFAULT)
+                    parentCard.setCardBackgroundColor(colorInt!!)
+                else {
+                    val colorHex = binding.root.context.resources.getString(colorsUtil.getColor(colorName))
+                    val colorInt : Int = Color.parseColor(colorHex)
+                    parentCard.setCardBackgroundColor(colorInt)
+                }
             }
         }
     }

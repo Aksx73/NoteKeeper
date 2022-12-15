@@ -7,6 +7,7 @@
     app:strokeWidth="1dp"
     android:clickable="true"
     android:layout_margin="4dp"
+    style="@style/Widget.Material3.CardView.Outlined"
     android:background="?selectableItemBackgroundBorderless"
     app:strokeColor="?colorOutline">
 

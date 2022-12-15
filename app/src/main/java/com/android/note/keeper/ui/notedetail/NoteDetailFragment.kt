@@ -29,6 +29,7 @@ import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.databinding.FragmentNoteDetailBinding
 import com.android.note.keeper.ui.MainActivity
 import com.android.note.keeper.util.ColorsUtil
+import com.android.note.keeper.util.Constants
 import com.android.note.keeper.util.DemoUtils
 import com.android.note.keeper.util.Utils
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -68,7 +69,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
     //private var menuSave: MenuItem? = null
     private var menuEdit: MenuItem? = null
 
-    private var tempNote: Note = Note(title = "", content = "")
+   // private var tempNote: Note = Note(title = "", content = "")
 
     private val colorsUtil = ColorsUtil()
 
@@ -96,7 +97,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         viewModel.setCurrentNote(args.note)
         keyListener = binding.etTitle.keyListener
 
-        if (viewModel.currentNote.value != null) {
+        if (viewModel.currentNote.value != null) { //old note
             viewModel.currentNote.value?.let {
                 binding.apply {
                     readOnlyTag.isVisible = true
@@ -107,9 +108,18 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     disableInputs()
                     binding.bottomActionBar.txtTime.text =
                         "Edited ${Utils.getFormattedDate(it.created)}"
+
+                    //note background color
+                    if (it.color == Constants.COLOR_DEFAULT){
+                        val colorInt = Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorSurface)
+                        binding.parent.setBackgroundColor(colorInt)
+                    }else {
+                        val colorInt = Color.parseColor(requireContext().resources.getString(colorsUtil.getColor(it.color)))
+                        binding.parent.setBackgroundColor(colorInt)
+                    }
                 }
             }
-        } else {
+        } else { //new note
             binding.parent.setOnClickListener {
                 if (viewModel.currentNote.value == null || viewModel.editMode.value == true) {
                     //todo -> get toolbar reference from activity and make 'read mode' tag textview invisible
@@ -121,6 +131,9 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
             binding.bottomActionBar.txtTime.text =
                 "Edited ${Utils.getFormattedTime(System.currentTimeMillis())}"
+
+            val colorInt = Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorSurface)
+            binding.parent.setBackgroundColor(colorInt)
 
         }
 
@@ -152,21 +165,37 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         }
 
         viewModel.selectedColor.observe(viewLifecycleOwner) { colorPosition ->
-            val colorHex = requireContext().resources.getString(colorsUtil.getColor(colorPosition))
-            val colorInt = Color.parseColor(colorHex)
-            binding.parent.setBackgroundColor(colorInt)
+            var colorName = Constants.COLOR_DEFAULT
+            if (colorPosition == 0) {
+                val colorInt = Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorSurface)
+                binding.parent.setBackgroundColor(colorInt)
+            } else {
+                colorName = colorsUtil.getPosition(colorPosition)
+                val colorHex = requireContext().resources.getString(colorsUtil.getColor(colorName))
+                val colorInt = Color.parseColor(colorHex)
+                binding.parent.setBackgroundColor(colorInt)
+            }
 
             //todo update note color in room table here
-            if (viewModel.currentNote.value!=null){ //old note
-                val updatedNote = viewModel.currentNote.value!!.copy(color = colorHex)
+            if (viewModel.currentNote.value != null) { //old note
+                val updatedNote = viewModel.currentNote.value!!.copy(color = colorName)
                 viewModel.setCurrentNote(updatedNote)
-            }else{ //new note
-                tempNote = tempNote.copy(color = colorHex)
+                viewModel.onUpdateClick(updatedNote)
+            } else { //new note
+                val updatedTempNote = viewModel.tempNote.value!!.copy(color = colorName)
+                viewModel.setTempNote(updatedTempNote)
+                //tempNote = tempNote.copy(color = colorName)
             }
         }
 
+        setNoteBackgroundColor()
         updatePasswordIcon()
         bottomActionClickEvent()
+    }
+
+    private fun setNoteBackgroundColor() {
+        //todo
+
     }
 
     private fun bottomActionClickEvent() {
@@ -194,7 +223,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             else AppCompatResources.getDrawable(requireContext(), R.drawable.ic_lock_open_24)
         }
 
-        tempNote?.let {
+        viewModel.tempNote.value?.let {
             if (it.isPasswordProtected)
                 binding.bottomActionBar.btPassword.icon =
                     AppCompatResources.getDrawable(requireContext(), R.drawable.ic_lock_filled_24)
@@ -279,11 +308,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                                 binding.bottomActionBar.bottomActionBar
                             )
                         } else {  //create new note
-                            val newNote = Note(
-                                title = title,
-                                content = content,
-                                isPasswordProtected = tempNote.isPasswordProtected
-                            )
+                            val newNote = viewModel.tempNote.value!!.copy(title = title, content = content)
                             viewModel.onSaveClick(newNote)
                             viewModel.setCurrentNote(newNote)
                             viewModel.setEditMode(false)
@@ -471,7 +496,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         } else { //new note
             //create temp note object as set it to current note in viewModel
             //todo
-            if (tempNote.isPasswordProtected) { //remove
+            if (viewModel.tempNote.value!!.isPasswordProtected) { //remove
                 title.text = "Remove password protection"
                 subtitle.text =
                     "Confirm your current master password to remove password protection for this note"
@@ -483,7 +508,9 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     ly_password.isErrorEnabled = false
                     ly_password.error = null
                     if (et_password.text.toString() == password) {
-                        tempNote = tempNote.copy(isPasswordProtected = false)
+                        val updatedTempNote = viewModel.tempNote.value!!.copy(isPasswordProtected = false)
+                        viewModel.setTempNote(updatedTempNote)
+                        //tempNote = tempNote.copy(isPasswordProtected = false)
                         updatePasswordIcon()
                         Utils.showSnackBar(
                             binding.parent,
@@ -509,7 +536,9 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     ly_password.isErrorEnabled = false
                     ly_password.error = null
                     if (et_password.text.toString() == password) {
-                        tempNote = tempNote.copy(isPasswordProtected = true)
+                        val updatedTempNote = viewModel.tempNote.value!!.copy(isPasswordProtected = true)
+                        viewModel.setTempNote(updatedTempNote)
+                        //tempNote = tempNote.copy(isPasswordProtected = true)
                         updatePasswordIcon()
                         Utils.showSnackBar(
                             binding.parent,
@@ -591,12 +620,10 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             } else { //new note
                 if (title.isNotBlank() || content.isNotBlank()) {
                     //todo save new note
-                    val newNote = Note(
-                        title = title,
-                        content = content,
-                        isPasswordProtected = tempNote.isPasswordProtected
-                    )
-                    viewModel.onSaveClick(newNote)
+                    val newTempNote = viewModel.tempNote.value!!.copy(title = title, content = content)
+                    viewModel.setTempNote(newTempNote)
+                    //val newNote = viewModel.tempNote.value!!.copy(title = title, content = content)
+                    viewModel.onSaveClick(viewModel.tempNote.value!!)
                 }
 
             }

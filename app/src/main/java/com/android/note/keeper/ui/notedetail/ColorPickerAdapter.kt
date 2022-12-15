@@ -17,17 +17,22 @@ import com.android.note.keeper.util.Utils
 import com.google.android.material.card.MaterialCardView
 
 
-class ColorPickerAdapter(val context: Context, private val viewModel: NoteDetailViewModel?) : RecyclerView.Adapter<ColorPickerAdapter.ViewHolder>() {
+class ColorPickerAdapter(val context: Context, private val viewModel: NoteDetailViewModel) :
+    RecyclerView.Adapter<ColorPickerAdapter.ViewHolder>() {
     private var selectedColor = 0
     private val colorsUtil = ColorsUtil()
 
     init {
-        if (viewModel != null)
-            selectedColor = viewModel.getSelectedColor()
+        //selectedColor = viewModel.getSelectedColor()
+
+        viewModel.currentNote.value?.let {
+            selectedColor = colorsUtil.getPositionFromName(it.color)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(context).inflate(R.layout.color_circle_list_item, parent, false)
+        val itemView =
+            LayoutInflater.from(context).inflate(R.layout.color_circle_list_item, parent, false)
         return ViewHolder(itemView)
     }
 
@@ -36,22 +41,33 @@ class ColorPickerAdapter(val context: Context, private val viewModel: NoteDetail
         if (position == selectedColor) {
             holder.imgChecked.isVisible = true
             holder.colorCard.strokeWidth = 6
-            holder.colorCard.strokeColor = Utils.getColorFromAttr(context,
-                com.google.android.material.R.attr.colorPrimary)
+            holder.colorCard.strokeColor = Utils.getColorFromAttr(
+                context,
+                com.google.android.material.R.attr.colorPrimary
+            )
         } else {
             holder.imgChecked.isVisible = false
             holder.colorCard.strokeWidth = 3
-            holder.colorCard.strokeColor = Utils.getColorFromAttr(context,
-                com.google.android.material.R.attr.colorOutline)
+            holder.colorCard.strokeColor = Utils.getColorFromAttr(
+                context,
+                com.google.android.material.R.attr.colorOutline
+            )
         }
 
-        val colorHex = context.resources.getString(colorsUtil.getColor(position))
-        val colorInt = Color.parseColor(colorHex)
-        holder.colorCard.setCardBackgroundColor(colorInt)
+        if (position == 0) {
+            val colorInt =
+                Utils.getColorFromAttr(context, com.google.android.material.R.attr.colorSurface)
+            holder.colorCard.setCardBackgroundColor(colorInt)
+        } else {
+            val colorName = colorsUtil.getPosition(position)
+            val colorHex = context.resources.getString(colorsUtil.getColor(colorName))
+            val colorInt = Color.parseColor(colorHex)
+            holder.colorCard.setCardBackgroundColor(colorInt)
+        }
 
         holder.colorCard.setOnClickListener {
             selectedColor = position
-            viewModel?.setSelectedColor(position)
+            viewModel.setSelectedColor(position)
             notifyDataSetChanged()
         }
 

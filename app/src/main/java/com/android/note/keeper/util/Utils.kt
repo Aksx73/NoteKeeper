@@ -8,16 +8,10 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.text.InputType
 import android.util.TypedValue
 import android.view.View
-import android.view.View.OnLayoutChangeListener
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.ScrollView
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.widget.NestedScrollView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
@@ -86,6 +80,17 @@ object Utils {
     ): Int {
         context.theme.resolveAttribute(attrColor, typedValue, resolveRefs)
         return typedValue.data
+    }
+
+    fun setColorAlpha(percentage: Int, colorCode: String): String {
+        val decValue = percentage.toDouble() / 100 * 255
+        val rawHexColor = colorCode.replace("#", "")
+        val str = StringBuilder(rawHexColor)
+        if (Integer.toHexString(decValue.toInt()).length == 1)
+            str.insert(0, "#0" + Integer.toHexString(decValue.toInt()))
+        else
+            str.insert(0, "#" + Integer.toHexString(decValue.toInt()))
+        return str.toString()
     }
 
 }

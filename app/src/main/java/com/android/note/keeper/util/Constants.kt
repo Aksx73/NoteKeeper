@@ -9,4 +9,15 @@ object Constants {
     const val TABLE_NAME = "notes_table"
     const val PREFERENCE_NAME = "user_preferences"
 
+    const val COLOR_DEFAULT = "DEFAULT"
+    const val COLOR_RED = "RED"
+    const val COLOR_YELLOW = "YELLOW"
+    const val COLOR_ORANGE = "ORANGE"
+    const val COLOR_GREEN = "GREEN"
+    const val COLOR_BLUE = "BLUE"
+    const val COLOR_TEAL = "TEAL"
+    const val COLOR_GRAY = "GRAY"
+    const val COLOR_PURPLE = "PURPLE"
+
+
 }
