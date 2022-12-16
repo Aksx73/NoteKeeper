@@ -17,9 +17,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/bt_color"
-            style="?attr/materialIconButtonStyle"
+            style="@style/Widget.Material3.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:tooltipText="Change color"
@@ -28,22 +28,13 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/bt_password"
-            style="?attr/materialIconButtonStyle"
+            style="@style/Widget.Material3.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
             android:saveEnabled="false"
-            android:tooltipText="Add password"
+            android:tooltipText="Lock"
             app:icon="@drawable/ic_lock_open_24"
-            app:iconTint="?colorControlNormal" />
-
-        <Button
-            android:id="@+id/bt_delete"
-            style="?attr/materialIconButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:tooltipText="Delete"
-            app:icon="@drawable/ic_delete_24"
             app:iconTint="?colorControlNormal" />
 
     </LinearLayout>
@@ -53,12 +44,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginEnd="16dp"
         android:fontFamily="sans-serif"
-        tools:text="Edited 1 Nov"
         android:textAppearance="?textAppearanceLabelMedium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Edited 1 Nov" />
+
+    <Button
+        android:id="@+id/bt_options"
+        style="?attr/materialIconButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_more_vert_24"
+        app:iconTint="?colorControlNormal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

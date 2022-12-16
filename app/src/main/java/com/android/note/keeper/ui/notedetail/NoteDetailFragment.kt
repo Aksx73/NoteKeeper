@@ -69,7 +69,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
     //private var menuSave: MenuItem? = null
     private var menuEdit: MenuItem? = null
 
-   // private var tempNote: Note = Note(title = "", content = "")
+    // private var tempNote: Note = Note(title = "", content = "")
 
     private val colorsUtil = ColorsUtil()
 
@@ -110,11 +110,18 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                         "Edited ${Utils.getFormattedDate(it.created)}"
 
                     //note background color
-                    if (it.color == Constants.COLOR_DEFAULT){
-                        val colorInt = Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorSurface)
+                    if (it.color == Constants.COLOR_DEFAULT) {
+                        val colorInt = Utils.getColorFromAttr(
+                            requireContext(),
+                            com.google.android.material.R.attr.colorSurface
+                        )
                         binding.parent.setBackgroundColor(colorInt)
-                    }else {
-                        val colorInt = Color.parseColor(requireContext().resources.getString(colorsUtil.getColor(it.color)))
+                    } else {
+                        val colorInt = Color.parseColor(
+                            requireContext().resources.getString(
+                                colorsUtil.getColor(it.color)
+                            )
+                        )
                         binding.parent.setBackgroundColor(colorInt)
                     }
                 }
@@ -132,7 +139,10 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             binding.bottomActionBar.txtTime.text =
                 "Edited ${Utils.getFormattedTime(System.currentTimeMillis())}"
 
-            val colorInt = Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorSurface)
+            val colorInt = Utils.getColorFromAttr(
+                requireContext(),
+                com.google.android.material.R.attr.colorSurface
+            )
             binding.parent.setBackgroundColor(colorInt)
 
         }
@@ -167,7 +177,10 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         viewModel.selectedColor.observe(viewLifecycleOwner) { colorPosition ->
             var colorName = Constants.COLOR_DEFAULT
             if (colorPosition == 0) {
-                val colorInt = Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorSurface)
+                val colorInt = Utils.getColorFromAttr(
+                    requireContext(),
+                    com.google.android.material.R.attr.colorSurface
+                )
                 binding.parent.setBackgroundColor(colorInt)
             } else {
                 colorName = colorsUtil.getPosition(colorPosition)
@@ -205,14 +218,47 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 showColorPaletteBottomSheet()
             }
 
-            btDelete.setOnClickListener {
-                deleteNote()
+            btOptions.setOnClickListener {
+                onOptionClicked()
             }
 
             btPassword.setOnClickListener {
                 addPassword()
             }
         }
+    }
+
+    private fun onOptionClicked() {
+        //todo show bottomSheet with options -> delete,add/update password, mark as complete,etc
+
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val bottomsheet: View = LayoutInflater.from(context).inflate(R.layout.bs_options, null)
+
+        val addRemovePassword = bottomsheet.findViewById<TextView>(R.id.add_password)
+        val delete = bottomsheet.findViewById<TextView>(R.id.delete)
+        val share = bottomsheet.findViewById<TextView>(R.id.share)
+        val label = bottomsheet.findViewById<TextView>(R.id.label)
+
+        addRemovePassword.isVisible = false
+        label.isVisible = true
+
+        delete.setOnClickListener {
+            deleteNote()
+            bottomSheetDialog.dismiss()
+        }
+
+        share.setOnClickListener {
+            //todo
+            bottomSheetDialog.dismiss()
+        }
+
+        label.setOnClickListener {
+            //todo
+            bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetDialog.setContentView(bottomsheet)
+        bottomSheetDialog.show()
     }
 
     private fun updatePasswordIcon() {
@@ -308,7 +354,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                                 binding.bottomActionBar.bottomActionBar
                             )
                         } else {  //create new note
-                            val newNote = viewModel.tempNote.value!!.copy(title = title, content = content)
+                            val newNote =
+                                viewModel.tempNote.value!!.copy(title = title, content = content)
                             viewModel.onSaveClick(newNote)
                             viewModel.setCurrentNote(newNote)
                             viewModel.setEditMode(false)
@@ -508,7 +555,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     ly_password.isErrorEnabled = false
                     ly_password.error = null
                     if (et_password.text.toString() == password) {
-                        val updatedTempNote = viewModel.tempNote.value!!.copy(isPasswordProtected = false)
+                        val updatedTempNote =
+                            viewModel.tempNote.value!!.copy(isPasswordProtected = false)
                         viewModel.setTempNote(updatedTempNote)
                         //tempNote = tempNote.copy(isPasswordProtected = false)
                         updatePasswordIcon()
@@ -536,7 +584,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     ly_password.isErrorEnabled = false
                     ly_password.error = null
                     if (et_password.text.toString() == password) {
-                        val updatedTempNote = viewModel.tempNote.value!!.copy(isPasswordProtected = true)
+                        val updatedTempNote =
+                            viewModel.tempNote.value!!.copy(isPasswordProtected = true)
                         viewModel.setTempNote(updatedTempNote)
                         //tempNote = tempNote.copy(isPasswordProtected = true)
                         updatePasswordIcon()
@@ -570,18 +619,28 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
     }
 
     private fun deleteNote() {
-        val alertDialog = MaterialAlertDialogBuilder(requireContext())
-            .setMessage("Delete this note?")
-            .setPositiveButton("Yes") { _, _ ->
-                if (viewModel.currentNote.value != null) {
-                    viewModel.onDeleteClick(viewModel.currentNote.value!!)
-                }
-                findNavController().popBackStack()
+        val currentNote = viewModel.currentNote.value
+        if (currentNote != null) {
+            if (currentNote.isPasswordProtected) {
+                //todo task for password before deleting
+
+            } else {
+                val alertDialog = MaterialAlertDialogBuilder(requireContext())
+                    .setMessage("Delete this note?")
+                    .setPositiveButton("Yes") { _, _ ->
+                        if (viewModel.currentNote.value != null) {
+                            viewModel.onDeleteClick(viewModel.currentNote.value!!)
+                        }
+                        findNavController().popBackStack()
+                    }
+                    .setNegativeButton("No") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                alertDialog.show()
             }
-            .setNegativeButton("No") { dialog, _ ->
-                dialog.dismiss()
-            }
-        alertDialog.show()
+        } else {
+            findNavController().popBackStack()
+        }
     }
 
     private fun showColorPaletteBottomSheet() {
@@ -620,7 +679,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             } else { //new note
                 if (title.isNotBlank() || content.isNotBlank()) {
                     //todo save new note
-                    val newTempNote = viewModel.tempNote.value!!.copy(title = title, content = content)
+                    val newTempNote =
+                        viewModel.tempNote.value!!.copy(title = title, content = content)
                     viewModel.setTempNote(newTempNote)
                     //val newNote = viewModel.tempNote.value!!.copy(title = title, content = content)
                     viewModel.onSaveClick(viewModel.tempNote.value!!)

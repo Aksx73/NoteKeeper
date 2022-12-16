@@ -132,7 +132,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
             menu.setOptionalIconsVisible(true)
         }
         menuInflater.inflate(R.menu.menu_list, menu)
-       val menuSearch = menu.findItem(R.id.action_search)
+        val menuSearch = menu.findItem(R.id.action_search)
         searchView = menuSearch.actionView as SearchView
         searchView.queryHint = "Search your notes"
 
@@ -279,15 +279,20 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
     }
 
     private fun deleteNote(note: Note) {
-        val alertDialog = MaterialAlertDialogBuilder(requireContext())
-            .setMessage("Delete this note?")
-            .setPositiveButton("Yes") { _, _ ->
-                viewModel.onDeleteClick(note)
-            }
-            .setNegativeButton("No") { dialog, _ ->
-                dialog.dismiss()
-            }
-        alertDialog.show()
+        if (note.isPasswordProtected) {
+            //todo ask for password before deleting
+
+        } else {
+            val alertDialog = MaterialAlertDialogBuilder(requireContext())
+                .setMessage("Delete this note?")
+                .setPositiveButton("Yes") { _, _ ->
+                    viewModel.onDeleteClick(note)
+                }
+                .setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                }
+            alertDialog.show()
+        }
     }
 
     private fun addPassword(note: Note) {
@@ -471,6 +476,11 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
 
         val addRemovePassword = bottomsheet.findViewById<TextView>(R.id.add_password)
         val delete = bottomsheet.findViewById<TextView>(R.id.delete)
+        val share = bottomsheet.findViewById<TextView>(R.id.share)
+        val label = bottomsheet.findViewById<TextView>(R.id.label)
+
+        addRemovePassword.isVisible = true
+        label.isVisible = false
 
         if (task.isPasswordProtected) addRemovePassword.text = "Remove lock"
         else addRemovePassword.text = "Add lock"
@@ -482,6 +492,11 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
 
         addRemovePassword.setOnClickListener {
             addPassword(task)
+            bottomSheetDialog.dismiss()
+        }
+
+        share.setOnClickListener {
+            //todo
             bottomSheetDialog.dismiss()
         }
 

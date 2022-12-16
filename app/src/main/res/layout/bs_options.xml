@@ -72,24 +72,43 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:paddingBottom="24dp">
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp">
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/add_password"
+                android:id="@+id/share"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="?selectableItemBackground"
                 android:clickable="true"
+                android:drawableStart="@drawable/ic_share_24"
+                android:drawablePadding="16dp"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:paddingStart="24dp"
+                android:text="Share" />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/add_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:background="?selectableItemBackground"
+                android:clickable="true"
                 android:drawableStart="@drawable/ic_lock_24"
                 android:drawablePadding="16dp"
                 android:focusable="true"
+                android:visibility="visible"
                 android:gravity="center_vertical"
                 android:padding="12dp"
                 android:paddingStart="24dp"
@@ -108,6 +127,21 @@
                 android:padding="12dp"
                 android:paddingStart="24dp"
                 android:text="Delete" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
+                android:drawableStart="@drawable/ic_label_24"
+                android:drawablePadding="16dp"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:paddingStart="24dp"
+                android:text="Labels" />
+
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

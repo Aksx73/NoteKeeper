@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_pin"
         android:title="Pin"
-        android:visible="false"
+       android:enabled="false"
         android:icon="@drawable/ic_outline_pin_24"
         app:showAsAction="always" />
 
@@ -15,12 +15,5 @@
         android:visible="true"
         android:icon="@drawable/ic_edit_24"
         app:showAsAction="always" />
-
-    <item
-        android:id="@+id/action_label"
-        android:title="Label"
-        android:visible="false"
-        android:icon="@drawable/ic_label_24"
-        app:showAsAction="never" />
 
 </menu>
