@@ -284,6 +284,49 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
     private fun deleteNote(note: Note) {
         if (note.isPasswordProtected) {
             //todo ask for password before deleting
+            val bottomSheetDialog = BottomSheetDialog(requireContext())
+            val bottomsheet: View = LayoutInflater.from(context).inflate(R.layout.bs_add_password, null)
+
+            val title = bottomsheet.findViewById<TextView>(R.id.txtTitle)
+            val subtitle = bottomsheet.findViewById<TextView>(R.id.txtSubTitle)
+            val progressBar = bottomsheet.findViewById<LinearProgressIndicator>(R.id.progress)
+            val et_password = bottomsheet.findViewById<TextInputEditText>(R.id.et_addPassword)
+            val ly_password = bottomsheet.findViewById<TextInputLayout>(R.id.lyt_addPassword)
+            val bt_save = bottomsheet.findViewById<MaterialButton>(R.id.bt_save)
+            val bt_cancel = bottomsheet.findViewById<MaterialButton>(R.id.bt_cancel)
+
+            title.text = "Delete password protected note"
+            subtitle.text = "Master password needed for deleting this note"
+            bt_save.text = "Confirm and Delete"
+
+            bt_save.setTextColor(Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorOnError))
+            bt_save.setBackgroundColor(Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorError))
+
+            bt_save.setOnClickListener {
+                //todo
+                ly_password.isErrorEnabled = false
+                ly_password.error = null
+                if (et_password.text.toString() == masterPassword) {
+                   //todo
+                    viewModel.onDeleteClick(note)
+                    Utils.showSnackBar(binding.parent, "Note deleted", binding.fab)
+                    bottomSheetDialog.dismiss()
+                } else {
+                    ly_password.error = "Wrong master password!"
+                }
+            }
+
+            et_password.doOnTextChanged { text, start, before, count ->
+                ly_password.isErrorEnabled = false
+                ly_password.error = null
+            }
+
+            bt_cancel.setOnClickListener {
+                bottomSheetDialog.dismiss()
+            }
+
+            bottomSheetDialog.setContentView(bottomsheet)
+            bottomSheetDialog.show()
 
         } else {
             val alertDialog = MaterialAlertDialogBuilder(requireContext())
