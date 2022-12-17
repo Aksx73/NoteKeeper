@@ -31,4 +31,14 @@
         <item>#33b7e5</item>
         <item>#8fa3ad</item>
     </array>
+    <!-- Reply Preference -->
+    <string-array name="reply_entries">
+        <item>Reply</item>
+        <item>Reply to all</item>
+    </string-array>
+
+    <string-array name="reply_values">
+        <item>reply</item>
+        <item>reply_all</item>
+    </string-array>
 </resources>

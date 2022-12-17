@@ -1,6 +1,7 @@
 package com.android.note.keeper.ui.notelist
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -22,6 +23,7 @@ import com.android.note.keeper.R
 import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.databinding.FragmentNoteListBinding
 import com.android.note.keeper.ui.MainActivity
+import com.android.note.keeper.ui.settings.SettingsActivity
 import com.android.note.keeper.util.DemoUtils
 import com.android.note.keeper.util.Utils
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -166,7 +168,8 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                 true
             }
             R.id.action_setting -> {
-                //todo
+                val intent = Intent((activity as MainActivity), SettingsActivity::class.java)
+                startActivity(intent)
                 true
             }
             else -> false

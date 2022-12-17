@@ -27,13 +27,11 @@ class NoteDetailViewModel @Inject constructor(
 
     val masterPasswordFlow = preferenceManager.masterPasswordFlow
 
-
-    fun getSelectedColor() :Int {
+    /*fun getSelectedColor() :Int {
         if (selectedColor.value == null)
             selectedColor.value = 0
         return selectedColor.value!!
-    }
-
+    }*/
 
     fun setSelectedColor(color: Int?){
         if (color == null)
