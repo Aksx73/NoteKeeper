@@ -295,19 +295,19 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
             val bt_save = bottomsheet.findViewById<MaterialButton>(R.id.bt_save)
             val bt_cancel = bottomsheet.findViewById<MaterialButton>(R.id.bt_cancel)
 
-            title.text = "Delete password protected note"
+            title.text = "Delete password protected note?"
             subtitle.text = "Master password needed for deleting this note"
             bt_save.text = "Confirm and Delete"
+            bt_cancel.text = "Cancel"
 
             bt_save.setTextColor(Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorOnError))
             bt_save.setBackgroundColor(Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorError))
+           // bt_cancel.setTextColor(Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorOnErrorContainer))
 
             bt_save.setOnClickListener {
-                //todo
                 ly_password.isErrorEnabled = false
                 ly_password.error = null
                 if (et_password.text.toString() == masterPassword) {
-                   //todo
                     viewModel.onDeleteClick(note)
                     Utils.showSnackBar(binding.parent, "Note deleted", binding.fab)
                     bottomSheetDialog.dismiss()
@@ -316,7 +316,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                 }
             }
 
-            et_password.doOnTextChanged { text, start, before, count ->
+            et_password.doOnTextChanged { _, _, _, _ ->
                 ly_password.isErrorEnabled = false
                 ly_password.error = null
             }
@@ -354,7 +354,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         val bottomSheetDialog = BottomSheetDialog(requireContext())
         val bottomsheet: View =
             LayoutInflater.from(context).inflate(R.layout.bs_create_password, null)
-        bottomSheetDialog.setCancelable(false)
+       // bottomSheetDialog.setCancelable(false)
 
         val et_password = bottomsheet.findViewById<TextInputEditText>(R.id.et_addPassword)
         val ly_password = bottomsheet.findViewById<TextInputLayout>(R.id.lyt_addPassword)
@@ -409,7 +409,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
     private fun bottomSheetEnableDisableLock(note: Note) {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
         val bottomsheet: View = LayoutInflater.from(context).inflate(R.layout.bs_add_password, null)
-        bottomSheetDialog.setCancelable(false)
+        //bottomSheetDialog.setCancelable(false)
 
         val title = bottomsheet.findViewById<TextView>(R.id.txtTitle)
         val subtitle = bottomsheet.findViewById<TextView>(R.id.txtSubTitle)

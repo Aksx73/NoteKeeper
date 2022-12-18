@@ -68,7 +68,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
     //private var menuSave: MenuItem? = null
     private var menuEdit: MenuItem? = null
-
+    private lateinit var masterPassword: String
     // private var tempNote: Note = Note(title = "", content = "")
 
     private val colorsUtil = ColorsUtil()
@@ -201,9 +201,26 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             }
         }
 
+        viewModel.masterPasswordLiveData.observe(viewLifecycleOwner) {
+            masterPassword = it
+            Log.d("TAG", "mastPassword live: $masterPassword")
+        }
+
+
+        loadMasterPassword()
         setNoteBackgroundColor()
         updatePasswordIcon()
         bottomActionClickEvent()
+
+        //used this to update masterPassword value with updated password
+    }
+
+    private fun loadMasterPassword() {
+        //used this to get masterPassword value immediately
+        viewLifecycleOwner.lifecycleScope.launch {
+            masterPassword = viewModel.masterPasswordFlow.first()
+            Log.d("TAG", "masterPassword: $masterPassword")
+        }
     }
 
     private fun setNoteBackgroundColor() {
@@ -278,7 +295,6 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
     }
 
-
     private fun updateMenuEditSave() {
         // menuSave?.isVisible = editMode
         menuEdit?.icon =
@@ -330,7 +346,6 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             Utils.hideKeyboard(requireActivity())
         }
     }
-
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
@@ -394,23 +409,11 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
     }
 
     private fun addPassword() {
-        var password: String? = null
-
-        runBlocking {
-            password = viewModel.masterPasswordFlow.first()
-            Log.d("TAG", "addPassword: $password")
+        if (masterPassword.isBlank()) {
+            bottomSheetCreateMasterPassword()
+        } else {
+            bottomSheetEnableDisableLock(masterPassword)
         }
-        password?.let {
-            if (password!!.isBlank()) {
-                //todo create password
-                bottomSheetCreateMasterPassword()
-            } else {
-                //todo enable lock
-                bottomSheetEnableDisableLock(it)
-            }
-        }
-
-
     }
 
     private fun bottomSheetCreateMasterPassword() {
@@ -440,8 +443,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                         "Master password added! Click on lock option again to enable lock",
                         Snackbar.LENGTH_LONG
                     )
-                        .setAnchorView(binding.bottomActionBar.bottomActionBar)
-                        .show()
+                        .setAnchorView(binding.bottomActionBar.bottomActionBar).show()
+                    loadMasterPassword()
                     bottomSheetDialog.dismiss()
                 } else { //password not match
                     ly_confirm.isErrorEnabled = true
@@ -451,19 +454,16 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 ly_confirm.isErrorEnabled = true
                 ly_confirm.error = "Re-enter password here"
             }
-
         }
 
-        et_confirm.doOnTextChanged { text, start, before, count ->
+        et_confirm.doOnTextChanged { _, _, _, _ ->
             ly_confirm.isErrorEnabled = false
             ly_confirm.error = null
         }
 
-
         bt_cancel.setOnClickListener {
             bottomSheetDialog.dismiss()
         }
-
 
         bottomSheetDialog.setContentView(bottomsheet)
         bottomSheetDialog.show()
@@ -473,7 +473,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         val bottomSheetDialog = BottomSheetDialog(requireContext())
         val bottomsheet: View =
             LayoutInflater.from(context).inflate(R.layout.bs_add_password, null)
-        bottomSheetDialog.setCancelable(false)
+        // bottomSheetDialog.setCancelable(false)
 
         val title = bottomsheet.findViewById<TextView>(R.id.txtTitle)
         val subtitle = bottomsheet.findViewById<TextView>(R.id.txtSubTitle)
@@ -623,14 +623,66 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         if (currentNote != null) {
             if (currentNote.isPasswordProtected) {
                 //todo task for password before deleting
+                val bottomSheetDialog = BottomSheetDialog(requireContext())
+                val bottomsheet: View =
+                    LayoutInflater.from(context).inflate(R.layout.bs_add_password, null)
+
+                val title = bottomsheet.findViewById<TextView>(R.id.txtTitle)
+                val subtitle = bottomsheet.findViewById<TextView>(R.id.txtSubTitle)
+                val progressBar = bottomsheet.findViewById<LinearProgressIndicator>(R.id.progress)
+                val et_password = bottomsheet.findViewById<TextInputEditText>(R.id.et_addPassword)
+                val ly_password = bottomsheet.findViewById<TextInputLayout>(R.id.lyt_addPassword)
+                val bt_save = bottomsheet.findViewById<MaterialButton>(R.id.bt_save)
+                val bt_cancel = bottomsheet.findViewById<MaterialButton>(R.id.bt_cancel)
+
+                title.text = "Delete password protected note?"
+                subtitle.text = "Master password needed for deleting this note"
+                bt_save.text = "Confirm and Delete"
+                bt_cancel.text = "Cancel"
+
+                bt_save.setTextColor(
+                    Utils.getColorFromAttr(
+                        requireContext(),
+                        com.google.android.material.R.attr.colorOnError
+                    )
+                )
+                bt_save.setBackgroundColor(
+                    Utils.getColorFromAttr(
+                        requireContext(),
+                        com.google.android.material.R.attr.colorError
+                    )
+                )
+                // bt_cancel.setTextColor(Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorOnErrorContainer))
+
+                bt_save.setOnClickListener {
+                    ly_password.isErrorEnabled = false
+                    ly_password.error = null
+                    if (et_password.text.toString() == masterPassword) {
+                        viewModel.onDeleteClick(viewModel.currentNote.value!!)
+                        bottomSheetDialog.dismiss()
+                        findNavController().popBackStack()
+                    } else {
+                        ly_password.error = "Wrong master password!"
+                    }
+                }
+
+                et_password.doOnTextChanged { _, _, _, _ ->
+                    ly_password.isErrorEnabled = false
+                    ly_password.error = null
+                }
+
+                bt_cancel.setOnClickListener {
+                    bottomSheetDialog.dismiss()
+                }
+
+                bottomSheetDialog.setContentView(bottomsheet)
+                bottomSheetDialog.show()
 
             } else {
                 val alertDialog = MaterialAlertDialogBuilder(requireContext())
                     .setMessage("Delete this note?")
                     .setPositiveButton("Yes") { _, _ ->
-                        if (viewModel.currentNote.value != null) {
-                            viewModel.onDeleteClick(viewModel.currentNote.value!!)
-                        }
+                        viewModel.onDeleteClick(viewModel.currentNote.value!!)
                         findNavController().popBackStack()
                     }
                     .setNegativeButton("No") { dialog, _ ->

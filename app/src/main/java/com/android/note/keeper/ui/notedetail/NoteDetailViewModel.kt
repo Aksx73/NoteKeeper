@@ -25,7 +25,9 @@ class NoteDetailViewModel @Inject constructor(
     private val mutableEditMode = MutableLiveData(true)
     val editMode: LiveData<Boolean> get() = mutableEditMode
 
+    //here both are needed
     val masterPasswordFlow = preferenceManager.masterPasswordFlow
+    val masterPasswordLiveData = preferenceManager.masterPasswordFlow.asLiveData()
 
     /*fun getSelectedColor() :Int {
         if (selectedColor.value == null)
@@ -78,7 +80,7 @@ class NoteDetailViewModel @Inject constructor(
     }
 
     private fun updateNote(note: Note) = viewModelScope.launch {
-        repository.update(note)
+        repository.update(note.copy(created = System.currentTimeMillis())) //created time updated to latest in case of updating note as well
         //todo navigate back to home with task result
     }
 

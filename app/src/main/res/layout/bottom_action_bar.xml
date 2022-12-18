@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:tooltipText="Change color"
             app:icon="@drawable/ic_color_24"
-            app:iconTint="?colorControlNormal" />
+            app:iconTint="?colorOnSurfaceVariant" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/bt_password"
@@ -35,7 +35,7 @@
             android:saveEnabled="false"
             android:tooltipText="Lock"
             app:icon="@drawable/ic_lock_open_24"
-            app:iconTint="?colorControlNormal" />
+            app:iconTint="?colorOnSurfaceVariant" />
 
     </LinearLayout>
 
@@ -50,6 +50,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:textColor="?colorOnSurfaceVariant"
         tools:text="Edited 1 Nov" />
 
     <Button
@@ -58,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:icon="@drawable/ic_more_vert_24"
-        app:iconTint="?colorControlNormal"
+        app:iconTint="?colorOnSurfaceVariant"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
