@@ -39,6 +39,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.skydoves.balloon.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -147,29 +148,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
         }
 
-        /*viewModel.currentNote.value?.let {
-            binding.apply {
-                readOnlyTag.isVisible = true
-                //editMode = false
-                viewModel.setEditMode(false)
-                etTitle.setText(it.title)
-                etContent.setText(it.content)
-                disableInputs()
-                binding.bottomActionBar.txtTime.text = "Edited ${Utils.getFormattedDate(it.created)}"
-            }
-        }
 
-        binding.parent.setOnClickListener {
-            if (viewModel.currentNote.value == null || viewModel.editMode.value == true) {
-                //todo -> get toolbar reference from activity and make 'read mode' tag textview invisible
-
-                binding.etContent.requestFocus()
-                Utils.showKeyboard(requireActivity(), binding.etContent)
-            }
-        }*/
-
-
-        //todo move editMode variable to viewmodel and observe the change to set action as per
         viewModel.editMode.observe(viewLifecycleOwner) {
             updateUIState(it)
         }
@@ -211,6 +190,19 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         setNoteBackgroundColor()
         updatePasswordIcon()
         bottomActionClickEvent()
+
+
+        //showing tooltip about password protection feature
+      /*  binding.bottomActionBar.btPassword.showAlignTop(
+            Utils.setTooltip(
+                requireContext(),
+                "Password protect your note from here",
+                R.drawable.ic_lock_24,
+                R.color.colorOnPrimary,
+                R.color.colorPrimary,
+                viewLifecycleOwner
+            ), 0,20
+        )*/
 
         //used this to update masterPassword value with updated password
     }

@@ -12,8 +12,16 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.lifecycle.LifecycleOwner
+import com.android.note.keeper.R
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import com.skydoves.balloon.ArrowPositionRules
+import com.skydoves.balloon.Balloon
+import com.skydoves.balloon.BalloonAnimation
+import com.skydoves.balloon.BalloonSizeSpec
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -73,7 +81,8 @@ object Utils {
     }
 
     @ColorInt
-    fun getColorFromAttr(context: Context,
+    fun getColorFromAttr(
+        context: Context,
         @AttrRes attrColor: Int,
         typedValue: TypedValue = TypedValue(),
         resolveRefs: Boolean = true
@@ -93,4 +102,33 @@ object Utils {
         return str.toString()
     }
 
+    fun setTooltip(
+        context: Context,
+        message: String,
+        @DrawableRes icon: Int,
+        @ColorRes colorText: Int,
+        @ColorRes backgroundColor: Int,
+        lifecycle: LifecycleOwner
+    ): Balloon {
+        return Balloon.Builder(context)
+            .setWidthRatio(0f)
+            .setHeight(BalloonSizeSpec.WRAP)
+            .setText(message)
+            .setTextColorResource(colorText)
+            .setTextSize(14f)
+           // .setIconDrawableResource(icon)
+            .setIconSize(18)
+            .setIconColorResource(colorText)
+            .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+            .setArrowSize(8)
+            .setArrowPosition(0.5f)
+            .setPadding(12)
+            .setCornerRadius(6f)
+            .setBackgroundColorResource(backgroundColor)
+            .setBalloonAnimation(BalloonAnimation.FADE)
+            .setLifecycleOwner(lifecycle)
+            .setAutoDismissDuration(3000L)
+            .build()
+
+    }
 }

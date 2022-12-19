@@ -33,6 +33,11 @@ class NoteListViewModel @Inject constructor(
     val masterPasswordFlow = preferenceManager.masterPasswordFlow
     val masterPasswordLiveData = preferenceManager.masterPasswordFlow.asLiveData()
 
+    var isMultiColumnView: Boolean = false
+
+    val viewModeFlow = preferenceManager.viewModeFlow
+    val viewModeLiveData = preferenceManager.viewModeFlow.asLiveData()
+
     fun setMasterPassword(password: String) = viewModelScope.launch {
         preferenceManager.setMasterPassword(password)
     }
@@ -44,6 +49,11 @@ class NoteListViewModel @Inject constructor(
     fun onDeleteClick(note: Note) {
         deleteNote(note)
     }
+
+    fun onViewModeChanged(mode: Int) = viewModelScope.launch {
+        preferenceManager.setViewMode(mode)
+    }
+
 
     private fun updateNote(note: Note) = viewModelScope.launch {
         repository.update(note)

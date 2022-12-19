@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
@@ -19,7 +19,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.android.note.keeper.R
+import com.android.note.keeper.data.PreferenceManager
 import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.databinding.FragmentNoteListBinding
 import com.android.note.keeper.ui.MainActivity
@@ -34,12 +36,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlin.math.log
 
 
 /**
@@ -57,9 +55,11 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
     private lateinit var masterPassword: String
 
     private lateinit var searchView: SearchView
+    private var menuViewMode: MenuItem? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentNoteListBinding.inflate(inflater, container, false)
@@ -82,12 +82,19 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
 
         noteAdapter = NoteAdapter(this)
 
+        observeUiViewMode()
+
         binding.apply {
             recyclerView.apply {
                 adapter = noteAdapter
-                layoutManager = LinearLayoutManager(requireContext())
+                /* layoutManager =
+                     if (viewMode == PreferenceManager.SINGLE_COLUMN) LinearLayoutManager(
+                         requireContext()
+                     )
+                     else StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)*/
                 setHasFixedSize(true)
             }
+
 
             fab.setOnClickListener {
                 val action =
@@ -98,7 +105,9 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         }
 
         viewModel.notes.observe(viewLifecycleOwner) { notes ->
-            noteAdapter.submitList(notes)
+            noteAdapter.submitList(notes) {
+                // binding.recyclerView.scrollToPosition(0)
+            }
             binding.emptyView.isVisible = notes.isEmpty()
         }
 
@@ -122,6 +131,44 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         }
     }
 
+    private fun observeUiViewMode() {
+        viewModel.viewModeLiveData.observe(viewLifecycleOwner) { viewMode ->
+            when (viewMode) {
+                PreferenceManager.SINGLE_COLUMN -> viewModel.isMultiColumnView = false
+                PreferenceManager.MULTI_COLUMN -> viewModel.isMultiColumnView = true
+            }
+            updateListView(viewMode)
+            setUpMenuViewModeIcon(viewModel.isMultiColumnView)
+        }
+    }
+
+    private fun updateListView(mode: Int) {
+        when (mode) {
+            PreferenceManager.SINGLE_COLUMN -> {
+                binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                noteAdapter.notifyDataSetChanged()
+            }
+            PreferenceManager.MULTI_COLUMN -> {
+                binding.recyclerView.layoutManager =
+                    StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+                noteAdapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    private fun setUpMenuViewModeIcon(isMultiColumn: Boolean) {
+        menuViewMode?.let {
+            if (isMultiColumn) {
+                it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_list_view_24)
+                it.title = "Single-column view"
+            } else {
+                it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_grid_view_24)
+                it.title = "Multi-column view"
+            }
+
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -134,6 +181,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
             menu.setOptionalIconsVisible(true)
         }
         menuInflater.inflate(R.menu.menu_list, menu)
+        menuViewMode = menu.findItem(R.id.action_view)
         val menuSearch = menu.findItem(R.id.action_search)
         searchView = menuSearch.actionView as SearchView
         searchView.queryHint = "Search your notes"
@@ -159,6 +207,9 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                 return true
             }
         })
+
+        setUpMenuViewModeIcon(viewModel.isMultiColumnView)
+
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -170,6 +221,16 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
             R.id.action_setting -> {
                 val intent = Intent((activity as MainActivity), SettingsActivity::class.java)
                 startActivity(intent)
+                true
+            }
+            R.id.action_view -> {
+                lifecycleScope.launch {
+                    when (viewModel.isMultiColumnView) {
+                        true -> viewModel.onViewModeChanged(PreferenceManager.SINGLE_COLUMN)
+                        false -> viewModel.onViewModeChanged(PreferenceManager.MULTI_COLUMN)
+                    }
+                }
+                //setUpMenuViewModeIcon(viewModel.isMultiColumnView)
                 true
             }
             else -> false
@@ -184,7 +245,8 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
 
         val et_currentPassword =
             bottomsheet.findViewById<TextInputEditText>(R.id.et_currentPassword)
-        val ly_currentPassword = bottomsheet.findViewById<TextInputLayout>(R.id.lyt_currentPassword)
+        val ly_currentPassword =
+            bottomsheet.findViewById<TextInputLayout>(R.id.lyt_currentPassword)
         val et_password = bottomsheet.findViewById<TextInputEditText>(R.id.et_addPassword)
         val ly_password = bottomsheet.findViewById<TextInputLayout>(R.id.lyt_addPassword)
         val et_confirm = bottomsheet.findViewById<TextInputEditText>(R.id.et_confirmPassword)
@@ -285,7 +347,8 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         if (note.isPasswordProtected) {
             //todo ask for password before deleting
             val bottomSheetDialog = BottomSheetDialog(requireContext())
-            val bottomsheet: View = LayoutInflater.from(context).inflate(R.layout.bs_add_password, null)
+            val bottomsheet: View =
+                LayoutInflater.from(context).inflate(R.layout.bs_add_password, null)
 
             val title = bottomsheet.findViewById<TextView>(R.id.txtTitle)
             val subtitle = bottomsheet.findViewById<TextView>(R.id.txtSubTitle)
@@ -300,9 +363,19 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
             bt_save.text = "Confirm and Delete"
             bt_cancel.text = "Cancel"
 
-            bt_save.setTextColor(Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorOnError))
-            bt_save.setBackgroundColor(Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorError))
-           // bt_cancel.setTextColor(Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorOnErrorContainer))
+            bt_save.setTextColor(
+                Utils.getColorFromAttr(
+                    requireContext(),
+                    com.google.android.material.R.attr.colorOnError
+                )
+            )
+            bt_save.setBackgroundColor(
+                Utils.getColorFromAttr(
+                    requireContext(),
+                    com.google.android.material.R.attr.colorError
+                )
+            )
+            // bt_cancel.setTextColor(Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorOnErrorContainer))
 
             bt_save.setOnClickListener {
                 ly_password.isErrorEnabled = false
@@ -354,7 +427,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         val bottomSheetDialog = BottomSheetDialog(requireContext())
         val bottomsheet: View =
             LayoutInflater.from(context).inflate(R.layout.bs_create_password, null)
-       // bottomSheetDialog.setCancelable(false)
+        // bottomSheetDialog.setCancelable(false)
 
         val et_password = bottomsheet.findViewById<TextInputEditText>(R.id.et_addPassword)
         val ly_password = bottomsheet.findViewById<TextInputLayout>(R.id.lyt_addPassword)
@@ -408,7 +481,8 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
 
     private fun bottomSheetEnableDisableLock(note: Note) {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
-        val bottomsheet: View = LayoutInflater.from(context).inflate(R.layout.bs_add_password, null)
+        val bottomsheet: View =
+            LayoutInflater.from(context).inflate(R.layout.bs_add_password, null)
         //bottomSheetDialog.setCancelable(false)
 
         val title = bottomsheet.findViewById<TextView>(R.id.txtTitle)
@@ -509,7 +583,8 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                 .create()
             dialogBuilder.show()
         } else {
-            val action = NoteListFragmentDirections.actionNoteListFragmentToNoteDetailFragment(task)
+            val action =
+                NoteListFragmentDirections.actionNoteListFragmentToNoteDetailFragment(task)
             findNavController().navigate(action)
         }
     }

@@ -13,7 +13,7 @@
         android:clipToPadding="false"
         android:paddingBottom="84dp"
         android:paddingTop="6dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:paddingHorizontal="4dp"
         tools:itemCount="5"
         tools:listitem="@layout/note_list_item" />
 

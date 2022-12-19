@@ -12,8 +12,8 @@
         android:id="@+id/action_view"
         android:icon="@drawable/ic_grid_view_24"
         android:title="Grid view"
-        app:showAsAction="never"
-        android:enabled="false"/>
+        app:showAsAction="always"
+        android:enabled="true"/>
 
     <item
         android:id="@+id/action_hide_completed"
