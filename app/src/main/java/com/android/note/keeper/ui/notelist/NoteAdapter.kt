@@ -68,6 +68,10 @@ class NoteAdapter(
                 txtSubtitle.text = note.content
                 txtDate.text = note.formattedDate
                 imgLock.isVisible = note.isPasswordProtected
+                txtSubtitle.isVisible = !note.isPasswordProtected
+                txtHiddenContent.text = "Content is hidden"
+                txtHiddenContent.isVisible = note.isPasswordProtected
+
 
                 val colorName = note.color
                 if (colorName == Constants.COLOR_DEFAULT)
