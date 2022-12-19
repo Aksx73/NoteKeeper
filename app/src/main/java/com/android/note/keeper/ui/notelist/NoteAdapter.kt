@@ -1,6 +1,5 @@
 package com.android.note.keeper.ui.notelist
 
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -63,12 +62,12 @@ class NoteAdapter(
         fun bind(note: Note) {
             binding.apply {
                 txtTitle.isVisible = !note.title.isNullOrBlank()
-                txtSubtitle.isVisible = !note.content.isNullOrBlank()
+                txtSubtitle.isVisible = !note.content.isNullOrBlank() && !note.isPasswordProtected
                 txtTitle.text = note.title
                 txtSubtitle.text = note.content
                 txtDate.text = note.formattedDate
                 imgLock.isVisible = note.isPasswordProtected
-                txtSubtitle.isVisible = !note.isPasswordProtected
+               // txtSubtitle.isVisible = !note.isPasswordProtected
                 txtHiddenContent.text = "Content is hidden"
                 txtHiddenContent.isVisible = note.isPasswordProtected
 
