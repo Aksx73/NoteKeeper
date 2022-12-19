@@ -71,7 +71,6 @@ class NoteAdapter(
                 txtHiddenContent.text = "Content is hidden"
                 txtHiddenContent.isVisible = note.isPasswordProtected
 
-
                 val colorName = note.color
                 if (colorName == Constants.COLOR_DEFAULT)
                     parentCard.setCardBackgroundColor(colorInt!!)

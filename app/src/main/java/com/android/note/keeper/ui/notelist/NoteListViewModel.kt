@@ -8,6 +8,8 @@ import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.data.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
@@ -21,6 +23,9 @@ class NoteListViewModel @Inject constructor(
 ) : ViewModel() {
 
     val searchQuery = savedStateHandle.getLiveData("searchQuery", "")
+
+    private val _tasksEvent = MutableSharedFlow<TasksEvent>()
+    val tasksEvent: SharedFlow<TasksEvent> = _tasksEvent
 
     private val noteFlow = searchQuery.asFlow().flatMapLatest { query ->
         repository.getNotes(query)
@@ -50,20 +55,30 @@ class NoteListViewModel @Inject constructor(
         deleteNote(note)
     }
 
+    fun onUndoDeleteClick(not: Note) = viewModelScope.launch {
+        repository.insert(not)
+    }
+
     fun onViewModeChanged(mode: Int) = viewModelScope.launch {
         preferenceManager.setViewMode(mode)
     }
 
-
     private fun updateNote(note: Note) = viewModelScope.launch {
         repository.update(note)
-        //todo navigate back to home with task result
+        _tasksEvent.emit(TasksEvent.OnNoteUpdatedConfirmationMessage("Note updated"))
     }
 
     private fun deleteNote(note: Note) = viewModelScope.launch {
         repository.delete(note)
-        //todo navigate back to home with task result
+        _tasksEvent.emit(TasksEvent.ShowUndoDeleteNoteMessage(note))
     }
 
+
+
+    sealed class TasksEvent {
+        data class ShowUndoDeleteNoteMessage(val note: Note) : TasksEvent()
+        data class OnNewNoteSavedConfirmationMessage(val msg: String) : TasksEvent()
+        data class OnNoteUpdatedConfirmationMessage(val msg: String) : TasksEvent()
+    }
 
 }

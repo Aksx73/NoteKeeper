@@ -80,7 +80,8 @@ class NoteDetailViewModel @Inject constructor(
     }
 
     private fun updateNote(note: Note) = viewModelScope.launch {
-        repository.update(note.copy(created = System.currentTimeMillis())) //created time updated to latest in case of updating note as well
+        //repository.update(note.copy(created = System.currentTimeMillis())) //created time updated to latest in case of updating note as well
+        repository.update(note)
         //todo navigate back to home with task result
     }
 
@@ -98,5 +99,6 @@ class NoteDetailViewModel @Inject constructor(
         //repository.updatePassword(id,isProtected)
         //todo
     }
+
 
 }

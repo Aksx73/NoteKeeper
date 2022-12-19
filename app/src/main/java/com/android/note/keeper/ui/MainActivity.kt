@@ -21,6 +21,7 @@ import com.android.note.keeper.databinding.ActivityMainBinding
 import com.android.note.keeper.util.Utils
 import com.android.note.keeper.util.Utils.isDarkThemeOn
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         //WindowCompat.setDecorFitsSystemWindows(window, false)
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+        DynamicColors.applyToActivityIfAvailable(this)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

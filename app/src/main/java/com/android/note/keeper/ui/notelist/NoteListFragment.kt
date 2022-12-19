@@ -18,8 +18,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.recyclerview.widget.*
 import com.android.note.keeper.R
 import com.android.note.keeper.data.PreferenceManager
 import com.android.note.keeper.data.model.Note
@@ -36,8 +35,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 /**
@@ -82,26 +83,29 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
 
         noteAdapter = NoteAdapter(this)
 
-        observeUiViewMode()
+        //observeUiViewMode()
 
         binding.apply {
             recyclerView.apply {
                 adapter = noteAdapter
-                /* layoutManager =
-                     if (viewMode == PreferenceManager.SINGLE_COLUMN) LinearLayoutManager(
-                         requireContext()
-                     )
-                     else StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)*/
+                //here layout manager is set using livedata observer
+                when (runBlocking { viewModel.viewModeFlow.first() }) {
+                    PreferenceManager.SINGLE_COLUMN -> {
+                        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                    }
+                    PreferenceManager.MULTI_COLUMN -> {
+                        binding.recyclerView.layoutManager =
+                            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+                    }
+                }
                 setHasFixedSize(true)
             }
-
 
             fab.setOnClickListener {
                 val action =
                     NoteListFragmentDirections.actionNoteListFragmentToNoteDetailFragment(null)
                 findNavController().navigate(action)
             }
-
         }
 
         viewModel.notes.observe(viewLifecycleOwner) { notes ->
@@ -119,8 +123,28 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
             Log.d("TAG", "mastPassword live: $masterPassword")
         }
 
-        //todo observe other events
+        observeEvents()
+    }
 
+    private fun observeEvents() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.tasksEvent.collectLatest { event ->
+                when (event) {
+                    is NoteListViewModel.TasksEvent.OnNoteUpdatedConfirmationMessage -> {
+                       //nothing here
+                    }
+                    is NoteListViewModel.TasksEvent.ShowUndoDeleteNoteMessage -> {
+                        Snackbar.make(requireView(), "Note deleted", Snackbar.LENGTH_LONG)
+                            .setAction("Undo") {
+                                viewModel.onUndoDeleteClick(event.note)
+                            }.show()
+                    }
+                    is NoteListViewModel.TasksEvent.OnNewNoteSavedConfirmationMessage -> {
+                       // nothing here
+                    }
+                }
+            }
+        }
     }
 
     private fun loadMasterPassword() {
@@ -230,6 +254,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                         false -> viewModel.onViewModeChanged(PreferenceManager.MULTI_COLUMN)
                     }
                 }
+                observeUiViewMode()
                 //setUpMenuViewModeIcon(viewModel.isMultiColumnView)
                 true
             }
