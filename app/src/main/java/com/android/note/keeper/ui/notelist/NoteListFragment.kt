@@ -3,17 +3,21 @@ package com.android.note.keeper.ui.notelist
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.core.os.postDelayed
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -25,8 +29,10 @@ import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.databinding.FragmentNoteListBinding
 import com.android.note.keeper.ui.MainActivity
 import com.android.note.keeper.ui.settings.SettingsActivity
+import com.android.note.keeper.util.Constants
 import com.android.note.keeper.util.DemoUtils
 import com.android.note.keeper.util.Utils
+import com.android.note.keeper.util.Utils.smoothSnapToPosition
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -123,25 +129,53 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
             Log.d("TAG", "mastPassword live: $masterPassword")
         }
 
+        setFragmentResultListener("add_delete_result") { _, bundle ->
+            val result = bundle.getInt("result")
+            val note: Note = bundle.getParcelable("note")!!
+
+            note?.let {
+                // viewModel.onDeleteAddedResult(result,note)
+                when (result) {
+                    Constants.NOTE_DELETE_RESULT_OK -> {
+                        Snackbar.make(requireView(), "Note deleted", Snackbar.LENGTH_LONG)
+                            .setAction("Undo") {
+                                viewModel.onUndoDeleteClick(note)
+                            }.show()
+                    }
+                    Constants.NOTE_ADDED_RESULT_OK -> {
+                        //todo scroll to top of list
+
+                        Handler(Looper.getMainLooper()).postDelayed(100) {
+                           // binding.recyclerView.smoothSnapToPosition(0)
+                           // binding.recyclerView.scrollToPosition(0)
+                            binding.recyclerView.smoothScrollToPosition(0)
+                        }
+                        Snackbar.make(requireView(), "Note added", Snackbar.LENGTH_LONG).show()
+                    }
+                    Constants.NOTE_UPDATED_RESULT_OK -> {
+                        //nothing here
+                    }
+                }
+            }
+        }
+
         observeEvents()
     }
 
+
     private fun observeEvents() {
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.tasksEvent.collectLatest { event ->
                 when (event) {
-                    is NoteListViewModel.TasksEvent.OnNoteUpdatedConfirmationMessage -> {
-                       //nothing here
-                    }
                     is NoteListViewModel.TasksEvent.ShowUndoDeleteNoteMessage -> {
+                        Log.d("TAG", "observeEvents: called")
                         Snackbar.make(requireView(), "Note deleted", Snackbar.LENGTH_LONG)
                             .setAction("Undo") {
                                 viewModel.onUndoDeleteClick(event.note)
                             }.show()
                     }
-                    is NoteListViewModel.TasksEvent.OnNewNoteSavedConfirmationMessage -> {
-                       // nothing here
-                    }
+                    is NoteListViewModel.TasksEvent.OnNewNoteSaved -> TODO()
+                    is NoteListViewModel.TasksEvent.OnNoteUpdated -> TODO()
                 }
             }
         }

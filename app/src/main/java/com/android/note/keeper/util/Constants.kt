@@ -1,8 +1,14 @@
 package com.android.note.keeper.util
 
+import android.app.Activity
 import android.content.Context
 
 object Constants {
+
+    const val NOTE_DELETE_RESULT_OK = Activity.RESULT_FIRST_USER
+    const val NOTE_ADDED_RESULT_OK = Activity.RESULT_FIRST_USER + 1
+    const val NOTE_UPDATED_RESULT_OK = Activity.RESULT_FIRST_USER + 2
+
     const val TAG_NOTE = 1
     const val TAG_CHECKLIST = 2
     const val DATABASE_NAME = "NotesDatabase"

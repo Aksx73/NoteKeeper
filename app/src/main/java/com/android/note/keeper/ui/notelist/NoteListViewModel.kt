@@ -6,6 +6,10 @@ import androidx.lifecycle.*
 import com.android.note.keeper.data.PreferenceManager
 import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.data.repository.NoteRepository
+import com.android.note.keeper.ui.notedetail.NoteDetailViewModel
+import com.android.note.keeper.util.Constants.NOTE_ADDED_RESULT_OK
+import com.android.note.keeper.util.Constants.NOTE_DELETE_RESULT_OK
+import com.android.note.keeper.util.Constants.NOTE_UPDATED_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -65,7 +69,6 @@ class NoteListViewModel @Inject constructor(
 
     private fun updateNote(note: Note) = viewModelScope.launch {
         repository.update(note)
-        _tasksEvent.emit(TasksEvent.OnNoteUpdatedConfirmationMessage("Note updated"))
     }
 
     private fun deleteNote(note: Note) = viewModelScope.launch {
@@ -73,12 +76,18 @@ class NoteListViewModel @Inject constructor(
         _tasksEvent.emit(TasksEvent.ShowUndoDeleteNoteMessage(note))
     }
 
-
+    fun onDeleteAddedResult(result: Int,note: Note) {
+        when (result) {
+            NOTE_DELETE_RESULT_OK -> TasksEvent.ShowUndoDeleteNoteMessage(note)
+            NOTE_ADDED_RESULT_OK -> TasksEvent.OnNewNoteSaved(note)
+            NOTE_UPDATED_RESULT_OK -> TasksEvent.OnNoteUpdated(note)
+        }
+    }
 
     sealed class TasksEvent {
         data class ShowUndoDeleteNoteMessage(val note: Note) : TasksEvent()
-        data class OnNewNoteSavedConfirmationMessage(val msg: String) : TasksEvent()
-        data class OnNoteUpdatedConfirmationMessage(val msg: String) : TasksEvent()
+        data class OnNewNoteSaved(val note: Note) : TasksEvent()
+        data class OnNoteUpdated(val note: Note) : TasksEvent()
     }
 
 }

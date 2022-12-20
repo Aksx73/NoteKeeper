@@ -4,7 +4,10 @@ import androidx.lifecycle.*
 import com.android.note.keeper.data.PreferenceManager
 import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.data.repository.NoteRepository
+import com.android.note.keeper.ui.notelist.NoteListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,6 +18,9 @@ class NoteDetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     val selectedColor = MutableLiveData<Int>()
+
+    private val _tasksEvent = MutableSharedFlow<TasksEvent>()
+    val tasksEvent: SharedFlow<TasksEvent> = _tasksEvent
 
     private val mutableNote = MutableLiveData<Note?>()
     val currentNote: LiveData<Note?> get() = mutableNote
@@ -76,18 +82,18 @@ class NoteDetailViewModel @Inject constructor(
 
     private fun createNote(note: Note) = viewModelScope.launch {
         repository.insert(note)
-        //todo navigate back to home with task result
+        _tasksEvent.emit(TasksEvent.OnNoteUpdatedConfirmationMessage("Note added"))
     }
 
     private fun updateNote(note: Note) = viewModelScope.launch {
         //repository.update(note.copy(created = System.currentTimeMillis())) //created time updated to latest in case of updating note as well
         repository.update(note)
-        //todo navigate back to home with task result
+        _tasksEvent.emit(TasksEvent.OnNoteUpdatedConfirmationMessage("Note updated"))
     }
 
     private fun deleteNote(note: Note) = viewModelScope.launch {
         repository.delete(note)
-        //todo navigate back to home with task result
+        _tasksEvent.emit(TasksEvent.ShowUndoDeleteNoteMessage(note))
     }
 
 
@@ -98,6 +104,12 @@ class NoteDetailViewModel @Inject constructor(
     private fun updatePasswordProtection(id: Int, isProtected: Boolean) = viewModelScope.launch {
         //repository.updatePassword(id,isProtected)
         //todo
+    }
+
+    sealed class TasksEvent {
+        data class ShowUndoDeleteNoteMessage(val note: Note) : TasksEvent()
+        data class OnNewNoteSavedConfirmationMessage(val msg: String) : TasksEvent()
+        data class OnNoteUpdatedConfirmationMessage(val msg: String) : TasksEvent()
     }
 
 

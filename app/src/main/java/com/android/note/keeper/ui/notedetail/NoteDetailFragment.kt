@@ -7,16 +7,16 @@ import android.text.method.KeyListener
 import android.util.Log
 import android.view.*
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -25,7 +25,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.note.keeper.R
-import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.databinding.FragmentNoteDetailBinding
 import com.android.note.keeper.ui.MainActivity
 import com.android.note.keeper.util.ColorsUtil
@@ -41,10 +40,9 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.skydoves.balloon.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.text.DateFormat
 
 
 /**
@@ -187,25 +185,45 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
 
         loadMasterPassword()
-        setNoteBackgroundColor()
         updatePasswordIcon()
         bottomActionClickEvent()
 
+        observeEvents()
+
 
         //showing tooltip about password protection feature
-      /*  binding.bottomActionBar.btPassword.showAlignTop(
-            Utils.setTooltip(
-                requireContext(),
-                "Password protect your note from here",
-                R.drawable.ic_lock_24,
-                R.color.colorOnPrimary,
-                R.color.colorPrimary,
-                viewLifecycleOwner
-            ), 0,20
-        )*/
+        /*  binding.bottomActionBar.btPassword.showAlignTop(
+              Utils.setTooltip(
+                  requireContext(),
+                  "Password protect your note from here",
+                  R.drawable.ic_lock_24,
+                  R.color.colorOnPrimary,
+                  R.color.colorPrimary,
+                  viewLifecycleOwner
+              ), 0,20
+          )*/
 
         //used this to update masterPassword value with updated password
     }
+
+    private fun observeEvents() {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.tasksEvent.collectLatest { event ->
+                when (event) {
+                    is NoteDetailViewModel.TasksEvent.ShowUndoDeleteNoteMessage -> {
+                        //todo fragment with result to note list fragment to show undo button
+                    }
+                    is NoteDetailViewModel.TasksEvent.OnNewNoteSavedConfirmationMessage -> {
+                        //todo fragment with result to note list fragment to scroll recycler view to top
+                    }
+                    is NoteDetailViewModel.TasksEvent.OnNoteUpdatedConfirmationMessage -> {
+                        //nothing here
+                    }
+                }
+            }
+        }
+    }
+
 
     private fun loadMasterPassword() {
         //used this to get masterPassword value immediately
@@ -213,11 +231,6 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             masterPassword = viewModel.masterPasswordFlow.first()
             Log.d("TAG", "masterPassword: $masterPassword")
         }
-    }
-
-    private fun setNoteBackgroundColor() {
-        //todo
-
     }
 
     private fun bottomActionClickEvent() {
@@ -355,11 +368,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                             viewModel.setCurrentNote(updatedNote)
                             viewModel.onUpdateClick(updatedNote)
                             viewModel.setEditMode(false)
-                            Utils.showSnackBar(
-                                binding.parent,
-                                "Note updated",
-                                binding.bottomActionBar.bottomActionBar
-                            )
+                            Utils.showSnackBar(binding.parent, "Note updated", binding.bottomActionBar.bottomActionBar)
+                            setFragmentResult("add_delete_result", /*bundle*/bundleOf("result" to Constants.NOTE_UPDATED_RESULT_OK, "note" to updatedNote))
                         } else {  //create new note
                             val newNote =
                                 viewModel.tempNote.value!!.copy(title = title, content = content)
@@ -372,6 +382,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                                 "Note saved",
                                 binding.bottomActionBar.bottomActionBar
                             )
+                            setFragmentResult("add_delete_result", /*bundle*/bundleOf("result" to Constants.NOTE_ADDED_RESULT_OK, "note" to newNote))
                         }
                     } else {
                         Snackbar.make(
@@ -652,6 +663,10 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     if (et_password.text.toString() == masterPassword) {
                         viewModel.onDeleteClick(viewModel.currentNote.value!!)
                         bottomSheetDialog.dismiss()
+                        setFragmentResult(
+                            "add_delete_result",
+                            bundleOf("result" to Constants.NOTE_DELETE_RESULT_OK, "note" to viewModel.currentNote.value)
+                        )
                         findNavController().popBackStack()
                     } else {
                         ly_password.error = "Wrong master password!"
@@ -675,6 +690,11 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     .setMessage("Delete this note?")
                     .setPositiveButton("Yes") { _, _ ->
                         viewModel.onDeleteClick(viewModel.currentNote.value!!)
+
+                        setFragmentResult(
+                            "add_delete_result", /*bundle*/
+                            bundleOf("result" to Constants.NOTE_DELETE_RESULT_OK, "note" to viewModel.currentNote.value)
+                        )
                         findNavController().popBackStack()
                     }
                     .setNegativeButton("No") { dialog, _ ->
@@ -719,6 +739,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     val updatedNote =
                         viewModel.currentNote.value!!.copy(title = title, content = content)
                     viewModel.onUpdateClick(updatedNote)
+                    setFragmentResult("add_delete_result", /*bundle*/bundleOf("result" to Constants.NOTE_UPDATED_RESULT_OK, "note" to updatedNote))
                 }
             } else { //new note
                 if (title.isNotBlank() || content.isNotBlank()) {
@@ -728,6 +749,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     viewModel.setTempNote(newTempNote)
                     //val newNote = viewModel.tempNote.value!!.copy(title = title, content = content)
                     viewModel.onSaveClick(viewModel.tempNote.value!!)
+                    setFragmentResult("add_delete_result", /*bundle*/bundleOf("result" to Constants.NOTE_ADDED_RESULT_OK, "note" to viewModel.tempNote.value!!))
                 }
 
             }
