@@ -7,14 +7,14 @@
 
     <!--Note background colors-->
     <color name="note_color_default">#00000000</color>
-    <color name="note_color_red">#FD9878</color>
-    <color name="note_color_orange">#F6C379</color>
-    <color name="note_color_yellow">#FBF074</color>
-    <color name="note_color_green">#C0F682</color>
-    <color name="note_color_teal">#A0FDE6</color>
-    <color name="note_color_blue">#81D8FF</color>
-    <color name="note_color_purple">#BA88FF</color>
-    <color name="note_color_gray">#b8c4c9</color>
+    <color name="note_color_red">#FAAFA9</color>
+    <color name="note_color_orange">#F29F75</color>
+    <color name="note_color_yellow">#FFF8B9</color>
+    <color name="note_color_green">#E2F6D3</color>
+    <color name="note_color_teal">#B4DED4</color>
+    <color name="note_color_blue">#AFCCDC</color>
+    <color name="note_color_purple">#D3BEDB</color>
+    <color name="note_color_gray">#E1E1E2</color>
 
 
     <color name="colorPrimary">@color/m3_ref_palette_primary40</color>

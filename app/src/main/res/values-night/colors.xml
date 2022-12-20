@@ -3,14 +3,14 @@
     <!--Note background colors-->
     <color name="cursor_color">#96FFFFFF</color>
 
-    <color name="note_color_red">#BD421C</color>
-    <color name="note_color_orange">#BA720B</color>
-    <color name="note_color_yellow">#A59600</color>
-    <color name="note_color_green">#3F7104</color>
-    <color name="note_color_teal">#00674D</color>
-    <color name="note_color_blue">#014D70</color>
-    <color name="note_color_purple">#330673</color>
-    <color name="note_color_gray">#5A6265</color>
+    <color name="note_color_red">#76172D</color>
+    <color name="note_color_orange">#692A18</color>
+    <color name="note_color_yellow">#7C4A03</color>
+    <color name="note_color_green">#264D3B</color>
+    <color name="note_color_teal">#0C635D</color>
+    <color name="note_color_blue">#274255</color>
+    <color name="note_color_purple">#482E5B</color>
+    <color name="note_color_gray">#323337</color>
 
     <color name="colorPrimary">@color/m3_sys_color_dark_primary</color>
     <color name="colorOnPrimary">@color/m3_sys_color_dark_on_primary</color>
