@@ -63,6 +63,8 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
 
     private lateinit var searchView: SearchView
     private var menuViewMode: MenuItem? = null
+    private var scrollToTop = false
+    private var updateNow = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -116,7 +118,10 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
 
         viewModel.notes.observe(viewLifecycleOwner) { notes ->
             noteAdapter.submitList(notes) {
-                // binding.recyclerView.scrollToPosition(0)
+                if (scrollToTop) {
+                    binding.recyclerView.scrollToPosition(0)
+                    scrollToTop = false
+                }
             }
             binding.emptyView.isVisible = notes.isEmpty()
         }
@@ -144,13 +149,13 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                     }
                     Constants.NOTE_ADDED_RESULT_OK -> {
                         //todo scroll to top of list
-
-                        Handler(Looper.getMainLooper()).postDelayed(100) {
-                           // binding.recyclerView.smoothSnapToPosition(0)
-                           // binding.recyclerView.scrollToPosition(0)
-                            binding.recyclerView.smoothScrollToPosition(0)
-                        }
-                        Snackbar.make(requireView(), "Note added", Snackbar.LENGTH_LONG).show()
+                        scrollToTop = true
+                        /* Handler(Looper.getMainLooper()).postDelayed(100) {
+                             // binding.recyclerView.smoothSnapToPosition(0)
+                             // binding.recyclerView.scrollToPosition(0)
+                             binding.recyclerView.smoothScrollToPosition(0)
+                         }
+                         Snackbar.make(requireView(), "Note added", Snackbar.LENGTH_LONG).show()*/
                     }
                     Constants.NOTE_UPDATED_RESULT_OK -> {
                         //nothing here
@@ -158,7 +163,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                 }
             }
         }
-
+        observeUiViewMode()
         observeEvents()
     }
 
@@ -195,7 +200,10 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                 PreferenceManager.SINGLE_COLUMN -> viewModel.isMultiColumnView = false
                 PreferenceManager.MULTI_COLUMN -> viewModel.isMultiColumnView = true
             }
-            updateListView(viewMode)
+            if (updateNow) {
+                updateListView(viewMode)
+                updateNow = false
+            }
             setUpMenuViewModeIcon(viewModel.isMultiColumnView)
         }
     }
@@ -288,7 +296,8 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                         false -> viewModel.onViewModeChanged(PreferenceManager.MULTI_COLUMN)
                     }
                 }
-                observeUiViewMode()
+                updateNow = true
+                //observeUiViewMode()
                 //setUpMenuViewModeIcon(viewModel.isMultiColumnView)
                 true
             }
