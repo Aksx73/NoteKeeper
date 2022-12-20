@@ -72,14 +72,6 @@ class NoteDetailViewModel @Inject constructor(
         deleteNote(note)
     }
 
-    fun isNoteValid() {
-        //todo check for blank note
-    }
-
-    fun onPasswordClick() {
-
-    }
-
     private fun createNote(note: Note) = viewModelScope.launch {
         repository.insert(note)
         _tasksEvent.emit(TasksEvent.OnNoteUpdatedConfirmationMessage("Note added"))

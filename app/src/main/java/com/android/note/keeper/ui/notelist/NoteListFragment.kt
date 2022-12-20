@@ -90,8 +90,6 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
 
         noteAdapter = NoteAdapter(this)
 
-        //observeUiViewMode()
-
         binding.apply {
             recyclerView.apply {
                 adapter = noteAdapter
@@ -138,7 +136,6 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
             val note: Note = bundle.getParcelable("note")!!
 
             note?.let {
-                // viewModel.onDeleteAddedResult(result,note)
                 when (result) {
                     Constants.NOTE_DELETE_RESULT_OK -> {
                         Snackbar.make(requireView(), "Note deleted", Snackbar.LENGTH_LONG)
@@ -147,14 +144,8 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                             }.show()
                     }
                     Constants.NOTE_ADDED_RESULT_OK -> {
-                        //todo scroll to top of list
+                        // scroll to top of list
                         scrollToTop = true
-                        /* Handler(Looper.getMainLooper()).postDelayed(100) {
-                             // binding.recyclerView.smoothSnapToPosition(0)
-                             // binding.recyclerView.scrollToPosition(0)
-                             binding.recyclerView.smoothScrollToPosition(0)
-                         }
-                         Snackbar.make(requireView(), "Note added", Snackbar.LENGTH_LONG).show()*/
                     }
                     Constants.NOTE_UPDATED_RESULT_OK -> {
                         //nothing here
@@ -177,9 +168,8 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                             .setAction("Undo") {
                                 viewModel.onUndoDeleteClick(event.note)
                             }.show()
+                        //todo if position of note is zero set @scrollToTop to true to scroll to top
                     }
-                    is NoteListViewModel.TasksEvent.OnNewNoteSaved -> TODO()
-                    is NoteListViewModel.TasksEvent.OnNoteUpdated -> TODO()
                 }
             }
         }
@@ -230,7 +220,6 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                 it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_grid_view_24)
                 it.title = "Multi-column view"
             }
-
         }
     }
 
@@ -296,8 +285,6 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                     }
                 }
                 updateNow = true
-                //observeUiViewMode()
-                //setUpMenuViewModeIcon(viewModel.isMultiColumnView)
                 true
             }
             else -> false
@@ -320,8 +307,6 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         val ly_confirm = bottomsheet.findViewById<TextInputLayout>(R.id.lyt_confirmPassword)
         val bt_save = bottomsheet.findViewById<MaterialButton>(R.id.bt_save)
         val bt_cancel = bottomsheet.findViewById<MaterialButton>(R.id.bt_cancel)
-
-        //todo
 
         ly_currentPassword.isVisible = masterPassword.isNotBlank()
 
@@ -442,7 +427,6 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                     com.google.android.material.R.attr.colorError
                 )
             )
-            // bt_cancel.setTextColor(Utils.getColorFromAttr(requireContext(), com.google.android.material.R.attr.colorOnErrorContainer))
 
             bt_save.setOnClickListener {
                 ly_password.isErrorEnabled = false

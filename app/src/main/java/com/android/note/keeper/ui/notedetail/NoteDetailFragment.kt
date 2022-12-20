@@ -60,15 +60,12 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
     private val viewModel by viewModels<NoteDetailViewModel>()
     private val args: NoteDetailFragmentArgs by navArgs()
-    //private var note: Note? = null
 
     private lateinit var keyListener: KeyListener
     private lateinit var readOnlyTag: TextView
 
-    //private var menuSave: MenuItem? = null
     private var menuEdit: MenuItem? = null
     private lateinit var masterPassword: String
-    // private var tempNote: Note = Note(title = "", content = "")
 
     private val colorsUtil = ColorsUtil()
 
@@ -403,7 +400,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
                 true
             }
-            /*R.id.action_archieve -> {
+            /*R.id.action_archive -> {
 
                 true
             }*/

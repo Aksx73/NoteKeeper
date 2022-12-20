@@ -76,18 +76,8 @@ class NoteListViewModel @Inject constructor(
         _tasksEvent.emit(TasksEvent.ShowUndoDeleteNoteMessage(note))
     }
 
-    fun onDeleteAddedResult(result: Int,note: Note) {
-        when (result) {
-            NOTE_DELETE_RESULT_OK -> TasksEvent.ShowUndoDeleteNoteMessage(note)
-            NOTE_ADDED_RESULT_OK -> TasksEvent.OnNewNoteSaved(note)
-            NOTE_UPDATED_RESULT_OK -> TasksEvent.OnNoteUpdated(note)
-        }
-    }
-
     sealed class TasksEvent {
         data class ShowUndoDeleteNoteMessage(val note: Note) : TasksEvent()
-        data class OnNewNoteSaved(val note: Note) : TasksEvent()
-        data class OnNoteUpdated(val note: Note) : TasksEvent()
     }
 
 }
