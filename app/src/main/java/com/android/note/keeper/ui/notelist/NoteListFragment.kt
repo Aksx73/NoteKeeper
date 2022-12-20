@@ -83,8 +83,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
 
         val binding = FragmentNoteListBinding.bind(view)
 
-        (activity as MainActivity).toolbar.findViewById<TextView>(R.id.currentMode).isVisible =
-            false
+        (activity as MainActivity).readMode.isVisible = false
 
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)

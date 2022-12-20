@@ -91,7 +91,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
-        readOnlyTag = (activity as MainActivity).toolbar.findViewById(R.id.currentMode)
+        readOnlyTag = (activity as MainActivity).readMode
 
         viewModel.setCurrentNote(args.note)
         keyListener = binding.etTitle.keyListener
