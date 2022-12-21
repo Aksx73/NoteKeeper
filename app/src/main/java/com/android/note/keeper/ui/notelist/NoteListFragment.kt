@@ -668,18 +668,18 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
 
         if (task.isPasswordProtected){
             addRemovePassword.text = "Remove lock"
-           //todo change icon
+            addRemovePassword.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_lock_filled_24, 0, 0, 0);
         } else{
             addRemovePassword.text = "Add lock"
-            //todo change icon
+            addRemovePassword.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_lock_open_24, 0, 0, 0);
         }
         if (task.pin){
-            label.text = "Unpin"
-            //todo change icon
+            pin.text = "Unpin"
+            pin.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pin_24, 0, 0, 0);
         }
         else{
-            label.text = "Pin"
-            //todo change icon
+            pin.text = "Pin"
+            pin.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pin_outline_24, 0, 0, 0);
         }
 
         delete.setOnClickListener {
