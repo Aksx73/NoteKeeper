@@ -31,7 +31,7 @@ class NoteAdapter(
     inner class NoteViewHolder(private val binding: NoteListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private var colorInt: Int? = null
-        private lateinit var colorsUtil: ColorsUtil
+        private var colorsUtil: ColorsUtil
 
         init {
             colorInt = Utils.getColorFromAttr(
@@ -63,11 +63,11 @@ class NoteAdapter(
             binding.apply {
                 txtTitle.isVisible = !note.title.isNullOrBlank()
                 txtSubtitle.isVisible = !note.content.isNullOrBlank() && !note.isPasswordProtected
+                pinned.isVisible = note.pin
                 txtTitle.text = note.title
                 txtSubtitle.text = note.content
                 txtDate.text = note.formattedDate
                 imgLock.isVisible = note.isPasswordProtected
-               // txtSubtitle.isVisible = !note.isPasswordProtected
                 txtHiddenContent.text = "Content is hidden"
                 txtHiddenContent.isVisible = note.isPasswordProtected
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -109,7 +110,21 @@
                 android:focusable="true"
                 android:visibility="visible"
                 android:gravity="center_vertical"
-                android:text="Add password" />
+                tools:text="Add password" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pin"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
+                android:drawableStart="@drawable/ic_pin_outline_24"
+                android:drawablePadding="24dp"
+                android:paddingHorizontal="16dp"
+                android:focusable="true"
+                android:visibility="visible"
+                android:gravity="center_vertical"
+                tools:text="Pin" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/delete"

@@ -474,6 +474,16 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         }
     }
 
+    private fun pinUnpin(note: Note){
+        if (note.pin) { //unpin
+            val updatedNote = note.copy(pin = false)
+            viewModel.onUpdateClick(updatedNote)
+        }else { //pin
+            val updatedNote = note.copy(pin = true)
+            viewModel.onUpdateClick(updatedNote)
+        }
+    }
+
     private fun bottomSheetCreateMasterPassword(note: Note) {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
         val bottomsheet: View =
@@ -650,12 +660,27 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         val delete = bottomsheet.findViewById<TextView>(R.id.delete)
         val share = bottomsheet.findViewById<TextView>(R.id.share)
         val label = bottomsheet.findViewById<TextView>(R.id.label)
+        val pin = bottomsheet.findViewById<TextView>(R.id.pin)
 
         addRemovePassword.isVisible = true
+        pin.isVisible = true
         label.isVisible = false
 
-        if (task.isPasswordProtected) addRemovePassword.text = "Remove lock"
-        else addRemovePassword.text = "Add lock"
+        if (task.isPasswordProtected){
+            addRemovePassword.text = "Remove lock"
+           //todo change icon
+        } else{
+            addRemovePassword.text = "Add lock"
+            //todo change icon
+        }
+        if (task.pin){
+            label.text = "Unpin"
+            //todo change icon
+        }
+        else{
+            label.text = "Pin"
+            //todo change icon
+        }
 
         delete.setOnClickListener {
             deleteNote(task)
@@ -664,6 +689,11 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
 
         addRemovePassword.setOnClickListener {
             addPassword(task)
+            bottomSheetDialog.dismiss()
+        }
+
+        pin.setOnClickListener {
+            pinUnpin(task)
             bottomSheetDialog.dismiss()
         }
 

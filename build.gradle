@@ -3,13 +3,13 @@ buildscript {
     // Define versions in a single place
     ext {
         coroutinesVersion = "1.6.4"
-        hiltVersion = "2.42"
+        hiltVersion = "2.44.1"
         lifecycleVersion = "2.5.1"
         roomVersion = "2.4.3"
     }
 
     dependencies {
-        classpath "com.google.dagger:hilt-android-gradle-plugin:2.42"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.5.3"
     }
 }

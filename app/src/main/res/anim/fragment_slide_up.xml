@@ -7,15 +7,15 @@
         android:fillAfter="true"
         android:fillBefore="false"
         android:fillEnabled="true"
-        android:fromAlpha="0"
+        android:fromAlpha="0.0"
         android:interpolator="@android:interpolator/decelerate_quint"
-        android:toAlpha="1" />
+        android:toAlpha="1.0" />
     <translate
         android:duration="350"
         android:fillAfter="true"
         android:fillBefore="true"
         android:fillEnabled="true"
-        android:fromYDelta="8%"
+        android:fromYDelta="8.000004%"
         android:interpolator="@android:interpolator/decelerate_quint"
-        android:toYDelta="0" />
+        android:toYDelta="0.0" />
 </set>

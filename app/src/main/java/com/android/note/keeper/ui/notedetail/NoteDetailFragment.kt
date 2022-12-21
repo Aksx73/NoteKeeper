@@ -38,7 +38,6 @@ import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.skydoves.balloon.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
@@ -65,6 +64,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
     private lateinit var readOnlyTag: TextView
 
     private var menuEdit: MenuItem? = null
+    private var menuPin: MenuItem? = null
     private lateinit var masterPassword: String
 
     private val colorsUtil = ColorsUtil()
@@ -99,6 +99,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     readOnlyTag.isVisible = true
                     //editMode = false
                     viewModel.setEditMode(false)
+                    viewModel.setPinValue(it.pin)
                     etTitle.setText(it.title)
                     etContent.setText(it.content)
                     disableInputs()
@@ -146,6 +147,10 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
         viewModel.editMode.observe(viewLifecycleOwner) {
             updateUIState(it)
+        }
+
+        viewModel.pinValue.observe(viewLifecycleOwner){
+            updateMenuPinUnpin()
         }
 
         viewModel.selectedColor.observe(viewLifecycleOwner) { colorPosition ->
@@ -257,9 +262,11 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         val delete = bottomsheet.findViewById<TextView>(R.id.delete)
         val share = bottomsheet.findViewById<TextView>(R.id.share)
         val label = bottomsheet.findViewById<TextView>(R.id.label)
+        val pin = bottomsheet.findViewById<TextView>(R.id.pin)
 
         addRemovePassword.isVisible = false
         label.isVisible = true
+        pin.isVisible = false
 
         delete.setOnClickListener {
             deleteNote()
@@ -297,15 +304,30 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
     }
 
+    private fun updateMenuPinUnpin() {
+        menuPin?.let {
+            if (viewModel.pinValue.value == true) {
+                it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_pin_24)
+                it.title = "Unpin"
+            } else {
+                it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_pin_outline_24)
+                it.title = "Pin"
+            }
+        }
+
+    }
+
+
     private fun updateMenuEditSave() {
-        // menuSave?.isVisible = editMode
-        menuEdit?.icon =
-            if (viewModel.editMode.value == true) ContextCompat.getDrawable(
-                requireContext(),
-                R.drawable.ic_check_24
-            )
-            else ContextCompat.getDrawable(requireContext(), R.drawable.ic_edit_24)
-        // menuEdit?.isVisible = !editMode
+        menuEdit?.let {
+            if (viewModel.editMode.value == true) {
+                it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_check_24)
+                it.title = "Save"
+            } else {
+                it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_edit_24)
+                it.title = "Edit"
+            }
+        }
         readOnlyTag.isVisible = !viewModel.editMode.value!!
     }
 
@@ -318,8 +340,10 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
         // menuSave = menu.findItem(R.id.action_save)
         menuEdit = menu.findItem(R.id.action_edit)
+        menuPin = menu.findItem(R.id.action_pin)
 
         updateMenuEditSave()
+        updateMenuPinUnpin()
     }
 
     private fun disableInputs() {
@@ -340,6 +364,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         if (edited) {
             enableInputs()
             updateMenuEditSave()
+            binding.etContent.requestFocus()
             binding.etContent.setSelection(binding.etContent.length())
             Utils.showKeyboard(requireActivity(), binding.etContent)
         } else {
@@ -365,9 +390,20 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                             viewModel.setCurrentNote(updatedNote)
                             viewModel.onUpdateClick(updatedNote)
                             viewModel.setEditMode(false)
-                            Utils.showSnackBar(binding.parent, "Note updated", binding.bottomActionBar.bottomActionBar)
-                            setFragmentResult("add_delete_result", /*bundle*/bundleOf("result" to Constants.NOTE_UPDATED_RESULT_OK, "note" to updatedNote))
-                        } else {  //create new note
+                            Utils.showSnackBar(
+                                binding.parent,
+                                "Note updated",
+                                binding.bottomActionBar.bottomActionBar
+                            )
+                            setFragmentResult(
+                                "add_delete_result", /*bundle*/
+                                bundleOf(
+                                    "result" to Constants.NOTE_UPDATED_RESULT_OK,
+                                    "note" to updatedNote
+                                )
+                            )
+                        }
+                        else {  //create new note
                             val newNote =
                                 viewModel.tempNote.value!!.copy(title = title, content = content)
                             viewModel.onSaveClick(newNote)
@@ -379,9 +415,16 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                                 "Note saved",
                                 binding.bottomActionBar.bottomActionBar
                             )
-                            setFragmentResult("add_delete_result", /*bundle*/bundleOf("result" to Constants.NOTE_ADDED_RESULT_OK, "note" to newNote))
+                            setFragmentResult(
+                                "add_delete_result", /*bundle*/
+                                bundleOf(
+                                    "result" to Constants.NOTE_ADDED_RESULT_OK,
+                                    "note" to newNote
+                                )
+                            )
                         }
-                    } else {
+                    }
+                    else {
                         Snackbar.make(
                             binding.parent,
                             "Note content cannot be blank",
@@ -397,7 +440,31 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 true
             }
             R.id.action_pin -> {
-
+                val currentNote = viewModel.currentNote.value
+                if (currentNote != null) { //already existing note
+                    if (currentNote.pin) { //unpin
+                        val updatedNote = currentNote.copy(pin = false)
+                        viewModel.setCurrentNote(updatedNote)
+                        viewModel.onUpdateClick(updatedNote)
+                        viewModel.setPinValue(false)
+                    } else { //pin
+                        val updatedNote = currentNote.copy(pin = true)
+                        viewModel.setCurrentNote(updatedNote)
+                        viewModel.onUpdateClick(updatedNote)
+                        viewModel.setPinValue(true)
+                    }
+                } else { //new note
+                    val currentNote = viewModel.tempNote.value
+                    if (currentNote!!.pin) { //unpin
+                        val updatedNote = currentNote.copy(pin = false)
+                        viewModel.setTempNote(updatedNote)
+                        viewModel.setPinValue(false)
+                    } else { //pin
+                        val updatedNote = currentNote.copy(pin = true)
+                        viewModel.setTempNote(updatedNote)
+                        viewModel.setPinValue(true)
+                    }
+                }
                 true
             }
             /*R.id.action_archive -> {
@@ -662,7 +729,10 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                         bottomSheetDialog.dismiss()
                         setFragmentResult(
                             "add_delete_result",
-                            bundleOf("result" to Constants.NOTE_DELETE_RESULT_OK, "note" to viewModel.currentNote.value)
+                            bundleOf(
+                                "result" to Constants.NOTE_DELETE_RESULT_OK,
+                                "note" to viewModel.currentNote.value
+                            )
                         )
                         findNavController().popBackStack()
                     } else {
@@ -690,7 +760,10 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
                         setFragmentResult(
                             "add_delete_result", /*bundle*/
-                            bundleOf("result" to Constants.NOTE_DELETE_RESULT_OK, "note" to viewModel.currentNote.value)
+                            bundleOf(
+                                "result" to Constants.NOTE_DELETE_RESULT_OK,
+                                "note" to viewModel.currentNote.value
+                            )
                         )
                         findNavController().popBackStack()
                     }
@@ -736,7 +809,13 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     val updatedNote =
                         viewModel.currentNote.value!!.copy(title = title, content = content)
                     viewModel.onUpdateClick(updatedNote)
-                    setFragmentResult("add_delete_result", /*bundle*/bundleOf("result" to Constants.NOTE_UPDATED_RESULT_OK, "note" to updatedNote))
+                    setFragmentResult(
+                        "add_delete_result", /*bundle*/
+                        bundleOf(
+                            "result" to Constants.NOTE_UPDATED_RESULT_OK,
+                            "note" to updatedNote
+                        )
+                    )
                 }
             } else { //new note
                 if (title.isNotBlank() || content.isNotBlank()) {
@@ -746,7 +825,13 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     viewModel.setTempNote(newTempNote)
                     //val newNote = viewModel.tempNote.value!!.copy(title = title, content = content)
                     viewModel.onSaveClick(viewModel.tempNote.value!!)
-                    setFragmentResult("add_delete_result", /*bundle*/bundleOf("result" to Constants.NOTE_ADDED_RESULT_OK, "note" to viewModel.tempNote.value!!))
+                    setFragmentResult(
+                        "add_delete_result", /*bundle*/
+                        bundleOf(
+                            "result" to Constants.NOTE_ADDED_RESULT_OK,
+                            "note" to viewModel.tempNote.value!!
+                        )
+                    )
                 }
 
             }
