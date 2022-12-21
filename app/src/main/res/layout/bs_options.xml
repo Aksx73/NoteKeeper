@@ -149,6 +149,7 @@
                 android:drawablePadding="24dp"
                 android:paddingHorizontal="16dp"
                 android:focusable="true"
+                android:enabled="false"
                 android:gravity="center_vertical"
                 android:text="Labels" />
 

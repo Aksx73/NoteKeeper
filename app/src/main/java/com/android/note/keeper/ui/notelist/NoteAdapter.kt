@@ -78,6 +78,7 @@ class NoteAdapter(
                     val colorHex = binding.root.context.resources.getString(colorsUtil.getColor(colorName))
                     val colorInt : Int = Color.parseColor(colorHex)
                     parentCard.setCardBackgroundColor(colorInt)
+                    parentCard.strokeColor = colorInt
                 }
             }
         }
