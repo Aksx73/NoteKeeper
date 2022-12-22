@@ -1,6 +1,7 @@
 package com.android.note.keeper.ui.settings
 
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceFragmentCompat
 import com.android.note.keeper.R
@@ -21,6 +22,10 @@ class SettingsActivity : AppCompatActivity() {
 
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
+
+        toolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }

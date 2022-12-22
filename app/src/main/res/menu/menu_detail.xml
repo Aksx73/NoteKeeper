@@ -9,6 +9,12 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_archive"
+        android:title="Archive"
+        android:icon="@drawable/ic_archive_24"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_edit"
         android:title="Edit"
         android:visible="true"

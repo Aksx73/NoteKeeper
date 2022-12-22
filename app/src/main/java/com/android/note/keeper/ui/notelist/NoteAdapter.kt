@@ -31,13 +31,12 @@ class NoteAdapter(
     inner class NoteViewHolder(private val binding: NoteListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private var colorInt: Int? = null
+        private var strokeColorInt: Int? = null
         private var colorsUtil: ColorsUtil
 
         init {
-            colorInt = Utils.getColorFromAttr(
-                binding.root.context,
-                com.google.android.material.R.attr.colorSurface
-            )
+            colorInt = Utils.getColorFromAttr(binding.root.context, com.google.android.material.R.attr.colorSurface)
+            strokeColorInt = Utils.getColorFromAttr(binding.root.context, com.google.android.material.R.attr.colorOutline)
 
             colorsUtil = ColorsUtil()
 
@@ -72,9 +71,10 @@ class NoteAdapter(
                 txtHiddenContent.isVisible = note.isPasswordProtected
 
                 val colorName = note.color
-                if (colorName == Constants.COLOR_DEFAULT)
+                if (colorName == Constants.COLOR_DEFAULT) {
                     parentCard.setCardBackgroundColor(colorInt!!)
-                else {
+                    parentCard.strokeColor = strokeColorInt!!
+                } else {
                     val colorHex = binding.root.context.resources.getString(colorsUtil.getColor(colorName))
                     val colorInt : Int = Color.parseColor(colorHex)
                     parentCard.setCardBackgroundColor(colorInt)

@@ -18,6 +18,7 @@
             app:popEnterAnim="@anim/fragment_fade_in"
             app:popExitAnim="@anim/fragment_fade_out" />
     </fragment>
+
     <fragment
         android:id="@+id/NoteDetailFragment"
         android:name="com.android.note.keeper.ui.notedetail.NoteDetailFragment"
@@ -26,9 +27,37 @@
         <action
             android:id="@+id/action_NoteDetailFragment_to_NoteListFragment"
             app:destination="@id/NoteListFragment" />
-        <argument android:name="note"
+        <argument
+            android:name="note"
+            android:defaultValue="@null"
             app:argType="com.android.note.keeper.data.model.Note"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_NoteDetailFragment_to_ArchiveNoteFragment"
+            app:destination="@id/ArchiveNoteFragment" />
+        <action
+            android:id="@+id/action_NoteDetailFragment_to_DeletedNoteFragment"
+            app:destination="@id/DeletedNoteFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/DeletedNoteFragment"
+        android:name="com.android.note.keeper.ui.DeletedNoteFragment"
+        android:label="fragment_deleted_note"
+        tools:layout="@layout/fragment_deleted_note" >
+        <action
+            android:id="@+id/action_DeletedNoteFragment_to_NoteDetailFragment"
+            app:destination="@id/NoteDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ArchiveNoteFragment"
+        android:name="com.android.note.keeper.ui.ArchiveNoteFragment"
+        android:label="fragment_archive_note"
+        tools:layout="@layout/fragment_archive_note" >
+        <action
+            android:id="@+id/action_ArchiveNoteFragment_to_NoteDetailFragment"
+            app:destination="@id/NoteDetailFragment" />
+    </fragment>
+
 </navigation>
