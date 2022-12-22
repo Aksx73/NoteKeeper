@@ -6,7 +6,7 @@
     android:paddingLeft="16dp"
     android:paddingTop="16dp"
     android:paddingRight="16dp"
-    android:paddingBottom="0dp"
+    android:paddingBottom="8dp"
     android:gravity="bottom"
     android:minHeight="100dp"
     android:orientation="vertical">

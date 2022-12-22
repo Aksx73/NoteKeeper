@@ -43,7 +43,7 @@
     <fragment
         android:id="@+id/DeletedNoteFragment"
         android:name="com.android.note.keeper.ui.DeletedNoteFragment"
-        android:label="fragment_deleted_note"
+        android:label="Deleted"
         tools:layout="@layout/fragment_deleted_note" >
         <action
             android:id="@+id/action_DeletedNoteFragment_to_NoteDetailFragment"
@@ -53,7 +53,7 @@
     <fragment
         android:id="@+id/ArchiveNoteFragment"
         android:name="com.android.note.keeper.ui.ArchiveNoteFragment"
-        android:label="fragment_archive_note"
+        android:label="Archive"
         tools:layout="@layout/fragment_archive_note" >
         <action
             android:id="@+id/action_ArchiveNoteFragment_to_NoteDetailFragment"
