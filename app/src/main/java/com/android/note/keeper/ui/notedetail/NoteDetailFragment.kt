@@ -777,6 +777,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         }
     }
 
+
     private fun showColorPaletteBottomSheet() {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
         val bottomsheet: View =
