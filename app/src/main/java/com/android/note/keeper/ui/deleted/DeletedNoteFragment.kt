@@ -1,4 +1,4 @@
-package com.android.note.keeper.ui
+package com.android.note.keeper.ui.deleted
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,12 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.android.note.keeper.R
 
-class ArchiveNoteFragment : Fragment() {
+
+class DeletedNoteFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-
+            //todo
         }
     }
 
@@ -21,12 +22,11 @@ class ArchiveNoteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_archive_note, container, false)
+        return inflater.inflate(R.layout.fragment_deleted_note, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
     }
-
 }

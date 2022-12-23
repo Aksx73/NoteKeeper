@@ -131,7 +131,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
             Log.d("TAG", "mastPassword live: $masterPassword")
         }
 
-        setFragmentResultListener("add_delete_result") { _, bundle ->
+        setFragmentResultListener(Constants.FRAGMENT_RESULT_REQUEST_KEY) { _, bundle ->
             val result = bundle.getInt("result")
             val note: Note = bundle.getParcelable("note")!!
 
@@ -149,6 +149,12 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                     }
                     Constants.NOTE_UPDATED_RESULT_OK -> {
                         //nothing here
+                    }
+                    Constants.NOTE_ARCHIVED_RESULT_OK -> {
+                        Snackbar.make(requireView(), "Note archived", Snackbar.LENGTH_LONG)
+                            .setAction("Undo") {
+                                viewModel.onUndoArchiveClick(note)
+                            }.show()
                     }
                 }
             }

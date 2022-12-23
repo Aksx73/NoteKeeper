@@ -7,6 +7,8 @@ interface NoteRepository {
 
     fun getNotes(query: String): Flow<List<Note>>
 
+    fun getArchiveNotes(query: String): Flow<List<Note>>
+
     suspend fun insert(note: Note)
 
     suspend fun update(note: Note)

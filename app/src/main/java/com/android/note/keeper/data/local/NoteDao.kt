@@ -13,8 +13,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NoteDao {
 
-    @Query("SELECT * FROM notes_table WHERE title LIKE '%' || :searchQuery || '%' OR content LIKE '%' || :searchQuery || '%' ORDER BY created DESC") //ORDER BY pin DESC, created DESC
+    @Query("SELECT * FROM notes_table WHERE archived = 0 AND ((title LIKE '%' || :searchQuery || '%') OR (content LIKE '%' || :searchQuery || '%')) ORDER BY created DESC") //ORDER BY pin DESC, created DESC
     fun getAllNotes(searchQuery: String): Flow<List<Note>>
+
+    @Query("SELECT * FROM notes_table WHERE archived = 1 AND ((title LIKE '%' || :searchQuery || '%') OR (content LIKE '%' || :searchQuery || '%')) ORDER BY created DESC") //ORDER BY pin DESC, created DESC
+    fun getAllArchiveNotes(searchQuery: String): Flow<List<Note>>
 
     @Insert(onConflict = REPLACE)
     suspend fun insert(note: Note)

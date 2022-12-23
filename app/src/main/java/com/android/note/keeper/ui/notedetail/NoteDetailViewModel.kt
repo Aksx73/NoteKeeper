@@ -34,6 +34,9 @@ class NoteDetailViewModel @Inject constructor(
     private val mutablePinValue = MutableLiveData(false)
     val pinValue: LiveData<Boolean> get() = mutablePinValue
 
+    private val mutableArchiveValue = MutableLiveData(false)
+    val archiveValue: LiveData<Boolean> get() = mutableArchiveValue
+
     //here both are needed
     val masterPasswordFlow = preferenceManager.masterPasswordFlow
     val masterPasswordLiveData = preferenceManager.masterPasswordFlow.asLiveData()
@@ -57,6 +60,10 @@ class NoteDetailViewModel @Inject constructor(
 
     fun setPinValue(isPinned: Boolean) {
         mutablePinValue.value = isPinned
+    }
+
+    fun setArchiveValue(isArchived: Boolean) {
+        mutableArchiveValue.value = isArchived
     }
 
     fun setTempNote(note: Note) {

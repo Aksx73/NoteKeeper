@@ -35,8 +35,13 @@ class NoteListViewModel @Inject constructor(
         repository.getNotes(query)
     }
 
+    private val archiveNoteFlow = searchQuery.asFlow().flatMapLatest { query ->
+        repository.getArchiveNotes(query)
+    }
+
     //private val noteFlow = repository.getNotes()
     val notes = noteFlow.asLiveData()
+    val archiveNotes = archiveNoteFlow.asLiveData()
 
     //here both are needed
     val masterPasswordFlow = preferenceManager.masterPasswordFlow
@@ -59,8 +64,12 @@ class NoteListViewModel @Inject constructor(
         deleteNote(note)
     }
 
-    fun onUndoDeleteClick(not: Note) = viewModelScope.launch {
-        repository.insert(not)
+    fun onUndoDeleteClick(note: Note) = viewModelScope.launch {
+        repository.insert(note)
+    }
+
+    fun onUndoArchiveClick(note: Note) = viewModelScope.launch {
+        repository.update(note.copy(archived = false))
     }
 
     fun onViewModeChanged(mode: Int) = viewModelScope.launch {

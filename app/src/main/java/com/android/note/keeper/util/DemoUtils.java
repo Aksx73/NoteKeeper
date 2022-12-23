@@ -16,6 +16,7 @@
 
 package com.android.note.keeper.util;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.MenuItem;
@@ -131,7 +132,7 @@ public class DemoUtils {
     scrollView.getLocationOnScreen(scrollViewLocation);
     Context context = scrollView.getContext();
 
-    Activity activity = ContextUtils.getActivity(context);
+    @SuppressLint("RestrictedApi") Activity activity = ContextUtils.getActivity(context);
     return scrollViewHeight + scrollViewLocation[1] >= getContentViewHeight(activity)
         && scrollableContentHeight + systemWindowInsetBottom >= scrollViewHeight;
   }

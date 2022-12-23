@@ -65,6 +65,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
     private var menuEdit: MenuItem? = null
     private var menuPin: MenuItem? = null
+    private var menuArchive: MenuItem? = null
     private lateinit var masterPassword: String
 
     private val colorsUtil = ColorsUtil()
@@ -123,7 +124,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     }
                 }
             }
-        } else { //new note
+        }
+        else { //new note
             binding.parent.setOnClickListener {
                 if (viewModel.currentNote.value == null || viewModel.editMode.value == true) {
                     //todo -> get toolbar reference from activity and make 'read mode' tag textview invisible
@@ -151,6 +153,10 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
         viewModel.pinValue.observe(viewLifecycleOwner){
             updateMenuPinUnpin()
+        }
+
+        viewModel.archiveValue.observe(viewLifecycleOwner){
+            updateMenuArchive()
         }
 
         viewModel.selectedColor.observe(viewLifecycleOwner) { colorPosition ->
@@ -225,7 +231,6 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             }
         }
     }
-
 
     private fun loadMasterPassword() {
         //used this to get masterPassword value immediately
@@ -314,6 +319,18 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 it.title = "Pin"
             }
         }
+    }
+
+    private fun updateMenuArchive() {
+        menuArchive?.let {
+            if (viewModel.archiveValue.value == true) {
+                it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_unarchive_24)
+                it.title = "Unarchive"
+            } else {
+                it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_archive_24)
+                it.title = "Archive"
+            }
+        }
 
     }
 
@@ -341,9 +358,11 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         // menuSave = menu.findItem(R.id.action_save)
         menuEdit = menu.findItem(R.id.action_edit)
         menuPin = menu.findItem(R.id.action_pin)
+        menuArchive = menu.findItem(R.id.action_archive)
 
         updateMenuEditSave()
         updateMenuPinUnpin()
+        updateMenuArchive()
     }
 
     private fun disableInputs() {
@@ -396,7 +415,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                                 binding.bottomActionBar.bottomActionBar
                             )
                             setFragmentResult(
-                                "add_delete_result", /*bundle*/
+                                Constants.FRAGMENT_RESULT_REQUEST_KEY,
                                 bundleOf(
                                     "result" to Constants.NOTE_UPDATED_RESULT_OK,
                                     "note" to updatedNote
@@ -416,7 +435,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                                 binding.bottomActionBar.bottomActionBar
                             )
                             setFragmentResult(
-                                "add_delete_result", /*bundle*/
+                                Constants.FRAGMENT_RESULT_REQUEST_KEY,
                                 bundleOf(
                                     "result" to Constants.NOTE_ADDED_RESULT_OK,
                                     "note" to newNote
@@ -467,10 +486,51 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 }
                 true
             }
-            /*R.id.action_archive -> {
-
+            R.id.action_archive -> {
+                val currentNote = viewModel.currentNote.value
+                if (currentNote != null) { //already existing note
+                    if (currentNote.archived) { //unarchived
+                        val updatedNote = currentNote.copy(archived = false)
+                        viewModel.setCurrentNote(updatedNote)
+                        viewModel.onUpdateClick(updatedNote)
+                        viewModel.setArchiveValue(false)
+                        //todo show snackbar for unarchived and undo button
+                        Snackbar.make(binding.parent,"Note unarchived",Snackbar.LENGTH_SHORT)
+                            .setAction("Undo"){
+                                //todo archive the note
+                                viewModel.setCurrentNote(currentNote.copy(archived = true))
+                                viewModel.onUpdateClick(currentNote.copy(archived = true))
+                                viewModel.setArchiveValue(true)
+                            }
+                    } else { //archived
+                        val updatedNote = currentNote.copy(archived = true)
+                        viewModel.setCurrentNote(updatedNote)
+                        viewModel.onUpdateClick(updatedNote)
+                        viewModel.setArchiveValue(true)
+                        //todo go back and show snackbar and undo action
+                        setFragmentResult(
+                            Constants.FRAGMENT_RESULT_REQUEST_KEY,
+                            bundleOf(
+                                "result" to Constants.NOTE_ARCHIVED_RESULT_OK,
+                                "note" to viewModel.currentNote.value
+                            )
+                        )
+                        findNavController().popBackStack()
+                    }
+                } else { //new note
+                    val currentNote = viewModel.tempNote.value
+                    if (currentNote!!.archived) { //unarchived
+                        val updatedNote = currentNote.copy(archived = false)
+                        viewModel.setTempNote(updatedNote)
+                        viewModel.setArchiveValue(false)
+                    } else { //archived
+                        val updatedNote = currentNote.copy(archived = true)
+                        viewModel.setTempNote(updatedNote)
+                        viewModel.setArchiveValue(true)
+                    }
+                }
                 true
-            }*/
+            }
             else -> false
         }
     }
@@ -728,7 +788,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                         viewModel.onDeleteClick(viewModel.currentNote.value!!)
                         bottomSheetDialog.dismiss()
                         setFragmentResult(
-                            "add_delete_result",
+                            Constants.FRAGMENT_RESULT_REQUEST_KEY,
                             bundleOf(
                                 "result" to Constants.NOTE_DELETE_RESULT_OK,
                                 "note" to viewModel.currentNote.value
@@ -759,7 +819,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                         viewModel.onDeleteClick(viewModel.currentNote.value!!)
 
                         setFragmentResult(
-                            "add_delete_result", /*bundle*/
+                            Constants.FRAGMENT_RESULT_REQUEST_KEY, /*bundle*/
                             bundleOf(
                                 "result" to Constants.NOTE_DELETE_RESULT_OK,
                                 "note" to viewModel.currentNote.value
@@ -811,7 +871,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                         viewModel.currentNote.value!!.copy(title = title, content = content)
                     viewModel.onUpdateClick(updatedNote)
                     setFragmentResult(
-                        "add_delete_result", /*bundle*/
+                        Constants.FRAGMENT_RESULT_REQUEST_KEY, /*bundle*/
                         bundleOf(
                             "result" to Constants.NOTE_UPDATED_RESULT_OK,
                             "note" to updatedNote
@@ -827,7 +887,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     //val newNote = viewModel.tempNote.value!!.copy(title = title, content = content)
                     viewModel.onSaveClick(viewModel.tempNote.value!!)
                     setFragmentResult(
-                        "add_delete_result", /*bundle*/
+                        Constants.FRAGMENT_RESULT_REQUEST_KEY, /*bundle*/
                         bundleOf(
                             "result" to Constants.NOTE_ADDED_RESULT_OK,
                             "note" to viewModel.tempNote.value!!

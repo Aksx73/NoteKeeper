@@ -13,6 +13,10 @@ class NoteRepositoryImpl @Inject constructor(private val dao: NoteDao) : NoteRep
         return dao.getAllNotes(query)
     }
 
+    override fun getArchiveNotes(query: String): Flow<List<Note>> {
+        return dao.getAllArchiveNotes(query)
+    }
+
     override suspend fun insert(note: Note) = dao.insert(note)
 
     override suspend fun update(note: Note) = dao.update(note)
