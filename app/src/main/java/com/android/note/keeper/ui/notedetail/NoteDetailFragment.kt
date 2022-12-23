@@ -495,6 +495,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                         viewModel.onUpdateClick(updatedNote)
                         viewModel.setArchiveValue(false)
                         //todo show snackbar for unarchived and undo button
+                        Utils.hideKeyboard(requireActivity())
                         Snackbar.make(binding.parent,"Note unarchived",Snackbar.LENGTH_SHORT)
                             .setAction("Undo"){
                                 //todo archive the note
@@ -523,10 +524,20 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                         val updatedNote = currentNote.copy(archived = false)
                         viewModel.setTempNote(updatedNote)
                         viewModel.setArchiveValue(false)
+                        //todo issue: show snackbar above soft keyboard
+                        Utils.hideKeyboard(requireActivity())
+                        Snackbar.make(binding.parent,"Note unarchived",Snackbar.LENGTH_SHORT)
+                            .setAnchorView(binding.bottomActionBar.bottomActionBar)
+                            .show()
                     } else { //archived
                         val updatedNote = currentNote.copy(archived = true)
                         viewModel.setTempNote(updatedNote)
                         viewModel.setArchiveValue(true)
+                        //todo issue: show snackbar above soft keyboard
+                        Utils.hideKeyboard(requireActivity())
+                        Snackbar.make(binding.parent,"Note archived",Snackbar.LENGTH_SHORT)
+                            .setAnchorView(binding.bottomActionBar.bottomActionBar)
+                            .show()
                     }
                 }
                 true
@@ -836,7 +847,6 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             findNavController().popBackStack()
         }
     }
-
 
     private fun showColorPaletteBottomSheet() {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
