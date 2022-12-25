@@ -5,7 +5,7 @@
     android:id="@+id/bottom_action_bar"
     android:layout_width="match_parent"
     android:layout_height="54dp"
-    android:background="?colorSurfaceVariant">
+    android:background="?colorSurface">
 
     <LinearLayout
         android:id="@+id/lyt_action_item"
