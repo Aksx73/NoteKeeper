@@ -10,22 +10,23 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:layout_marginBottom="8dp"
-        android:text="Appearance"
-        android:textColor="?colorSecondary"
-        android:gravity="center"
+        android:layout_marginBottom="12dp"
         android:drawablePadding="8dp"
-        android:drawableStart="@drawable/ic_color_24"
-        android:textAppearance="?textAppearanceOverline" />
+        android:gravity="center"
+        android:text="Appearance"
+        android:textAppearance="?textAppearanceLabelLarge"
+        android:textColor="?colorSecondary"
+        app:drawableStartCompat="@drawable/ic_dark_mode_24"
+        app:drawableTint="?colorSecondary" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingVertical="12dp"
+        android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingVertical="10dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -67,7 +68,7 @@
         android:id="@+id/lyt_use_system_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="12dp">
+       >
 
         <TextView
             android:id="@+id/txt"
@@ -102,10 +103,12 @@
             android:id="@+id/switch_use_system_color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="28dp"
             android:background="?selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:paddingHorizontal="16dp"
+            android:foreground="?selectableItemBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -125,13 +128,84 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:text="Security"
-        android:gravity="center"
-        android:drawablePadding="8dp"
-        android:drawableStart="@drawable/ic_color_24"
-        android:textColor="?colorSecondary"
         android:layout_marginBottom="8dp"
-        android:textAppearance="?textAppearanceOverline" />
+        android:drawablePadding="8dp"
+        android:gravity="center"
+        android:text="Security"
+        android:textAppearance="?textAppearanceLabelLarge"
+        android:textColor="?colorSecondary"
+        app:drawableStartCompat="@drawable/ic_twotone_security_24"
+        app:drawableTint="?colorSecondary" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/lyt_change_master_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingVertical="16dp">
+
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="sans-serif"
+            android:text="Change master password"
+            android:textAppearance="?textAppearanceTitleMedium"
+            app:layout_constraintBottom_toTopOf="@+id/txt_current_password_tittle"
+            app:layout_constraintEnd_toStartOf="@+id/img_show_hide_password"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/txt_current_password_tittle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Current password: "
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text2" />
+
+        <TextView
+            android:id="@+id/txt_current_password"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="*****"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_current_password_tittle"
+            app:layout_constraintEnd_toStartOf="@+id/img_show_hide_password"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/txt_current_password_tittle"
+            app:layout_constraintTop_toTopOf="@+id/txt_current_password_tittle" />
+
+        <ImageView
+            android:id="@+id/img_show_hide_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@drawable/ic_remove_eye_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" />
+
 
 
 </LinearLayout>
