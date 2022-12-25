@@ -66,13 +66,13 @@ object Utils {
     }
 
     fun getFormattedTime(timeMilli: Long): String { // 12:45 am
-        var date = Date(timeMilli)
+        val date = Date(timeMilli)
         val timeZoneDate = SimpleDateFormat("HH:mm a", Locale.getDefault())
         return timeZoneDate.format(date)
     }
 
     fun getFormattedDate(timeMilli: Long): String { // 14 Dec
-        var date = Date(timeMilli)
+        val date = Date(timeMilli)
         val timeZoneDate = SimpleDateFormat("dd MMM", Locale.getDefault())
         return timeZoneDate.format(date)
     }

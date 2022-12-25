@@ -7,7 +7,7 @@
             app:title="@string/signature_title"
             app:useSimpleSummaryProvider="true" />
 
-        <ListPreference
+        <DropDownPreference
             app:defaultValue="reply"
             app:entries="@array/reply_entries"
             app:entryValues="@array/reply_values"
