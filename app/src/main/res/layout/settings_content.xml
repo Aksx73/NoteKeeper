@@ -15,7 +15,7 @@
         android:gravity="center"
         android:text="Appearance"
         android:textAppearance="?textAppearanceLabelLarge"
-        android:textColor="?colorSecondary"
+        android:textColor="?colorPrimary"
         app:drawableStartCompat="@drawable/ic_dark_mode_24"
         app:drawableTint="?colorSecondary" />
 
@@ -74,7 +74,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="54dp"
+            android:layout_marginEnd="84dp"
             android:fontFamily="sans-serif"
             android:text="Use system colors"
             android:textAppearance="?textAppearanceTitleMedium"
@@ -90,7 +90,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="54dp"
+            android:layout_marginEnd="84dp"
             android:text="Use colors provided by system"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -132,7 +132,7 @@
         android:gravity="center"
         android:text="Security"
         android:textAppearance="?textAppearanceLabelLarge"
-        android:textColor="?colorSecondary"
+        android:textColor="?colorPrimary"
         app:drawableStartCompat="@drawable/ic_twotone_security_24"
         app:drawableTint="?colorSecondary" />
 
