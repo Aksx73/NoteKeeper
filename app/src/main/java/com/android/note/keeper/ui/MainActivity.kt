@@ -100,6 +100,24 @@ class MainActivity : AppCompatActivity() {
                     startActivity(Intent(this, SettingsActivity::class.java))
                     // binding.drawerLayout.close()
                 }
+                R.id.rate -> {
+                    //todo rate
+                    Snackbar.make(binding.drawerLayout, "Rate clicked", Snackbar.LENGTH_SHORT)
+                        .show()
+                    binding.drawerLayout.close()
+                }
+                R.id.feedback -> {
+                    //todo open gmail
+                    Snackbar.make(binding.drawerLayout, "Feedback clicked", Snackbar.LENGTH_SHORT)
+                        .show()
+                    binding.drawerLayout.close()
+                }
+                R.id.about -> {
+                    //todo about page
+                    Snackbar.make(binding.drawerLayout, "About clicked", Snackbar.LENGTH_SHORT)
+                        .show()
+                    binding.drawerLayout.close()
+                }
                 else -> {
                     NavigationUI.onNavDestinationSelected(menuItem, navController)
                     binding.drawerLayout.closeDrawers()
