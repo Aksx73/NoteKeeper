@@ -143,6 +143,7 @@
         android:background="?selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
+        android:animateLayoutChanges="true"
         android:paddingVertical="16dp">
 
         <TextView
