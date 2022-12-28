@@ -667,6 +667,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         val share = bottomsheet.findViewById<TextView>(R.id.share)
         val label = bottomsheet.findViewById<TextView>(R.id.label)
         val pin = bottomsheet.findViewById<TextView>(R.id.pin)
+        val archive = bottomsheet.findViewById<TextView>(R.id.archive)
 
         addRemovePassword.isVisible = true
         pin.isVisible = true
@@ -687,6 +688,14 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
             pin.text = "Pin"
             pin.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pin_outline_24, 0, 0, 0);
         }
+        if (task.archived){
+            archive.text = "Unarchive"
+            archive.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_archive_24, 0, 0, 0);
+        }
+        else{
+            archive.text = "Archive"
+            archive.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_unarchive_24, 0, 0, 0);
+        }
 
         delete.setOnClickListener {
             deleteNote(task)
@@ -701,6 +710,10 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         pin.setOnClickListener {
             pinUnpin(task)
             bottomSheetDialog.dismiss()
+        }
+
+        archive.setOnClickListener {
+            //todo
         }
 
         share.setOnClickListener {

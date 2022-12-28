@@ -101,6 +101,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     //editMode = false
                     viewModel.setEditMode(false)
                     viewModel.setPinValue(it.pin)
+                    viewModel.setArchiveValue(it.archived)
                     etTitle.setText(it.title)
                     etContent.setText(it.content)
                     disableInputs()
@@ -268,10 +269,12 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         val share = bottomsheet.findViewById<TextView>(R.id.share)
         val label = bottomsheet.findViewById<TextView>(R.id.label)
         val pin = bottomsheet.findViewById<TextView>(R.id.pin)
+        val archive = bottomsheet.findViewById<TextView>(R.id.archive)
 
         addRemovePassword.isVisible = false
         label.isVisible = true
         pin.isVisible = false
+        archive.isVisible = false
 
         delete.setOnClickListener {
             deleteNote()

@@ -4,12 +4,15 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import android.widget.TextView
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.fragment.app.Fragment
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -26,6 +29,10 @@ import com.android.note.keeper.ui.notelist.NoteAdapter
 import com.android.note.keeper.ui.notelist.NoteListFragmentDirections
 import com.android.note.keeper.ui.notelist.NoteListViewModel
 import com.android.note.keeper.ui.settings.SettingsActivity
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -89,7 +96,48 @@ class ArchiveNoteFragment : Fragment(R.layout.fragment_archive_note), NoteAdapte
             binding.emptyView.isVisible = notes.isEmpty()
         }
 
+        observeUiViewMode()
 
+    }
+
+    private fun observeUiViewMode() {
+        viewModel.viewModeLiveData.observe(viewLifecycleOwner) { viewMode ->
+            when (viewMode) {
+                PreferenceManager.SINGLE_COLUMN -> viewModel.isMultiColumnView = false
+                PreferenceManager.MULTI_COLUMN -> viewModel.isMultiColumnView = true
+            }
+            if (updateNow) {
+                updateListView(viewMode)
+                updateNow = false
+            }
+            setUpMenuViewModeIcon(viewModel.isMultiColumnView)
+        }
+    }
+
+    private fun updateListView(mode: Int) {
+        when (mode) {
+            PreferenceManager.SINGLE_COLUMN -> {
+                binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                noteAdapter.notifyDataSetChanged()
+            }
+            PreferenceManager.MULTI_COLUMN -> {
+                binding.recyclerView.layoutManager =
+                    StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+                noteAdapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    private fun setUpMenuViewModeIcon(isMultiColumn: Boolean) {
+        menuViewMode?.let {
+            if (isMultiColumn) {
+                it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_list_view_24)
+                it.title = "Single-column view"
+            } else {
+                it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_grid_view_24)
+                it.title = "Multi-column view"
+            }
+        }
     }
 
     @SuppressLint("RestrictedApi")
@@ -102,11 +150,6 @@ class ArchiveNoteFragment : Fragment(R.layout.fragment_archive_note), NoteAdapte
         val menuSearch = menu.findItem(R.id.action_search)
         searchView = menuSearch.actionView as SearchView
         searchView.queryHint = "Search your notes"
-
-       /* val master_password = menu.findItem(R.id.action_master_password)
-
-        master_password.title = if (masterPassword.isBlank()) "Create master password"
-        else "Update master password"*/
 
         val pendingQuery = viewModel.searchQuery.value
         if (pendingQuery != null && pendingQuery.isNotEmpty()) {
@@ -125,7 +168,7 @@ class ArchiveNoteFragment : Fragment(R.layout.fragment_archive_note), NoteAdapte
             }
         })
 
-       // setUpMenuViewModeIcon(viewModel.isMultiColumnView)
+        setUpMenuViewModeIcon(viewModel.isMultiColumnView)
 
     }
 
@@ -151,12 +194,118 @@ class ArchiveNoteFragment : Fragment(R.layout.fragment_archive_note), NoteAdapte
         searchView.setOnQueryTextListener(null)
     }
 
+
+
     override fun onItemClick(task: Note) {
-        TODO("Not yet implemented")
+        if (task.isPasswordProtected) {
+            //todo show material dialog to enter master password
+
+            val dialogView: View = layoutInflater.inflate(R.layout.dialog_enter_password, null)
+            val et_password = dialogView.findViewById(R.id.et_password) as TextInputEditText
+            val ly_password = dialogView.findViewById(R.id.ly_password) as TextInputLayout
+
+            et_password.doOnTextChanged { _, _, _, _ ->
+                ly_password.isErrorEnabled = false
+                ly_password.error = null
+            }
+
+            val dialogBuilder = MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Enter password")
+                //.setCancelable(false)
+                .setView(dialogView)
+                .setPositiveButton("Confirm") { _, _ ->
+                    if (et_password.text.toString() == masterPassword) {
+                        val action =
+                            NoteListFragmentDirections.actionNoteListFragmentToNoteDetailFragment(
+                                task
+                            )
+                        findNavController().navigate(action)
+                    } else {
+                        ly_password.isErrorEnabled = true
+                        ly_password.error = "Incorrect password"
+                    }
+                }.setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+            dialogBuilder.show()
+        } else {
+            val action =
+                ArchiveNoteFragmentDirections.actionArchiveNoteFragmentToNoteDetailFragment(task)
+            findNavController().navigate(action)
+        }
+
     }
 
     override fun onOptionClick(task: Note) {
-        TODO("Not yet implemented")
+        //todo show bottomSheet with options -> delete,add/update password, mark as complete,etc
+
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val bottomsheet: View = LayoutInflater.from(context).inflate(R.layout.bs_options, null)
+
+        val addRemovePassword = bottomsheet.findViewById<TextView>(R.id.add_password)
+        val delete = bottomsheet.findViewById<TextView>(R.id.delete)
+        val share = bottomsheet.findViewById<TextView>(R.id.share)
+        val label = bottomsheet.findViewById<TextView>(R.id.label)
+        val pin = bottomsheet.findViewById<TextView>(R.id.pin)
+        val archive = bottomsheet.findViewById<TextView>(R.id.archive)
+
+        addRemovePassword.isVisible = true
+        pin.isVisible = true
+        label.isVisible = false
+
+        if (task.isPasswordProtected){
+            addRemovePassword.text = "Remove lock"
+            addRemovePassword.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_lock_filled_24, 0, 0, 0);
+        } else{
+            addRemovePassword.text = "Add lock"
+            addRemovePassword.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_lock_open_24, 0, 0, 0);
+        }
+        if (task.pin){
+            pin.text = "Unpin"
+            pin.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pin_24, 0, 0, 0);
+        }
+        else{
+            pin.text = "Pin"
+            pin.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pin_outline_24, 0, 0, 0);
+        }
+        if (task.archived){
+            archive.text = "Unarchive"
+            archive.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_archive_24, 0, 0, 0);
+        }
+        else{
+            archive.text = "Archive"
+            archive.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_unarchive_24, 0, 0, 0);
+        }
+
+        delete.setOnClickListener {
+           // deleteNote(task)
+            bottomSheetDialog.dismiss()
+        }
+
+        addRemovePassword.setOnClickListener {
+           // addPassword(task)
+            bottomSheetDialog.dismiss()
+        }
+
+        pin.setOnClickListener {
+          //  pinUnpin(task)
+            bottomSheetDialog.dismiss()
+        }
+
+        archive.setOnClickListener {
+           // archive(task)
+            bottomSheetDialog.dismiss()
+        }
+
+        share.setOnClickListener {
+            //todo
+            bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetDialog.setContentView(bottomsheet)
+        bottomSheetDialog.show()
+
     }
 
 
