@@ -27,11 +27,13 @@
         android:icon="@drawable/ic_lock_filled_24"
         tools:title="Create master password"
         app:showAsAction="never"
+        android:visible="false"
         android:title="" />
 
     <item
         android:id="@+id/action_setting"
         android:icon="@drawable/ic_settings_24dp"
         android:title="Settings"
+        android:visible="false"
         app:showAsAction="never" />
 </menu>

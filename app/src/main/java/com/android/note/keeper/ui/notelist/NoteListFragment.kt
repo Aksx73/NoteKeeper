@@ -274,7 +274,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
-            R.id.action_master_password -> {
+           /* R.id.action_master_password -> {
                 bottomSheetUpdateMasterPassword()
                 true
             }
@@ -282,7 +282,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                 val intent = Intent((activity as MainActivity), SettingsActivity::class.java)
                 startActivity(intent)
                 true
-            }
+            }*/
             R.id.action_view -> {
                 lifecycleScope.launch {
                     when (viewModel.isMultiColumnView) {
