@@ -487,6 +487,29 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         }else { //pin
             val updatedNote = note.copy(pin = true)
             viewModel.onUpdateClick(updatedNote)
+
+        }
+    }
+
+    private fun archive(note: Note){
+        if (note.archived) { //unarchive
+            val updatedNote = note.copy(archived = false)
+            viewModel.onUpdateClick(updatedNote)
+            Snackbar.make(binding.parent,"Note unarchived",Snackbar.LENGTH_SHORT)
+                .setAction("Undo"){
+                    //todo archive the note
+                    val archivedNote = note.copy(archived = true)
+                    viewModel.onUpdateClick(archivedNote)
+                }.show()
+        }else { //archive
+            val updatedNote = note.copy(archived = true)
+            viewModel.onUpdateClick(updatedNote)
+            Snackbar.make(binding.parent,"Note archived",Snackbar.LENGTH_SHORT)
+                .setAction("Undo"){
+                    //todo unarchive the note
+                    val unarchivedNote = note.copy(archived = false)
+                    viewModel.onUpdateClick(unarchivedNote)
+                }.show()
         }
     }
 
@@ -713,7 +736,8 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         }
 
         archive.setOnClickListener {
-            //todo
+            archive(task)
+            bottomSheetDialog.dismiss()
         }
 
         share.setOnClickListener {

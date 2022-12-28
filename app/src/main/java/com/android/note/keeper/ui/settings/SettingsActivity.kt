@@ -72,6 +72,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun initViews() {
         binding.apply {
+            content.lytUseSystemColor.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
             content.lytChangeMasterPassword.setOnClickListener {
                 bottomSheetUpdateMasterPassword()
             }

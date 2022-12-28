@@ -67,6 +67,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/lyt_use_system_color"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content">
 
         <TextView
@@ -105,6 +106,7 @@
             android:background="?selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
+
             android:foreground="?selectableItemBackground"
             android:paddingHorizontal="16dp"
             android:paddingVertical="28dp"
