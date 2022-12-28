@@ -24,12 +24,15 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="150dp"
         android:orientation="vertical"
+        tools:visibility="visible"
         android:visibility="gone">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableTop="@drawable/ic_notes_24"
-            android:drawablePadding="8dp"
+            android:drawableTop="@drawable/note_illustration"
+            android:drawablePadding="12dp"
+            android:gravity="center"
+            android:textAppearance="?textAppearanceBodyMedium"
             android:text="No archived notes" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
