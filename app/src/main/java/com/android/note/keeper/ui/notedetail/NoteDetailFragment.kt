@@ -505,7 +505,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                                 viewModel.setCurrentNote(currentNote.copy(archived = true))
                                 viewModel.onUpdateClick(currentNote.copy(archived = true))
                                 viewModel.setArchiveValue(true)
-                            }
+                            }.show()
                     } else { //archived
                         val updatedNote = currentNote.copy(archived = true)
                         viewModel.setCurrentNote(updatedNote)
@@ -521,7 +521,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                         )
                         findNavController().popBackStack()
                     }
-                } else { //new note
+                }
+                else { //new note
                     val currentNote = viewModel.tempNote.value
                     if (currentNote!!.archived) { //unarchived
                         val updatedNote = currentNote.copy(archived = false)
@@ -579,11 +580,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 if (et_password.text.toString() == et_confirm.text.toString()) {
                     //todo save to datastore
                     viewModel.setMasterPassword(et_password.text.toString())
-                    Snackbar.make(
-                        binding.parent,
-                        "Master password added! Click on lock option again to enable lock",
-                        Snackbar.LENGTH_LONG
-                    )
+                    Snackbar.make(binding.parent, "Master password added! Click on lock option again to enable lock", Snackbar.LENGTH_LONG)
                         .setAnchorView(binding.bottomActionBar.bottomActionBar).show()
                     loadMasterPassword()
                     bottomSheetDialog.dismiss()
