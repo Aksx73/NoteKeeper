@@ -10,6 +10,8 @@ class NoteApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        // todo use value from datastore to enable dark mode & dynamic theming
         DynamicColors.applyToActivitiesIfAvailable(this)
     }
 }

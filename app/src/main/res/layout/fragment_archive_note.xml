@@ -29,10 +29,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableTop="@drawable/note_illustration"
             android:drawablePadding="12dp"
             android:gravity="center"
             android:textAppearance="?textAppearanceBodyMedium"
-            android:text="No archived notes" />
+            android:text="No archived notes"
+            app:drawableTopCompat="@drawable/note_illustration" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

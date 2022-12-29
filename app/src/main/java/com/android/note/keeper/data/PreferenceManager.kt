@@ -34,11 +34,23 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
             }
         }
 
-    suspend fun getViewMode(): Int {
+   /* suspend fun getViewMode(): Int {
         val preferences = dataStore.data.first()
         return preferences[VIEW_MODE] ?: SINGLE_COLUMN
-    }
+    }*/
 
+    val dynamicThemingFlow : Flow<Boolean> = dataStore.data
+        .map { preference ->
+            preference[DYNAMIC_COLORS] ?: DEFAULT_DYNAMIC_COLOR
+        }
+        .catch { exception ->
+            if (exception is IOException) {
+                Log.e(TAG, "Error reading preferences", exception)
+                emptyPreferences()
+            } else {
+                throw exception
+            }
+        }
 
     val viewModeFlow: Flow<Int> = dataStore.data
         .map { preference ->
@@ -65,11 +77,20 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
         }
     }
 
+    suspend fun setDynamicTheming(isEnabled:Boolean){
+        dataStore.edit { preference ->
+            preference[DYNAMIC_COLORS] = isEnabled
+        }
+    }
+
     companion object {
         val MASTER_PASSWORD = stringPreferencesKey("master_password")
         val VIEW_MODE = intPreferencesKey("view_mode")
+        val DARK_THEME = intPreferencesKey("dark_theme")
+        val DYNAMIC_COLORS = booleanPreferencesKey("dynamic_theming")
         const val DEFAULT_PASSWORD = ""
         const val SINGLE_COLUMN = 0
         const val MULTI_COLUMN = 1
+        const val DEFAULT_DYNAMIC_COLOR = true
     }
 }

@@ -26,6 +26,10 @@ class SettingViewModel @Inject constructor(
         preferenceManager.setMasterPassword(password)
     }
 
+    fun setDynamicColorEnabled(isEnabled: Boolean) = viewModelScope.launch {
+        preferenceManager.setDynamicTheming(isEnabled)
+    }
+
     fun setIsPasswordVisible(bool:Boolean){
         _isPasswordVisible.value = bool
     }

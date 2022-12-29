@@ -73,13 +73,23 @@ class SettingsActivity : AppCompatActivity() {
     private fun initViews() {
         binding.apply {
             content.lytUseSystemColor.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
             content.lytChangeMasterPassword.setOnClickListener {
                 bottomSheetUpdateMasterPassword()
             }
+
             content.imgShowHidePassword.setOnClickListener {
                 viewModel.switchIsPasswordVisible()
             }
-            content.txtCurrentPassword.text = ""
+
+            //todo get current dynamic color preference and set switch checked value
+
+            content.switchUseSystemColor.setOnCheckedChangeListener { buttonView, isChecked ->
+                viewModel.setDynamicColorEnabled(isChecked)
+               // recreate()
+            }
+
+
         }
 
     }
