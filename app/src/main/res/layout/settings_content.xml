@@ -15,12 +15,10 @@
         android:drawablePadding="8dp"
         android:gravity="center"
         android:text="Appearance"
-        android:textAppearance="?textAppearanceLabelLarge"
-        android:textColor="?colorPrimary"
-        app:drawableStartCompat="@drawable/ic_dark_mode_24"
-        app:drawableTint="?colorPrimary" />
+        android:fontFamily="sans-serif"
+        android:textColor="?colorPrimary" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
@@ -29,19 +27,38 @@
         android:orientation="vertical"
         android:paddingVertical="10dp">
 
-        <TextView
+        <ImageView
+            android:id="@+id/imageView2"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_dark_mode_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
+            android:layout_marginStart="24dp"
             android:fontFamily="sans-serif"
             android:text="Dark mode"
-            android:textAppearance="?textAppearanceTitleMedium" />
+            android:textAppearance="?textAppearanceTitleMedium"
+            app:layout_constraintBottom_toTopOf="@+id/chipGroup"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:paddingHorizontal="16dp"
+            android:layout_marginStart="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toBottomOf="@+id/textView2"
             app:singleSelection="true">
 
             <com.google.android.material.chip.Chip
@@ -63,7 +80,7 @@
                 android:checked="true"
                 android:text="Follow system" />
         </com.google.android.material.chip.ChipGroup>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/lyt_use_system_color"
@@ -72,11 +89,22 @@
         tools:visibility="visible"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_color_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
         <TextView
             android:id="@+id/txt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="24dp"
             android:layout_marginEnd="84dp"
             android:fontFamily="sans-serif"
             android:text="Use system colors"
@@ -84,7 +112,7 @@
             app:layout_constraintBottom_toTopOf="@+id/textView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
 
@@ -92,13 +120,13 @@
             android:id="@+id/textView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="24dp"
             android:layout_marginEnd="84dp"
             android:text="Use colors provided by system"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toBottomOf="@+id/txt" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
@@ -108,7 +136,6 @@
             android:background="?selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-
             android:foreground="?selectableItemBackground"
             android:paddingHorizontal="16dp"
             android:paddingVertical="28dp"
@@ -122,8 +149,7 @@
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" />
+        android:layout_height="wrap_content" />
 
 
     <TextView
@@ -132,13 +158,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="8dp"
-        android:drawablePadding="8dp"
         android:gravity="center"
         android:text="Security"
-        android:textAppearance="?textAppearanceLabelLarge"
-        android:textColor="?colorPrimary"
-        app:drawableStartCompat="@drawable/ic_twotone_security_24"
-        app:drawableTint="?colorPrimary" />
+        android:fontFamily="sans-serif"
+        android:textColor="?colorPrimary" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/lyt_change_master_password"
@@ -150,20 +173,31 @@
         android:animateLayoutChanges="true"
         android:paddingVertical="16dp">
 
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_password_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
         <TextView
             android:id="@+id/text2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="24dp"
 
+            android:layout_marginEnd="8dp"
             android:fontFamily="sans-serif"
             android:text="Change master password"
             android:textAppearance="?textAppearanceTitleMedium"
             app:layout_constraintBottom_toTopOf="@+id/txt_current_password_tittle"
             app:layout_constraintEnd_toStartOf="@+id/img_show_hide_password"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView4"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
 
@@ -171,10 +205,10 @@
             android:id="@+id/txt_current_password_tittle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="24dp"
             android:text="Current password: "
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView4"
             app:layout_constraintTop_toBottomOf="@+id/text2" />
 
         <TextView
@@ -210,8 +244,7 @@
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -219,13 +252,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="8dp"
-        android:drawablePadding="8dp"
+        android:fontFamily="sans-serif"
         android:gravity="center"
         android:text="About"
-        android:textAppearance="?textAppearanceLabelLarge"
-        android:textColor="?colorPrimary"
-        app:drawableStartCompat="@drawable/ic_info_24"
-        app:drawableTint="?colorPrimary" />
+        android:textColor="?colorPrimary" />
 
     <TextView
         android:layout_width="match_parent"

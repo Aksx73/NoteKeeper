@@ -16,4 +16,17 @@
         <item name="android:listPreferredItemHeightSmall">50dp</item>
     </style>
 
+    <style name="Theme.CollapsingToolbar.Title.Big" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">32sp</item>
+        <item name="fontFamily">sans-serif</item>
+    </style>
+    <style name="Theme.CollapsingToolbar.Title.Big2" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">40sp</item>
+        <item name="fontFamily">sans-serif-medium</item>
+    </style>
+    <style name="Theme.Toolbar.Title" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
 </resources>

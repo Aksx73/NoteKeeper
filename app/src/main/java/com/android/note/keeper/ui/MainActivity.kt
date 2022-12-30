@@ -113,10 +113,7 @@ class MainActivity : AppCompatActivity() {
                     binding.drawerLayout.close()
                 }
                 R.id.about -> {
-                    //todo about page
-                    Snackbar.make(binding.drawerLayout, "About clicked", Snackbar.LENGTH_SHORT)
-                        .show()
-                    binding.drawerLayout.close()
+                    startActivity(Intent(this, AboutActivity::class.java))
                 }
                 else -> {
                     NavigationUI.onNavDestinationSelected(menuItem, navController)
