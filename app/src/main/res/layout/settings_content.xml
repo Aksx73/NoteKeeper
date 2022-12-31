@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <TextView
@@ -13,9 +13,9 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="12dp"
         android:drawablePadding="8dp"
+        android:fontFamily="sans-serif"
         android:gravity="center"
         android:text="Appearance"
-        android:fontFamily="sans-serif"
         android:textColor="?colorPrimary" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -85,9 +85,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/lyt_use_system_color"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="gone"
-        tools:visibility="visible"
-        android:layout_height="wrap_content">
+        tools:visibility="visible">
 
         <ImageView
             android:id="@+id/imageView3"
@@ -158,19 +158,19 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="8dp"
+        android:fontFamily="sans-serif"
         android:gravity="center"
         android:text="Security"
-        android:fontFamily="sans-serif"
         android:textColor="?colorPrimary" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/lyt_change_master_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:background="?selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:animateLayoutChanges="true"
         android:paddingVertical="16dp">
 
         <ImageView
@@ -242,64 +242,71 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="sans-serif"
-        android:gravity="center"
-        android:text="About"
-        android:textColor="?colorPrimary" />
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?selectableItemBackground"
-        android:clickable="true"
-        android:drawablePadding="24dp"
-        android:fontFamily="sans-serif"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="14dp"
-        android:paddingVertical="14dp"
-        android:text="Privacy policy"
-        android:textAppearance="?textAppearanceTitleMedium"
-        app:drawableStartCompat="@drawable/ic_outline_article_24" />
+        android:visibility="gone"
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?selectableItemBackground"
-        android:clickable="true"
-        android:drawablePadding="24dp"
-        android:fontFamily="sans-serif"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="14dp"
-        android:paddingVertical="14dp"
-        android:text="Send feedback"
-        android:textAppearance="?textAppearanceTitleMedium"
-        android:textSize="16sp"
-        app:drawableStartCompat="@drawable/ic_mail_outline_24" />
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="About"
+            android:textColor="?colorPrimary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:drawablePadding="24dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="14dp"
+            android:text="Privacy policy"
+            android:textAppearance="?textAppearanceTitleMedium"
+            app:drawableStartCompat="@drawable/ic_outline_article_24" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:drawablePadding="24dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="14dp"
+            android:text="Send feedback"
+            android:textAppearance="?textAppearanceTitleMedium"
+            android:textSize="16sp"
+            app:drawableStartCompat="@drawable/ic_mail_outline_24" />
 
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?selectableItemBackground"
-        android:clickable="true"
-        android:drawablePadding="24dp"
-        android:fontFamily="sans-serif"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="14dp"
-        android:paddingVertical="14dp"
-        android:text="Rate app"
-        android:textAppearance="?textAppearanceTitleMedium"
-        app:drawableStartCompat="@drawable/ic_rate_24" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:drawablePadding="24dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="14dp"
+            android:text="Rate app"
+            android:textAppearance="?textAppearanceTitleMedium"
+            app:drawableStartCompat="@drawable/ic_rate_24" />
+    </LinearLayout>
 
 
 </LinearLayout>

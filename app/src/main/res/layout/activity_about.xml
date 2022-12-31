@@ -43,6 +43,7 @@
             android:layout_height="match_parent">
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/materialCardView"
                 style="@style/Widget.Material3.CardView.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,8 +61,8 @@
                         android:id="@+id/imageView3"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:layout_marginTop="16dp"
                         android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         android:src="@drawable/ic_app_icon"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -72,8 +73,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="12dp"
-                        android:text="@string/app_name"
                         android:fontFamily="sans-serif"
+                        android:text="@string/app_name"
                         android:textAppearance="?textAppearanceTitleMedium"
                         app:layout_constraintBottom_toTopOf="@+id/txt_app_version"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -97,11 +98,12 @@
                     <HorizontalScrollView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
                         android:clipToPadding="false"
                         android:orientation="horizontal"
                         android:paddingHorizontal="16dp"
-                        android:layout_marginTop="18dp"
                         android:paddingBottom="8dp"
+                        android:scrollbars="none"
                         app:layout_constraintTop_toBottomOf="@+id/txt_app_version"
                         tools:layout_editor_absoluteX="16dp">
 
@@ -121,8 +123,24 @@
                                 style="@style/Widget.Material3.Button.OutlinedButton.Icon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Email"
                                 android:layout_marginStart="8dp"
+                                android:text="Email"
+                                app:icon="@drawable/ic_mail_outline_24" />
+
+                            <com.google.android.material.button.MaterialButton
+                                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:text="Website"
+                                app:icon="@drawable/ic_notes_24" />
+
+                            <com.google.android.material.button.MaterialButton
+                                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:text="Twitter"
                                 app:icon="@drawable/ic_mail_outline_24" />
 
                         </LinearLayout>
@@ -132,6 +150,105 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Material3.CardView.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialCardView">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/privacy_policy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?selectableItemBackground"
+                        android:clickable="true"
+                        android:drawablePadding="24dp"
+                        android:fontFamily="sans-serif"
+                        android:gravity="center_vertical"
+                        android:padding="16dp"
+                        android:text="Privacy policy"
+                        android:textAppearance="?textAppearanceTitleMedium"
+                        app:drawableStartCompat="@drawable/ic_outline_article_24"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/feedback"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?selectableItemBackground"
+                        android:clickable="true"
+                        android:drawablePadding="24dp"
+                        android:fontFamily="sans-serif"
+                        android:gravity="center_vertical"
+                        android:padding="16dp"
+                        android:text="Send feedback"
+                        android:textAppearance="?textAppearanceTitleMedium"
+                        android:textSize="16sp"
+                        app:drawableStartCompat="@drawable/ic_mail_outline_24"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/privacy_policy" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/rate_app"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?selectableItemBackground"
+                        android:clickable="true"
+                        android:drawablePadding="24dp"
+                        android:fontFamily="sans-serif"
+                        android:gravity="center_vertical"
+                        android:padding="16dp"
+                        android:text="Rate app"
+                        android:textAppearance="?textAppearanceTitleMedium"
+                        app:drawableStartCompat="@drawable/ic_rate_24"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/feedback" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/share"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?selectableItemBackground"
+                        android:clickable="true"
+                        android:drawablePadding="24dp"
+                        android:fontFamily="sans-serif"
+                        android:gravity="center_vertical"
+                        android:padding="16dp"
+                        android:text="Share app"
+                        android:textAppearance="?textAppearanceTitleMedium"
+                        app:drawableStartCompat="@drawable/ic_share_24"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/feedback" />
+
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
