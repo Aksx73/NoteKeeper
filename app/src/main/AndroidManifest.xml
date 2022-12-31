@@ -13,15 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App.Starting"
         tools:targetApi="31">
-
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.NoteKeeper"
-            android:label="@string/app_name">
+            android:theme="@style/Theme.NoteKeeper">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -29,11 +26,17 @@
             android:name=".ui.settings.SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings"
-            android:theme="@style/Theme.NoteKeeper"/>
+            android:theme="@style/Theme.NoteKeeper" />
         <activity
             android:name=".ui.AboutActivity"
             android:exported="true"
-            android:theme="@style/Theme.NoteKeeper"/>
+            android:theme="@style/Theme.NoteKeeper" />
+        <activity
+            android:name=".ui.BackupActivity"
+            android:exported="false"
+            android:theme="@style/Theme.NoteKeeper" >
+        </activity>
+
     </application>
 
 </manifest>

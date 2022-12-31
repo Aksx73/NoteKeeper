@@ -91,9 +91,7 @@ class MainActivity : AppCompatActivity() {
             // binding.navigationView.setCheckedItem(menuItem)
             when (menuItem.itemId) {
                 R.id.backup -> {
-                    Snackbar.make(binding.drawerLayout, "Backup clicked", Snackbar.LENGTH_SHORT)
-                        .show()
-                    binding.drawerLayout.close()
+                    startActivity(Intent(this, BackupActivity::class.java))
                 }
                 R.id.settings -> {
                     startActivity(Intent(this, SettingsActivity::class.java))
