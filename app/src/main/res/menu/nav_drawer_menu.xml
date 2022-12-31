@@ -35,35 +35,21 @@
                 android:title="Settings"
                 android:checkable="false"
                 app:showAsAction="ifRoom"/>
+
+            <item
+                android:id="@+id/backup"
+                android:icon="@drawable/ic_backup_restore_24"
+                android:title="Backup"
+                android:checkable="false"
+                app:showAsAction="ifRoom"/>
+
             <item
                 android:id="@+id/about"
                 android:icon="@drawable/ic_info_24"
                 android:title="About"
                 android:checkable="false"
                 app:showAsAction="ifRoom"/>
-            <item
-                android:id="@+id/share"
-                android:icon="@drawable/ic_share_24"
-                android:title="Share app"
-                android:checkable="false"
-                android:visible="false"
-                app:showAsAction="ifRoom"/>
 
-            <item
-                android:id="@+id/feedback"
-                android:icon="@drawable/ic_mail_outline_24"
-                android:title="Share feedback"
-                android:checkable="false"
-                android:visible="false"
-                app:showAsAction="ifRoom"/>
-
-            <item
-                android:id="@+id/rate"
-                android:icon="@drawable/ic_rate_24"
-                android:title="Rate app"
-                android:checkable="false"
-                android:visible="false"
-                app:showAsAction="ifRoom"/>
         </menu>
     </item>
 </menu>

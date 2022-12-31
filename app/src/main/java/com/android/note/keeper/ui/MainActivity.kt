@@ -90,27 +90,14 @@ class MainActivity : AppCompatActivity() {
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             // binding.navigationView.setCheckedItem(menuItem)
             when (menuItem.itemId) {
-                R.id.share -> {
-                    //todo share
-                    Snackbar.make(binding.drawerLayout, "Share clicked", Snackbar.LENGTH_SHORT)
+                R.id.backup -> {
+                    Snackbar.make(binding.drawerLayout, "Backup clicked", Snackbar.LENGTH_SHORT)
                         .show()
                     binding.drawerLayout.close()
                 }
                 R.id.settings -> {
                     startActivity(Intent(this, SettingsActivity::class.java))
                     // binding.drawerLayout.close()
-                }
-                R.id.rate -> {
-                    //todo rate
-                    Snackbar.make(binding.drawerLayout, "Rate clicked", Snackbar.LENGTH_SHORT)
-                        .show()
-                    binding.drawerLayout.close()
-                }
-                R.id.feedback -> {
-                    //todo open gmail
-                    Snackbar.make(binding.drawerLayout, "Feedback clicked", Snackbar.LENGTH_SHORT)
-                        .show()
-                    binding.drawerLayout.close()
                 }
                 R.id.about -> {
                     startActivity(Intent(this, AboutActivity::class.java))

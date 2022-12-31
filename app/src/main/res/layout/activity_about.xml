@@ -125,7 +125,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
                                 android:text="Email"
-                                app:icon="@drawable/ic_mail_outline_24" />
+                                app:icon="@drawable/ic_alternate_email_24" />
 
                             <com.google.android.material.button.MaterialButton
                                 style="@style/Widget.Material3.Button.OutlinedButton.Icon"
