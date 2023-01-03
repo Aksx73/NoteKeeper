@@ -29,7 +29,6 @@ import com.android.note.keeper.databinding.FragmentNoteDetailBinding
 import com.android.note.keeper.ui.MainActivity
 import com.android.note.keeper.util.ColorsUtil
 import com.android.note.keeper.util.Constants
-import com.android.note.keeper.util.DemoUtils
 import com.android.note.keeper.util.Utils
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
@@ -76,7 +75,6 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
     ): View? {
         _binding = FragmentNoteDetailBinding.inflate(inflater, container, false)
 
-        DemoUtils.addBottomSpaceInsetsIfNeeded(binding.root as ViewGroup, container)
 
         return binding.root
     }
@@ -826,7 +824,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             } else {
                 val alertDialog = MaterialAlertDialogBuilder(requireContext())
                     .setMessage("Delete this note?")
-                    .setPositiveButton("Yes") { _, _ ->
+                    .setPositiveButton("Delete") { _, _ ->
                         viewModel.onDeleteClick(viewModel.currentNote.value!!)
 
                         setFragmentResult(
@@ -838,7 +836,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                         )
                         findNavController().popBackStack()
                     }
-                    .setNegativeButton("No") { dialog, _ ->
+                    .setNegativeButton("Cancel") { dialog, _ ->
                         dialog.dismiss()
                     }
                 alertDialog.show()

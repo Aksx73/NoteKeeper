@@ -1,17 +1,13 @@
 package com.android.note.keeper.ui.notelist
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
-import androidx.core.os.postDelayed
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
@@ -28,11 +24,8 @@ import com.android.note.keeper.data.PreferenceManager
 import com.android.note.keeper.data.model.Note
 import com.android.note.keeper.databinding.FragmentNoteListBinding
 import com.android.note.keeper.ui.MainActivity
-import com.android.note.keeper.ui.settings.SettingsActivity
 import com.android.note.keeper.util.Constants
-import com.android.note.keeper.util.DemoUtils
 import com.android.note.keeper.util.Utils
-import com.android.note.keeper.util.Utils.smoothSnapToPosition
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -73,7 +66,6 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
     ): View? {
         _binding = FragmentNoteListBinding.inflate(inflater, container, false)
 
-        DemoUtils.addBottomSpaceInsetsIfNeeded(binding.root as ViewGroup, container)
 
         return binding.root
     }
