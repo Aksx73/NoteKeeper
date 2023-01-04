@@ -130,7 +130,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
             note?.let {
                 when (result) {
                     Constants.NOTE_DELETE_RESULT_OK -> {
-                        Snackbar.make(requireView(), "Note deleted", Snackbar.LENGTH_LONG)
+                        Snackbar.make(requireView(), "Note moved to Bin", Snackbar.LENGTH_LONG)
                             .setAction("Undo") {
                                 viewModel.onUndoDeleteClick(note)
                             }.show()
@@ -162,7 +162,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                 when (event) {
                     is NoteListViewModel.TasksEvent.ShowUndoDeleteNoteMessage -> {
                         Log.d("TAG", "observeEvents: called")
-                        Snackbar.make(requireView(), "Note deleted", Snackbar.LENGTH_LONG)
+                        Snackbar.make(requireView(), "Note moved to Bin", Snackbar.LENGTH_LONG)
                             .setAction("Undo") {
                                 viewModel.onUndoDeleteClick(event.note)
                             }.show()
@@ -431,7 +431,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                 ly_password.error = null
                 if (et_password.text.toString() == masterPassword) {
                     viewModel.onDeleteClick(note)
-                    Utils.showSnackBar(binding.parent, "Note deleted", binding.fab)
+                    Utils.showSnackBar(binding.parent, "Note moved to Bin", binding.fab)
                     bottomSheetDialog.dismiss()
                 } else {
                     ly_password.error = "Wrong master password!"
@@ -453,10 +453,10 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
         } else {
             val alertDialog = MaterialAlertDialogBuilder(requireContext())
                 .setMessage("Delete this note?")
-                .setPositiveButton("Yes") { _, _ ->
+                .setPositiveButton("Delete") { _, _ ->
                     viewModel.onDeleteClick(note)
                 }
-                .setNegativeButton("No") { dialog, _ ->
+                .setNegativeButton("Cancel") { dialog, _ ->
                     dialog.dismiss()
                 }
             alertDialog.show()

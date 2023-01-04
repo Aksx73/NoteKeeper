@@ -18,12 +18,18 @@ class SettingViewModel @Inject constructor(
     private val _isPasswordVisible = MutableLiveData<Boolean>(false)
     val isPasswordVisible : LiveData<Boolean> = _isPasswordVisible
 
+    val themeFlow = preferenceManager.themeMode.asLiveData()
+
     //here both are needed
     val masterPasswordFlow = preferenceManager.masterPasswordFlow
     val masterPasswordLiveData = preferenceManager.masterPasswordFlow.asLiveData()
 
     fun setMasterPassword(password: String) = viewModelScope.launch {
         preferenceManager.setMasterPassword(password)
+    }
+
+    fun setThemeMode(uiMode: Int) = viewModelScope.launch {
+        preferenceManager.setThemeMode(uiMode)
     }
 
     fun setDynamicColorEnabled(isEnabled: Boolean) = viewModelScope.launch {

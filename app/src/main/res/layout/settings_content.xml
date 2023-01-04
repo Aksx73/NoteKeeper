@@ -62,18 +62,21 @@
             app:singleSelection="true">
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/chip_off"
                 style="@style/Widget.Material3.Chip.Suggestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Off" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/chip_on"
                 style="@style/Widget.Material3.Chip.Suggestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="On" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/chip_follow_system"
                 style="@style/Widget.Material3.Chip.Suggestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -2,6 +2,7 @@ package com.android.note.keeper.data
 
 import android.content.Context
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
@@ -23,7 +24,7 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
 
     val masterPasswordFlow: Flow<String> = dataStore.data
         .map { preferences ->
-            preferences[MASTER_PASSWORD] ?: DEFAULT_PASSWORD
+            preferences[PREF_MASTER_PASSWORD] ?: DEFAULT_PASSWORD
         }
         .catch { exception ->
             if (exception is IOException) {
@@ -41,7 +42,7 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
 
     val dynamicThemingFlow : Flow<Boolean> = dataStore.data
         .map { preference ->
-            preference[DYNAMIC_COLORS] ?: DEFAULT_DYNAMIC_COLOR
+            preference[PREF_DYNAMIC_COLORS] ?: DEFAULT_DYNAMIC_COLOR
         }
         .catch { exception ->
             if (exception is IOException) {
@@ -54,7 +55,7 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
 
     val viewModeFlow: Flow<Int> = dataStore.data
         .map { preference ->
-            preference[VIEW_MODE] ?: SINGLE_COLUMN
+            preference[PREF_VIEW_MODE] ?: SINGLE_COLUMN
         }
         .catch { exception ->
             if (exception is IOException) {
@@ -65,29 +66,41 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
             }
         }
 
+
+
+    val themeMode: Flow<Int> = dataStore.data.map { preferences ->
+        preferences[PREF_THEME] ?: AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+    }
+
     suspend fun setMasterPassword(pass: String) {
         dataStore.edit { preferences ->
-            preferences[MASTER_PASSWORD] = pass
+            preferences[PREF_MASTER_PASSWORD] = pass
+        }
+    }
+
+    suspend fun setThemeMode(mode: Int) {
+        dataStore.edit { settings ->
+            settings[PREF_THEME] = mode
         }
     }
 
     suspend fun setViewMode(mode:Int){
         dataStore.edit { preference ->
-            preference[VIEW_MODE] = mode
+            preference[PREF_VIEW_MODE] = mode
         }
     }
 
     suspend fun setDynamicTheming(isEnabled:Boolean){
         dataStore.edit { preference ->
-            preference[DYNAMIC_COLORS] = isEnabled
+            preference[PREF_DYNAMIC_COLORS] = isEnabled
         }
     }
 
     companion object {
-        val MASTER_PASSWORD = stringPreferencesKey("master_password")
-        val VIEW_MODE = intPreferencesKey("view_mode")
-        val DARK_THEME = intPreferencesKey("dark_theme")
-        val DYNAMIC_COLORS = booleanPreferencesKey("dynamic_theming")
+        val PREF_MASTER_PASSWORD = stringPreferencesKey("master_password")
+        val PREF_VIEW_MODE = intPreferencesKey("view_mode")
+        val PREF_THEME = intPreferencesKey("dark_theme")
+        val PREF_DYNAMIC_COLORS = booleanPreferencesKey("dynamic_theming")
         const val DEFAULT_PASSWORD = ""
         const val SINGLE_COLUMN = 0
         const val MULTI_COLUMN = 1
