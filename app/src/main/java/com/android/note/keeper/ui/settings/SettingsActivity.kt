@@ -1,5 +1,7 @@
 package com.android.note.keeper.ui.settings
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
@@ -19,8 +21,7 @@ import com.android.note.keeper.R
 import com.android.note.keeper.databinding.SettingsActivityBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
+import com.google.android.material.internal.ContextUtils
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -63,8 +64,12 @@ class SettingsActivity : AppCompatActivity() {
 
         initViews()
 
-        viewModel.themeFlow.observe(this){
+        viewModel.themeFlow.observe(this) {
             changeTheme(it)
+        }
+
+        viewModel.dynamicColorFlow.observe(this){
+            //binding.content.switchUseSystemColor.isChecked = it
         }
     }
 
@@ -91,12 +96,10 @@ class SettingsActivity : AppCompatActivity() {
 
             //todo get current dynamic color preference and set switch checked value
 
-            content.switchUseSystemColor.setOnCheckedChangeListener { buttonView, isChecked ->
+            content.switchUseSystemColor.setOnCheckedChangeListener { _, isChecked ->
                 viewModel.setDynamicColorEnabled(isChecked)
-               // recreate()
+                //recreateActivityIfPossible(this@SettingsActivity);
             }
-
-
 
             content.chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
               //  for (i in checkedIds){
@@ -146,7 +149,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun changeTheme(mode: Int) {
-        when(mode){
+        when (mode) {
             AppCompatDelegate.MODE_NIGHT_YES -> binding.content.chipGroup.check(R.id.chip_on)
             AppCompatDelegate.MODE_NIGHT_NO -> binding.content.chipGroup.check(R.id.chip_off)
             AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> binding.content.chipGroup.check(R.id.chip_follow_system)
@@ -182,7 +185,9 @@ class SettingsActivity : AppCompatActivity() {
             bt_save.setOnClickListener {
                 if (et_currentPassword.text.toString() == masterPassword) {
                     // correct
-                    if (et_password.text.toString().isNotBlank() && et_confirm.text.toString().isNotBlank()) {
+                    if (et_password.text.toString().isNotBlank() && et_confirm.text.toString()
+                            .isNotBlank()
+                    ) {
                         if (et_password.text.toString() == et_confirm.text.toString()) {
                             //todo save to datastore
                             viewModel.setMasterPassword(et_password.text.toString())
@@ -260,6 +265,12 @@ class SettingsActivity : AppCompatActivity() {
 
         bottomSheetDialog.setContentView(bottomsheet)
         bottomSheetDialog.show()
+    }
+
+    @SuppressLint("RestrictedApi")
+    private fun recreateActivityIfPossible(context: Context) {
+        val activity = ContextUtils.getActivity(context)
+        activity?.recreate()
     }
 
 

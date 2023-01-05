@@ -19,6 +19,7 @@ class SettingViewModel @Inject constructor(
     val isPasswordVisible : LiveData<Boolean> = _isPasswordVisible
 
     val themeFlow = preferenceManager.themeMode.asLiveData()
+    val dynamicColorFlow = preferenceManager.dynamicThemingFlow.asLiveData()
 
     //here both are needed
     val masterPasswordFlow = preferenceManager.masterPasswordFlow

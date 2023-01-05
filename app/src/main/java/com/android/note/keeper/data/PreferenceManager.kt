@@ -35,11 +35,6 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
             }
         }
 
-   /* suspend fun getViewMode(): Int {
-        val preferences = dataStore.data.first()
-        return preferences[VIEW_MODE] ?: SINGLE_COLUMN
-    }*/
-
     val dynamicThemingFlow : Flow<Boolean> = dataStore.data
         .map { preference ->
             preference[PREF_DYNAMIC_COLORS] ?: DEFAULT_DYNAMIC_COLOR

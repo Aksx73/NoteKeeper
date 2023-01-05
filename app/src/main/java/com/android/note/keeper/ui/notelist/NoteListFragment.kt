@@ -224,7 +224,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        searchView.setOnQueryTextListener(null)
+       // searchView.setOnQueryTextListener(null)
     }
 
     @SuppressLint("RestrictedApi")
