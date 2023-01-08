@@ -45,6 +45,10 @@ class DeletedNoteFragment : Fragment(R.layout.fragment_deleted_note), MenuProvid
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
+
+
+
+
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
