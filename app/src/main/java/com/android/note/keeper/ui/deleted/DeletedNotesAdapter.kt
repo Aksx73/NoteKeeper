@@ -28,18 +28,9 @@ class DeletedNotesAdapter (
         holder.bind(currentItem)
     }
 
-    inner class NoteViewHolder(private val binding: DeletedNoteListItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        private var colorInt: Int? = null
-        private var strokeColorInt: Int? = null
-        private var colorsUtil: ColorsUtil
+    inner class NoteViewHolder(private val binding: DeletedNoteListItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-            colorInt = Utils.getColorFromAttr(binding.root.context, com.google.android.material.R.attr.colorSurface)
-            strokeColorInt = Utils.getColorFromAttr(binding.root.context, com.google.android.material.R.attr.colorOutline)
-
-            colorsUtil = ColorsUtil()
-
             binding.apply {
                 root.setOnClickListener {
                     val position = adapterPosition
@@ -54,25 +45,8 @@ class DeletedNotesAdapter (
         fun bind(note: DeletedNote) {
             binding.apply {
                 txtTitle.isVisible = !note.title.isNullOrBlank()
-                txtSubtitle.isVisible = !note.content.isNullOrBlank() && !note.isPasswordProtected
-                pinned.isVisible = note.pin
                 txtTitle.text = note.title
                 txtSubtitle.text = note.content
-                txtDate.text = note.formattedDate
-                imgLock.isVisible = note.isPasswordProtected
-                txtHiddenContent.text = "Content is hidden"
-                txtHiddenContent.isVisible = note.isPasswordProtected
-
-                val colorName = note.color
-                if (colorName == Constants.COLOR_DEFAULT) {
-                    parentCard.setCardBackgroundColor(colorInt!!)
-                    parentCard.strokeColor = strokeColorInt!!
-                } else {
-                    val colorHex = binding.root.context.resources.getString(colorsUtil.getColor(colorName))
-                    val colorInt : Int = Color.parseColor(colorHex)
-                    parentCard.setCardBackgroundColor(colorInt)
-                    parentCard.strokeColor = colorInt
-                }
             }
         }
     }

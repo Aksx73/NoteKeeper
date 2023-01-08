@@ -12,54 +12,29 @@
     android:background="?selectableItemBackground"
     android:clickable="true">
 
-    <View
-        android:id="@+id/pinned"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_gravity="start|top"
-        android:background="@drawable/triangle_pin_bkg"
-        android:visibility="gone" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="16dp"
-        android:paddingStart="16dp">
+        android:paddingVertical="24dp"
+        android:paddingHorizontal="16dp">
 
 
         <TextView
             android:id="@+id/txt_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:paddingBottom="8dp"
             android:singleLine="true"
             android:textColor="?android:textColorPrimary"
             android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/img_option"
+
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@tools:sample/lorem" />
-
-        <TextView
-            android:id="@+id/txt_hidden_content"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif"
-            android:paddingBottom="8dp"
-            android:singleLine="true"
-            android:textColor="?android:textColorSecondary"
-            android:textSize="16sp"
-            android:textStyle="italic"
-            android:visibility="gone"
-            app:layout_constraintEnd_toStartOf="@+id/img_option"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_title"
-            tools:text="@tools:sample/lorem" />
-
 
         <TextView
             android:id="@+id/txt_subtitle"
@@ -68,55 +43,12 @@
             android:ellipsize="end"
             android:fontFamily="sans-serif"
             android:maxLines="10"
-            android:paddingBottom="8dp"
             android:textColor="?android:textColorPrimary"
-            app:layout_constraintEnd_toStartOf="@+id/img_option"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_hidden_content"
+            app:layout_constraintTop_toBottomOf="@+id/txt_title"
             tools:text="@tools:sample/lorem/random" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_subtitle">
-
-            <ImageView
-                android:id="@+id/img_lock"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_marginEnd="8dp"
-                android:visibility="visible"
-                app:srcCompat="@drawable/ic_lock_filled_24" />
-
-            <TextView
-                android:id="@+id/txt_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:textAppearance="?textAppearanceLabelMedium"
-                tools:text="@tools:sample/date/mmddyy" />
-
-        </LinearLayout>
-
-
-        <ImageView
-            android:id="@+id/img_option"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:padding="4dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/ic_more_vert_24" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
