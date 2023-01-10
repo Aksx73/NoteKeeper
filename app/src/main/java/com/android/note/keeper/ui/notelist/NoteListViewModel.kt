@@ -4,7 +4,9 @@ package com.android.note.keeper.ui.notelist
 
 import androidx.lifecycle.*
 import com.android.note.keeper.data.PreferenceManager
+import com.android.note.keeper.data.model.DeletedNote
 import com.android.note.keeper.data.model.Note
+import com.android.note.keeper.data.repository.DeletedNoteRepository
 import com.android.note.keeper.data.repository.NoteRepository
 import com.android.note.keeper.ui.notedetail.NoteDetailViewModel
 import com.android.note.keeper.util.Constants.NOTE_ADDED_RESULT_OK
@@ -23,6 +25,7 @@ import javax.inject.Inject
 class NoteListViewModel @Inject constructor(
     private val preferenceManager: PreferenceManager,
     private val repository: NoteRepository,
+    private val deletedNotesRepository: DeletedNoteRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -62,6 +65,7 @@ class NoteListViewModel @Inject constructor(
 
     fun onDeleteClick(note: Note) {
         deleteNote(note)
+        insertNoteInBin(note)
     }
 
     fun onUndoDeleteClick(note: Note) = viewModelScope.launch {
@@ -78,6 +82,10 @@ class NoteListViewModel @Inject constructor(
 
     private fun updateNote(note: Note) = viewModelScope.launch {
         repository.update(note)
+    }
+
+    private fun insertNoteInBin(note: Note) = viewModelScope.launch {
+        deletedNotesRepository.insert(DeletedNote(_id = note._id, title = note.title, content = note.content))
     }
 
     private fun deleteNote(note: Note) = viewModelScope.launch {

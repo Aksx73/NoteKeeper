@@ -15,7 +15,7 @@
         android:paddingTop="6dp"
         android:paddingHorizontal="4dp"
         tools:itemCount="5"
-        tools:listitem="@layout/note_list_item" />
+        tools:listitem="@layout/deleted_note_list_item" />
 
     <LinearLayout
         android:id="@+id/empty_view"
@@ -30,6 +30,6 @@
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/ic_notes_24"
             android:drawablePadding="8dp"
-            android:text="No archived notes" />
+            android:text="Empty recycle bin" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

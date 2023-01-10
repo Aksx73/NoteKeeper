@@ -1,6 +1,5 @@
 package com.android.note.keeper.ui.deleted
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -9,9 +8,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.android.note.keeper.data.model.DeletedNote
 import com.android.note.keeper.databinding.DeletedNoteListItemBinding
-import com.android.note.keeper.util.ColorsUtil
-import com.android.note.keeper.util.Constants
-import com.android.note.keeper.util.Utils
 
 class DeletedNotesAdapter (
     private val listener: OnItemClickListener
@@ -44,7 +40,8 @@ class DeletedNotesAdapter (
 
         fun bind(note: DeletedNote) {
             binding.apply {
-                txtTitle.isVisible = !note.title.isNullOrBlank()
+                txtTitle.isVisible = note.title.isNotBlank()
+                txtSubtitle.isVisible = note.content.isNotBlank()
                 txtTitle.text = note.title
                 txtSubtitle.text = note.content
             }

@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.android.note.keeper.R
 import com.android.note.keeper.data.PreferenceManager
 import com.android.note.keeper.data.model.DeletedNote
@@ -23,9 +24,10 @@ import com.android.note.keeper.ui.notelist.NoteAdapter
 import com.android.note.keeper.ui.notelist.NoteListViewModel
 import com.android.note.keeper.util.Constants
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class DeletedNoteFragment : Fragment(R.layout.fragment_deleted_note), MenuProvider,
     DeletedNotesAdapter.OnItemClickListener {
     private var _binding: FragmentDeletedNoteBinding? = null
@@ -40,14 +42,12 @@ class DeletedNoteFragment : Fragment(R.layout.fragment_deleted_note), MenuProvid
     ): View? {
         _binding = FragmentDeletedNoteBinding.inflate(inflater, container, false)
 
-        // DemoUtils.addBottomSpaceInsetsIfNeeded(binding.root as ViewGroup, container)
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentArchiveNoteBinding.bind(view)
+        //val binding = FragmentDeletedNoteBinding.bind(view)
         (activity as MainActivity).readMode.isVisible = false
 
         val menuHost: MenuHost = requireActivity()
@@ -58,7 +58,7 @@ class DeletedNoteFragment : Fragment(R.layout.fragment_deleted_note), MenuProvid
         binding.apply {
             recyclerView.adapter = noteAdapter
             recyclerView.setHasFixedSize(true)
-
+            recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         }
 
         viewModel.deletedNotes.observe(viewLifecycleOwner) { notes ->

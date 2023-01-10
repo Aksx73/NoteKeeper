@@ -2,7 +2,9 @@ package com.android.note.keeper.ui.notedetail
 
 import androidx.lifecycle.*
 import com.android.note.keeper.data.PreferenceManager
+import com.android.note.keeper.data.model.DeletedNote
 import com.android.note.keeper.data.model.Note
+import com.android.note.keeper.data.repository.DeletedNoteRepository
 import com.android.note.keeper.data.repository.NoteRepository
 import com.android.note.keeper.ui.notelist.NoteListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NoteDetailViewModel @Inject constructor(
     private val preferenceManager: PreferenceManager,
+    private val deletedNotesRepository: DeletedNoteRepository,
     private val repository: NoteRepository
 ) : ViewModel() {
 
@@ -84,6 +87,7 @@ class NoteDetailViewModel @Inject constructor(
 
     fun onDeleteClick(note: Note) {
         deleteNote(note)
+        insertNoteInBin(note)
     }
 
     private fun createNote(note: Note) = viewModelScope.launch {
@@ -102,6 +106,9 @@ class NoteDetailViewModel @Inject constructor(
         _tasksEvent.emit(TasksEvent.ShowUndoDeleteNoteMessage(note))
     }
 
+    private fun insertNoteInBin(note: Note) = viewModelScope.launch {
+        deletedNotesRepository.insert(DeletedNote(_id = note._id, title = note.title, content = note.content))
+    }
 
     fun setMasterPassword(password: String) = viewModelScope.launch {
         preferenceManager.setMasterPassword(password)

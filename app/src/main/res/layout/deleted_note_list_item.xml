@@ -16,7 +16,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="24dp"
+        android:paddingVertical="12dp"
         android:paddingHorizontal="16dp">
 
 
@@ -26,11 +26,10 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
-            android:paddingBottom="8dp"
-            android:singleLine="true"
+            android:paddingVertical="4dp"
+            android:maxLines="3"
             android:textColor="?android:textColorPrimary"
             android:textSize="16sp"
-
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -43,6 +42,7 @@
             android:ellipsize="end"
             android:fontFamily="sans-serif"
             android:maxLines="10"
+            android:paddingVertical="4dp"
             android:textColor="?android:textColorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
