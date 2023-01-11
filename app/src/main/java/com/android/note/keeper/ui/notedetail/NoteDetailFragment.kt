@@ -123,7 +123,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     }
                 }
             }
-        } else { //new note
+        }
+        else { //new note
             if (args.deletedNote == null) {
                 binding.parent.setOnClickListener {
                     if (viewModel.currentNote.value == null || viewModel.editMode.value == true) {
@@ -143,11 +144,21 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 )
                 binding.parent.setBackgroundColor(colorInt)
 
-            } else {  //deleted note
+            }
+            else {  //deleted note
                 //todo disable edit text
                 //disable bottom action bar actions
-
-
+                args.deletedNote?.let {
+                    binding.apply {
+                        etTitle.setText(it.title)
+                        etContent.setText(it.content)
+                        disableInputs()
+                        Utils.disableInput(binding.etTitle)
+                        Utils.disableInput(binding.etContent)
+                        binding.bottomActionBar.txtTime.text =
+                            "Edited ${Utils.getFormattedDate(it.created)}"
+                    }
+                }
             }
         }
 
@@ -379,19 +390,21 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
     @SuppressLint("RestrictedApi")
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        if (menu is MenuBuilder) {
+       /* if (menu is MenuBuilder) {
             menu.setOptionalIconsVisible(true)
+        }*/
+        if (args.deletedNote == null) {
+            menuInflater.inflate(R.menu.menu_detail, menu)
+
+            // menuSave = menu.findItem(R.id.action_save)
+            menuEdit = menu.findItem(R.id.action_edit)
+            menuPin = menu.findItem(R.id.action_pin)
+            menuArchive = menu.findItem(R.id.action_archive)
+
+            updateMenuEditSave()
+            updateMenuPinUnpin()
+            updateMenuArchive()
         }
-        menuInflater.inflate(R.menu.menu_detail, menu)
-
-        // menuSave = menu.findItem(R.id.action_save)
-        menuEdit = menu.findItem(R.id.action_edit)
-        menuPin = menu.findItem(R.id.action_pin)
-        menuArchive = menu.findItem(R.id.action_archive)
-
-        updateMenuEditSave()
-        updateMenuPinUnpin()
-        updateMenuArchive()
     }
 
     private fun disableInputs() {
