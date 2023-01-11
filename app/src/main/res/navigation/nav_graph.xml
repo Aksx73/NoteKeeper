@@ -38,13 +38,18 @@
         <action
             android:id="@+id/action_NoteDetailFragment_to_DeletedNoteFragment"
             app:destination="@id/DeletedNoteFragment" />
+        <argument
+            android:name="deletedNote"
+            android:defaultValue="@null"
+            app:argType="com.android.note.keeper.data.model.DeletedNote"
+            app:nullable="true" />
     </fragment>
 
     <fragment
         android:id="@+id/DeletedNoteFragment"
         android:name="com.android.note.keeper.ui.deleted.DeletedNoteFragment"
         android:label="Deleted"
-        tools:layout="@layout/fragment_deleted_note" >
+        tools:layout="@layout/fragment_deleted_note">
         <action
             android:id="@+id/action_DeletedNoteFragment_to_NoteDetailFragment"
             app:destination="@id/NoteDetailFragment" />
@@ -54,7 +59,7 @@
         android:id="@+id/ArchiveNoteFragment"
         android:name="com.android.note.keeper.ui.archive.ArchiveNoteFragment"
         android:label="Archive"
-        tools:layout="@layout/fragment_archive_note" >
+        tools:layout="@layout/fragment_archive_note">
         <action
             android:id="@+id/action_ArchiveNoteFragment_to_NoteDetailFragment"
             app:destination="@id/NoteDetailFragment" />

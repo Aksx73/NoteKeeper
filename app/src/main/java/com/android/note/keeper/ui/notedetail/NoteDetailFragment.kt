@@ -123,26 +123,32 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     }
                 }
             }
-        }
-        else { //new note
-            binding.parent.setOnClickListener {
-                if (viewModel.currentNote.value == null || viewModel.editMode.value == true) {
-                    //todo -> get toolbar reference from activity and make 'read mode' tag textview invisible
+        } else { //new note
+            if (args.deletedNote == null) {
+                binding.parent.setOnClickListener {
+                    if (viewModel.currentNote.value == null || viewModel.editMode.value == true) {
+                        //todo -> get toolbar reference from activity and make 'read mode' tag textview invisible
 
-                    binding.etContent.requestFocus()
-                    Utils.showKeyboard(requireActivity(), binding.etContent)
+                        binding.etContent.requestFocus()
+                        Utils.showKeyboard(requireActivity(), binding.etContent)
+                    }
                 }
+
+                binding.bottomActionBar.txtTime.text =
+                    "Edited ${Utils.getFormattedTime(System.currentTimeMillis())}"
+
+                val colorInt = Utils.getColorFromAttr(
+                    requireContext(),
+                    com.google.android.material.R.attr.colorSurface
+                )
+                binding.parent.setBackgroundColor(colorInt)
+
+            } else {  //deleted note
+                //todo disable edit text
+                //disable bottom action bar actions
+
+
             }
-
-            binding.bottomActionBar.txtTime.text =
-                "Edited ${Utils.getFormattedTime(System.currentTimeMillis())}"
-
-            val colorInt = Utils.getColorFromAttr(
-                requireContext(),
-                com.google.android.material.R.attr.colorSurface
-            )
-            binding.parent.setBackgroundColor(colorInt)
-
         }
 
 
@@ -150,11 +156,11 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             updateUIState(it)
         }
 
-        viewModel.pinValue.observe(viewLifecycleOwner){
+        viewModel.pinValue.observe(viewLifecycleOwner) {
             updateMenuPinUnpin()
         }
 
-        viewModel.archiveValue.observe(viewLifecycleOwner){
+        viewModel.archiveValue.observe(viewLifecycleOwner) {
             updateMenuArchive()
         }
 
@@ -240,6 +246,9 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
     }
 
     private fun bottomActionClickEvent() {
+        binding.bottomActionBar.btPassword.isEnabled = args.deletedNote == null
+        binding.bottomActionBar.btColor.isEnabled = args.deletedNote == null
+
         binding.bottomActionBar.apply {
 
             btColor.setOnClickListener {
@@ -254,6 +263,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 addPassword()
             }
         }
+
+
     }
 
     private fun onOptionClicked() {
@@ -268,11 +279,28 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         val label = bottomsheet.findViewById<TextView>(R.id.label)
         val pin = bottomsheet.findViewById<TextView>(R.id.pin)
         val archive = bottomsheet.findViewById<TextView>(R.id.archive)
+        val restore = bottomsheet.findViewById<TextView>(R.id.restore)
+        val deleteForever = bottomsheet.findViewById<TextView>(R.id.delete_forever)
 
-        addRemovePassword.isVisible = false
-        label.isVisible = true
-        pin.isVisible = false
-        archive.isVisible = false
+        if (args.deletedNote==null) {
+            label.isVisible = true
+            delete.isVisible = true
+            share.isVisible = true
+            pin.isVisible = false
+            addRemovePassword.isVisible = false
+            archive.isVisible = false
+            restore.isVisible = false
+            deleteForever.isVisible = false
+        }else{
+            restore.isVisible = true
+            deleteForever.isVisible = true
+            addRemovePassword.isVisible = false
+            delete.isVisible = false
+            share.isVisible = false
+            label.isVisible = false
+            pin.isVisible = false
+            archive.isVisible = false
+        }
 
         delete.setOnClickListener {
             deleteNote()
@@ -422,8 +450,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                                     "note" to updatedNote
                                 )
                             )
-                        }
-                        else {  //create new note
+                        } else {  //create new note
                             val newNote =
                                 viewModel.tempNote.value!!.copy(title = title, content = content)
                             viewModel.onSaveClick(newNote)
@@ -443,8 +470,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                                 )
                             )
                         }
-                    }
-                    else {
+                    } else {
                         Snackbar.make(
                             binding.parent,
                             "Note content cannot be blank",
@@ -497,8 +523,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                         viewModel.setArchiveValue(false)
                         //todo show snackbar for unarchived and undo button
                         Utils.hideKeyboard(requireActivity())
-                        Snackbar.make(binding.parent,"Note unarchived",Snackbar.LENGTH_SHORT)
-                            .setAction("Undo"){
+                        Snackbar.make(binding.parent, "Note unarchived", Snackbar.LENGTH_SHORT)
+                            .setAction("Undo") {
                                 //todo archive the note
                                 viewModel.setCurrentNote(currentNote.copy(archived = true))
                                 viewModel.onUpdateClick(currentNote.copy(archived = true))
@@ -519,8 +545,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                         )
                         findNavController().popBackStack()
                     }
-                }
-                else { //new note
+                } else { //new note
                     val currentNote = viewModel.tempNote.value
                     if (currentNote!!.archived) { //unarchived
                         val updatedNote = currentNote.copy(archived = false)
@@ -528,7 +553,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                         viewModel.setArchiveValue(false)
                         //todo issue: show snackbar above soft keyboard
                         Utils.hideKeyboard(requireActivity())
-                        Snackbar.make(binding.parent,"Note unarchived",Snackbar.LENGTH_SHORT)
+                        Snackbar.make(binding.parent, "Note unarchived", Snackbar.LENGTH_SHORT)
                             .setAnchorView(binding.bottomActionBar.bottomActionBar)
                             .show()
                     } else { //archived
@@ -537,7 +562,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                         viewModel.setArchiveValue(true)
                         //todo issue: show snackbar above soft keyboard
                         Utils.hideKeyboard(requireActivity())
-                        Snackbar.make(binding.parent,"Note archived",Snackbar.LENGTH_SHORT)
+                        Snackbar.make(binding.parent, "Note archived", Snackbar.LENGTH_SHORT)
                             .setAnchorView(binding.bottomActionBar.bottomActionBar)
                             .show()
                     }
@@ -578,7 +603,11 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 if (et_password.text.toString() == et_confirm.text.toString()) {
                     //todo save to datastore
                     viewModel.setMasterPassword(et_password.text.toString())
-                    Snackbar.make(binding.parent, "Master password added! Click on lock option again to enable lock", Snackbar.LENGTH_LONG)
+                    Snackbar.make(
+                        binding.parent,
+                        "Master password added! Click on lock option again to enable lock",
+                        Snackbar.LENGTH_LONG
+                    )
                         .setAnchorView(binding.bottomActionBar.bottomActionBar).show()
                     loadMasterPassword()
                     bottomSheetDialog.dismiss()

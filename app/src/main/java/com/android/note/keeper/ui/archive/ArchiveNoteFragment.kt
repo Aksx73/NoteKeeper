@@ -470,7 +470,7 @@ class ArchiveNoteFragment : Fragment(R.layout.fragment_archive_note), NoteAdapte
                 .setView(dialogView)
                 .setPositiveButton("Confirm") { _, _ ->
                     if (et_password.text.toString() == masterPassword) {
-                        val action = ArchiveNoteFragmentDirections.actionArchiveNoteFragmentToNoteDetailFragment(task)
+                        val action = ArchiveNoteFragmentDirections.actionArchiveNoteFragmentToNoteDetailFragment(note = task)
                         findNavController().navigate(action)
                     } else {
                         ly_password.isErrorEnabled = true
@@ -482,8 +482,7 @@ class ArchiveNoteFragment : Fragment(R.layout.fragment_archive_note), NoteAdapte
                 .create()
             dialogBuilder.show()
         } else {
-            val action =
-                ArchiveNoteFragmentDirections.actionArchiveNoteFragmentToNoteDetailFragment(task)
+            val action = ArchiveNoteFragmentDirections.actionArchiveNoteFragmentToNoteDetailFragment(note = task)
             findNavController().navigate(action)
         }
 

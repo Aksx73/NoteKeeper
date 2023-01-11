@@ -21,6 +21,7 @@ import com.android.note.keeper.databinding.FragmentArchiveNoteBinding
 import com.android.note.keeper.databinding.FragmentDeletedNoteBinding
 import com.android.note.keeper.ui.MainActivity
 import com.android.note.keeper.ui.notelist.NoteAdapter
+import com.android.note.keeper.ui.notelist.NoteListFragmentDirections
 import com.android.note.keeper.ui.notelist.NoteListViewModel
 import com.android.note.keeper.util.Constants
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -98,6 +99,7 @@ class DeletedNoteFragment : Fragment(R.layout.fragment_deleted_note), MenuProvid
     }
 
     override fun onItemClick(task: DeletedNote) {
-        TODO("Not yet implemented")
+        val action = DeletedNoteFragmentDirections.actionDeletedNoteFragmentToNoteDetailFragment(deletedNote = task)
+        findNavController().navigate(action)
     }
 }

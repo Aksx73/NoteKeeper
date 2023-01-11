@@ -100,7 +100,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
 
             fab.setOnClickListener {
                 val action =
-                    NoteListFragmentDirections.actionNoteListFragmentToNoteDetailFragment(null)
+                    NoteListFragmentDirections.actionNoteListFragmentToNoteDetailFragment()
                 findNavController().navigate(action)
             }
         }
@@ -652,7 +652,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
                     if (et_password.text.toString() == masterPassword) {
                         val action =
                             NoteListFragmentDirections.actionNoteListFragmentToNoteDetailFragment(
-                                task
+                                note = task
                             )
                         findNavController().navigate(action)
                     } else {
@@ -666,7 +666,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list), NoteAdapter.OnIt
             dialogBuilder.show()
         } else {
             val action =
-                NoteListFragmentDirections.actionNoteListFragmentToNoteDetailFragment(task)
+                NoteListFragmentDirections.actionNoteListFragmentToNoteDetailFragment(note = task)
             findNavController().navigate(action)
         }
     }
