@@ -123,9 +123,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     }
                 }
             }
-        }
-        else { //new note
-            if (args.deletedNote == null) {
+        } else {
+            if (args.deletedNote == null) { //new note
                 binding.parent.setOnClickListener {
                     if (viewModel.currentNote.value == null || viewModel.editMode.value == true) {
                         //todo -> get toolbar reference from activity and make 'read mode' tag textview invisible
@@ -144,15 +143,14 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 )
                 binding.parent.setBackgroundColor(colorInt)
 
-            }
-            else {  //deleted note
+            } else {  //deleted note
                 //todo disable edit text
                 //disable bottom action bar actions
                 args.deletedNote?.let {
                     binding.apply {
                         etTitle.setText(it.title)
                         etContent.setText(it.content)
-                        disableInputs()
+                        // disableInputs()
                         Utils.disableInput(binding.etTitle)
                         Utils.disableInput(binding.etContent)
                         binding.bottomActionBar.txtTime.text =
@@ -293,7 +291,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         val restore = bottomsheet.findViewById<TextView>(R.id.restore)
         val deleteForever = bottomsheet.findViewById<TextView>(R.id.delete_forever)
 
-        if (args.deletedNote==null) {
+        if (args.deletedNote == null) {
             label.isVisible = true
             delete.isVisible = true
             share.isVisible = true
@@ -302,7 +300,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             archive.isVisible = false
             restore.isVisible = false
             deleteForever.isVisible = false
-        }else{
+        } else {
             restore.isVisible = true
             deleteForever.isVisible = true
             addRemovePassword.isVisible = false
@@ -390,9 +388,9 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
     @SuppressLint("RestrictedApi")
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-       /* if (menu is MenuBuilder) {
-            menu.setOptionalIconsVisible(true)
-        }*/
+        /* if (menu is MenuBuilder) {
+             menu.setOptionalIconsVisible(true)
+         }*/
         if (args.deletedNote == null) {
             menuInflater.inflate(R.menu.menu_detail, menu)
 
@@ -929,20 +927,22 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     )
                 }
             } else { //new note
-                if (title.isNotBlank() || content.isNotBlank()) {
-                    //todo save new note
-                    val newTempNote =
-                        viewModel.tempNote.value!!.copy(title = title, content = content)
-                    viewModel.setTempNote(newTempNote)
-                    //val newNote = viewModel.tempNote.value!!.copy(title = title, content = content)
-                    viewModel.onSaveClick(viewModel.tempNote.value!!)
-                    setFragmentResult(
-                        Constants.FRAGMENT_RESULT_REQUEST_KEY, /*bundle*/
-                        bundleOf(
-                            "result" to Constants.NOTE_ADDED_RESULT_OK,
-                            "note" to viewModel.tempNote.value!!
+                if (args.deletedNote == null) { //if note is not deleted note then..
+                    if (title.isNotBlank() || content.isNotBlank()) {
+                        //todo save new note
+                        val newTempNote =
+                            viewModel.tempNote.value!!.copy(title = title, content = content)
+                        viewModel.setTempNote(newTempNote)
+                        //val newNote = viewModel.tempNote.value!!.copy(title = title, content = content)
+                        viewModel.onSaveClick(viewModel.tempNote.value!!)
+                        setFragmentResult(
+                            Constants.FRAGMENT_RESULT_REQUEST_KEY, /*bundle*/
+                            bundleOf(
+                                "result" to Constants.NOTE_ADDED_RESULT_OK,
+                                "note" to viewModel.tempNote.value!!
+                            )
                         )
-                    )
+                    }
                 }
 
             }
