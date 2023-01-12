@@ -90,6 +90,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         readOnlyTag = (activity as MainActivity).readMode
 
         viewModel.setCurrentNote(args.note)
+        viewModel.setCurrentDeletedNote(args.deletedNote)
         keyListener = binding.etTitle.keyListener
 
         if (viewModel.currentNote.value != null) { //old note
@@ -124,7 +125,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 }
             }
         } else {
-            if (args.deletedNote == null) { //new note
+            if (viewModel.currentDeletedNote.value == null) { //new note & not deleted note
                 binding.parent.setOnClickListener {
                     if (viewModel.currentNote.value == null || viewModel.editMode.value == true) {
                         //todo -> get toolbar reference from activity and make 'read mode' tag textview invisible
@@ -144,17 +145,24 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 binding.parent.setBackgroundColor(colorInt)
 
             } else {  //deleted note
-                //todo disable edit text
-                //disable bottom action bar actions
-                args.deletedNote?.let {
+                viewModel.currentDeletedNote.value?.let {
                     binding.apply {
+                        viewModel.setEditMode(false)
+                        readOnlyTag.isVisible = false
                         etTitle.setText(it.title)
                         etContent.setText(it.content)
-                        // disableInputs()
-                        Utils.disableInput(binding.etTitle)
-                        Utils.disableInput(binding.etContent)
+                        etContent.setTextIsSelectable(false)
+                        disableInputs()
                         binding.bottomActionBar.txtTime.text =
                             "Edited ${Utils.getFormattedDate(it.created)}"
+
+                        binding.parent.setOnClickListener {
+                            Snackbar.make(it, "Can't edit in Recycle Bin", Snackbar.LENGTH_SHORT)
+                                .setAction("Restore") {
+                                    //todo restore note
+                                }
+                                .setAnchorView(binding.bottomActionBar.bottomActionBar).show()
+                        }
                     }
                 }
             }
@@ -255,8 +263,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
     }
 
     private fun bottomActionClickEvent() {
-        binding.bottomActionBar.btPassword.isEnabled = args.deletedNote == null
-        binding.bottomActionBar.btColor.isEnabled = args.deletedNote == null
+        binding.bottomActionBar.btPassword.isEnabled = viewModel.currentDeletedNote.value == null
+        binding.bottomActionBar.btColor.isEnabled = viewModel.currentDeletedNote.value == null
 
         binding.bottomActionBar.apply {
 
@@ -291,7 +299,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         val restore = bottomsheet.findViewById<TextView>(R.id.restore)
         val deleteForever = bottomsheet.findViewById<TextView>(R.id.delete_forever)
 
-        if (args.deletedNote == null) {
+        if (viewModel.currentDeletedNote.value == null) {
             label.isVisible = true
             delete.isVisible = true
             share.isVisible = true
@@ -374,16 +382,18 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
 
     private fun updateMenuEditSave() {
-        menuEdit?.let {
-            if (viewModel.editMode.value == true) {
-                it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_check_24)
-                it.title = "Save"
-            } else {
-                it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_edit_24)
-                it.title = "Edit"
+        if (viewModel.currentDeletedNote.value == null) {
+            menuEdit?.let {
+                if (viewModel.editMode.value == true) {
+                    it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_check_24)
+                    it.title = "Save"
+                } else {
+                    it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_edit_24)
+                    it.title = "Edit"
+                }
             }
+            readOnlyTag.isVisible = !viewModel.editMode.value!!
         }
-        readOnlyTag.isVisible = !viewModel.editMode.value!!
     }
 
     @SuppressLint("RestrictedApi")
@@ -391,7 +401,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         /* if (menu is MenuBuilder) {
              menu.setOptionalIconsVisible(true)
          }*/
-        if (args.deletedNote == null) {
+        if (viewModel.currentDeletedNote.value == null) {
             menuInflater.inflate(R.menu.menu_detail, menu)
 
             // menuSave = menu.findItem(R.id.action_save)
@@ -927,7 +937,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     )
                 }
             } else { //new note
-                if (args.deletedNote == null) { //if note is not deleted note then..
+                if (viewModel.currentDeletedNote.value == null) { //if note is not deleted note then..
                     if (title.isNotBlank() || content.isNotBlank()) {
                         //todo save new note
                         val newTempNote =

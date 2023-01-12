@@ -28,6 +28,9 @@ class NoteDetailViewModel @Inject constructor(
     private val mutableNote = MutableLiveData<Note?>()
     val currentNote: LiveData<Note?> get() = mutableNote
 
+    private val mutableDeletedNote = MutableLiveData<DeletedNote?>()
+    val currentDeletedNote: LiveData<DeletedNote?> get() = mutableDeletedNote
+
     private val mutableTempNote = MutableLiveData<Note>(Note(title = "", content = ""))
     val tempNote: LiveData<Note> get() = mutableTempNote
 
@@ -75,6 +78,10 @@ class NoteDetailViewModel @Inject constructor(
 
     fun setCurrentNote(note: Note?) {
         mutableNote.value = note
+    }
+
+    fun setCurrentDeletedNote(deletedNote: DeletedNote?) {
+        mutableDeletedNote.value = deletedNote
     }
 
     fun onSaveClick(note: Note) {
