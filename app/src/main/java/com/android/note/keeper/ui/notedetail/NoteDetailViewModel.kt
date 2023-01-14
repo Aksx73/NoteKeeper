@@ -97,6 +97,10 @@ class NoteDetailViewModel @Inject constructor(
         insertNoteInBin(note)
     }
 
+    fun onDeleteForeverClicked(note: DeletedNote){
+        deleteNoteFromBinForever(note)
+    }
+
     private fun createNote(note: Note) = viewModelScope.launch {
         repository.insert(note)
         _tasksEvent.emit(TasksEvent.OnNoteUpdatedConfirmationMessage("Note added"))
@@ -115,6 +119,10 @@ class NoteDetailViewModel @Inject constructor(
 
     private fun insertNoteInBin(note: Note) = viewModelScope.launch {
         deletedNotesRepository.insert(DeletedNote(_id = note._id, title = note.title, content = note.content))
+    }
+
+    private fun deleteNoteFromBinForever(note: DeletedNote) = viewModelScope.launch {
+        deletedNotesRepository.delete(note)
     }
 
     fun setMasterPassword(password: String) = viewModelScope.launch {

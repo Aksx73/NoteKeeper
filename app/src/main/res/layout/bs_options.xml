@@ -193,6 +193,7 @@
                 android:textColor="?android:textColorPrimary"
                 android:textSize="16sp"
                 android:visibility="gone"
+                tools:visibility="visible"
                 android:gravity="center_vertical"
                 android:text="Restore" />
 
@@ -209,6 +210,7 @@
                 android:textColor="?android:textColorPrimary"
                 android:textSize="16sp"
                 android:visibility="gone"
+                tools:visibility="visible"
                 android:gravity="center_vertical"
                 android:text="Delete forever" />
 

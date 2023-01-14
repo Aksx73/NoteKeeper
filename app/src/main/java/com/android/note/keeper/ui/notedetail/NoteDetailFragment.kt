@@ -334,6 +334,17 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             bottomSheetDialog.dismiss()
         }
 
+        restore.setOnClickListener {
+            //todo
+            bottomSheetDialog.dismiss()
+        }
+
+        deleteForever.setOnClickListener {
+            deleteNoteForever()
+            bottomSheetDialog.dismiss()
+        }
+
+
         bottomSheetDialog.setContentView(bottomsheet)
         bottomSheetDialog.show()
     }
@@ -802,6 +813,21 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
         bottomSheetDialog.setContentView(bottomsheet)
         bottomSheetDialog.show()
+    }
+
+    private fun deleteNoteForever() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setMessage("Delete this note forever?")
+            .setPositiveButton("Delete") { _, _ ->
+                viewModel.onDeleteForeverClicked(viewModel.currentDeletedNote.value!!)
+
+                findNavController().popBackStack()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+
     }
 
     private fun deleteNote() {
