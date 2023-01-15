@@ -89,7 +89,7 @@ class DeletedNoteFragment : Fragment(R.layout.fragment_deleted_note), MenuProvid
             .setTitle("Empty Recycle Bin?")
             .setMessage("All notes in Recycle Bin will be permanently deleted.")
             .setPositiveButton("Empty bin") { _, _ ->
-                //todo call delete all notes from view model
+               viewModel.onDeleteAllClick()
             }
             .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
