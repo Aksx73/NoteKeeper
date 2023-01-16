@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.content.res.Resources
 import android.text.InputType
 import android.util.TypedValue
 import android.view.View
@@ -80,6 +81,14 @@ object Utils {
     fun Context.isDarkThemeOn(): Boolean {
         return resources.configuration.uiMode and
                 Configuration.UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
+    }
+
+    fun Context.dpToPx(dp: Int): Int {
+        return (dp * resources.displayMetrics.density).toInt()
+    }
+
+    fun Context.pxToDp(px: Int): Int {
+        return (px / resources.displayMetrics.density).toInt()
     }
 
     @ColorInt
