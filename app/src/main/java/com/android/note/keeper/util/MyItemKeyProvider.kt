@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.note.keeper.ui.deleted.DeletedNotesAdapter
 
 class MyItemKeyProvider(private val recyclerView: RecyclerView) :
-    ItemKeyProvider<Long>(SCOPE_MAPPED) { //SCOPE_CACHED
+    ItemKeyProvider<Long>(SCOPE_CACHED) {
 
     override fun getKey(position: Int): Long? {
         return recyclerView.adapter?.getItemId(position)
