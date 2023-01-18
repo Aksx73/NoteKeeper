@@ -113,23 +113,6 @@ class DeletedNoteFragment : Fragment(R.layout.fragment_deleted_note), MenuProvid
             binding.emptyView.isVisible = notes.isEmpty()
         }
 
-        requireActivity().onBackPressedDispatcher
-            .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    tracker?.let {
-                        if (it.clearSelection()) {
-                            return;
-                        } else {
-                            requireActivity().onBackPressed()
-                        }
-                    }
-                    //todo handle back press
-
-                }
-            }
-            )
-
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
