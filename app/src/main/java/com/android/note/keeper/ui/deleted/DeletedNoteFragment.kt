@@ -95,7 +95,8 @@ class DeletedNoteFragment : Fragment(R.layout.fragment_deleted_note), MenuProvid
 
                     if (actionMode == null) {
                         val currentActivity = activity as MainActivity
-                        actionMode = currentActivity.startSupportActionMode(this@DeletedNoteFragment)!!
+                        actionMode =
+                            currentActivity.startSupportActionMode(this@DeletedNoteFragment)!!
                         //todo
                     }
 
@@ -160,15 +161,10 @@ class DeletedNoteFragment : Fragment(R.layout.fragment_deleted_note), MenuProvid
 
     }
 
-
     override fun onItemClick(task: DeletedNote) {
         val action =
             DeletedNoteFragmentDirections.actionDeletedNoteFragmentToNoteDetailFragment(deletedNote = task)
         findNavController().navigate(action)
-    }
-
-    override fun onItemLongClick(task: DeletedNote) {
-        // TODO("Not yet implemented")
     }
 
     override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {

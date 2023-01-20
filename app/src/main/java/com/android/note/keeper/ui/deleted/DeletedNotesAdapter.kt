@@ -58,13 +58,6 @@ class DeletedNotesAdapter(
                         listener.onItemClick(task)
                     }
                 }
-
-              /*  root.setOnLongClickListener {
-
-                    //todo
-                    true
-                }*/
-
             }
         }
 
@@ -89,7 +82,6 @@ class DeletedNotesAdapter(
 
     interface OnItemClickListener {
         fun onItemClick(task: DeletedNote)
-        fun onItemLongClick(task: DeletedNote)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<DeletedNote>() {
