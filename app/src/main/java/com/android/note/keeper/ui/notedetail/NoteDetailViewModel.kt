@@ -21,6 +21,7 @@ class NoteDetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     val selectedColor = MutableLiveData<Int>()
+    var enableSaveOnDestroy = true
 
     private val _tasksEvent = MutableSharedFlow<TasksEvent>()
     val tasksEvent: SharedFlow<TasksEvent> = _tasksEvent

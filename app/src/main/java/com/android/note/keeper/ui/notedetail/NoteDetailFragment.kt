@@ -465,8 +465,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
                     if (title.isNotBlank() || content.isNotBlank()) {
                         if (viewModel.currentNote.value != null) {  //update note
-                            val updatedNote =
-                                viewModel.currentNote.value!!.copy(title = title, content = content)
+                            val updatedNote = viewModel.currentNote.value!!.copy(title = title, content = content)
                             viewModel.setCurrentNote(updatedNote)
                             viewModel.onUpdateClick(updatedNote)
                             viewModel.setEditMode(false)
@@ -483,8 +482,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                                 )
                             )
                         } else {  //create new note
-                            val newNote =
-                                viewModel.tempNote.value!!.copy(title = title, content = content)
+                            val newNote = viewModel.tempNote.value!!.copy(title = title, content = content)
                             viewModel.onSaveClick(newNote)
                             viewModel.setCurrentNote(newNote)
                             viewModel.setEditMode(false)
@@ -897,7 +895,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 bottomSheetDialog.setContentView(bottomsheet)
                 bottomSheetDialog.show()
 
-            } else {
+            }
+            else {
                 val alertDialog = MaterialAlertDialogBuilder(requireContext())
                     .setMessage("Delete this note?")
                     .setPositiveButton("Delete") { _, _ ->
@@ -918,6 +917,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 alertDialog.show()
             }
         } else {
+            viewModel.enableSaveOnDestroy = false
             findNavController().popBackStack()
         }
     }
@@ -939,48 +939,50 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
     override fun onDestroyView() {
         //todo save note
-        if (viewModel.editMode.value == true) {
-            //save note
-            val title = binding.etTitle.text.toString()
-            val content = binding.etContent.text.toString()
+        if (viewModel.enableSaveOnDestroy) {
+            if (viewModel.editMode.value == true) {
+                //save note
+                val title = binding.etTitle.text.toString()
+                val content = binding.etContent.text.toString()
 
-            if (viewModel.currentNote.value != null) { // Old Note
-                if (title.isBlank() && content.isBlank()) {
-                    // If the user removed everything from the note
-                    //todo delete note
-                    viewModel.onDeleteClick(viewModel.currentNote.value!!)
-                } else {
-                    //todo update note
-                    val updatedNote =
-                        viewModel.currentNote.value!!.copy(title = title, content = content)
-                    viewModel.onUpdateClick(updatedNote)
-                    setFragmentResult(
-                        Constants.FRAGMENT_RESULT_REQUEST_KEY, /*bundle*/
-                        bundleOf(
-                            "result" to Constants.NOTE_UPDATED_RESULT_OK,
-                            "note" to updatedNote
-                        )
-                    )
-                }
-            } else { //new note
-                if (viewModel.currentDeletedNote.value == null) { //if note is not deleted note then..
-                    if (title.isNotBlank() || content.isNotBlank()) {
-                        //todo save new note
-                        val newTempNote =
-                            viewModel.tempNote.value!!.copy(title = title, content = content)
-                        viewModel.setTempNote(newTempNote)
-                        //val newNote = viewModel.tempNote.value!!.copy(title = title, content = content)
-                        viewModel.onSaveClick(viewModel.tempNote.value!!)
+                if (viewModel.currentNote.value != null) { // Old Note
+                    if (title.isBlank() && content.isBlank()) {
+                        // If the user removed everything from the note
+                        //todo delete note
+                        viewModel.onDeleteClick(viewModel.currentNote.value!!)
+                    } else {
+                        //todo update note
+                        val updatedNote =
+                            viewModel.currentNote.value!!.copy(title = title, content = content)
+                        viewModel.onUpdateClick(updatedNote)
                         setFragmentResult(
                             Constants.FRAGMENT_RESULT_REQUEST_KEY, /*bundle*/
                             bundleOf(
-                                "result" to Constants.NOTE_ADDED_RESULT_OK,
-                                "note" to viewModel.tempNote.value!!
+                                "result" to Constants.NOTE_UPDATED_RESULT_OK,
+                                "note" to updatedNote
                             )
                         )
                     }
-                }
+                } else { //new note
+                    if (viewModel.currentDeletedNote.value == null) { //if note is not deleted note then..
+                        if (title.isNotBlank() || content.isNotBlank()) {
+                            //todo save new note
+                            val newTempNote =
+                                viewModel.tempNote.value!!.copy(title = title, content = content)
+                            viewModel.setTempNote(newTempNote)
+                            //val newNote = viewModel.tempNote.value!!.copy(title = title, content = content)
+                            viewModel.onSaveClick(viewModel.tempNote.value!!)
+                            setFragmentResult(
+                                Constants.FRAGMENT_RESULT_REQUEST_KEY, /*bundle*/
+                                bundleOf(
+                                    "result" to Constants.NOTE_ADDED_RESULT_OK,
+                                    "note" to viewModel.tempNote.value!!
+                                )
+                            )
+                        }
+                    }
 
+                }
             }
         }
         super.onDestroyView()
