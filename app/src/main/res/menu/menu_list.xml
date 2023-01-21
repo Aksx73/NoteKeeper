@@ -20,6 +20,7 @@
         android:checkable="true"
         android:title="Hide completed"
         android:enabled="false"
+        android:visible="false"
         app:showAsAction="never" />
 
     <item

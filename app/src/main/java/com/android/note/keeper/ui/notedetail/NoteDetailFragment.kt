@@ -902,6 +902,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     .setPositiveButton("Delete") { _, _ ->
                         viewModel.onDeleteClick(viewModel.currentNote.value!!)
 
+
+
                         setFragmentResult(
                             Constants.FRAGMENT_RESULT_REQUEST_KEY, /*bundle*/
                             bundleOf(
@@ -909,6 +911,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                                 "note" to viewModel.currentNote.value
                             )
                         )
+                       // viewModel.enableSaveOnDestroy = false
                         findNavController().popBackStack()
                     }
                     .setNegativeButton("Cancel") { dialog, _ ->
@@ -984,7 +987,9 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
                 }
             }
-        }
+        }/*else {
+            viewModel.onDeleteClick(viewModel.currentNote.value!!)
+        }*/
         super.onDestroyView()
         _binding = null
     }
