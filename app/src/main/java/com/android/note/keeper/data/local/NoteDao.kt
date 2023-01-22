@@ -20,7 +20,13 @@ interface NoteDao {
     fun getAllArchiveNotes(searchQuery: String): Flow<List<Note>>
 
     @Insert(onConflict = REPLACE)
+    suspend fun insertAndGetID(note: Note): Long
+
+    @Insert(onConflict = REPLACE)
     suspend fun insert(note: Note)
+
+    @Query("SELECT * FROM notes_table WHERE _id=:id")
+    suspend fun getNoteById(id: Long)
 
     @Update
     suspend fun update(note: Note)

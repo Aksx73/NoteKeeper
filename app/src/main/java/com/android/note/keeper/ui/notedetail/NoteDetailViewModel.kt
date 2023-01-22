@@ -8,6 +8,7 @@ import com.android.note.keeper.data.repository.DeletedNoteRepository
 import com.android.note.keeper.data.repository.NoteRepository
 import com.android.note.keeper.ui.notelist.NoteListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
@@ -54,7 +55,7 @@ class NoteDetailViewModel @Inject constructor(
         return selectedColor.value!!
     }*/
 
-    fun setSelectedColor(color: Int?){
+    fun setSelectedColor(color: Int?) {
         if (color == null)
             selectedColor.value = 0
         else
@@ -89,6 +90,11 @@ class NoteDetailViewModel @Inject constructor(
         createNote(note)
     }
 
+    suspend fun onSaveClickAndReturnID(note: Note): Long {
+        val id = viewModelScope.async { createNoteAndReturnID(note) }
+        return id.await()
+    }
+
     fun onUpdateClick(note: Note) {
         updateNote(note)
     }
@@ -98,13 +104,19 @@ class NoteDetailViewModel @Inject constructor(
         insertNoteInBin(note)
     }
 
-    fun onDeleteForeverClicked(note: DeletedNote){
+    fun onDeleteForeverClicked(note: DeletedNote) {
         deleteNoteFromBinForever(note)
     }
 
     private fun createNote(note: Note) = viewModelScope.launch {
         repository.insert(note)
         _tasksEvent.emit(TasksEvent.OnNoteUpdatedConfirmationMessage("Note added"))
+    }
+
+    private suspend fun createNoteAndReturnID(note: Note): Long {
+        val id = repository.insertAndGetID(note)
+        _tasksEvent.emit(TasksEvent.OnNoteUpdatedConfirmationMessage("Note added"))
+        return id
     }
 
     private fun updateNote(note: Note) = viewModelScope.launch {
@@ -119,7 +131,13 @@ class NoteDetailViewModel @Inject constructor(
     }
 
     private fun insertNoteInBin(note: Note) = viewModelScope.launch {
-        deletedNotesRepository.insert(DeletedNote(_id = note._id, title = note.title, content = note.content))
+        deletedNotesRepository.insert(
+            DeletedNote(
+                _id = note._id,
+                title = note.title,
+                content = note.content
+            )
+        )
     }
 
     private fun deleteNoteFromBinForever(note: DeletedNote) = viewModelScope.launch {

@@ -9,7 +9,11 @@ interface NoteRepository {
 
     fun getArchiveNotes(query: String): Flow<List<Note>>
 
+    suspend fun insertAndGetID(note: Note) : Long
+
     suspend fun insert(note: Note)
+
+    suspend fun getNoteById(id: Long)
 
     suspend fun update(note: Note)
 

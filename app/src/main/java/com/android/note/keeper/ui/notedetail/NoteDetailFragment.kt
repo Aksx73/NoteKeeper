@@ -7,6 +7,7 @@ import android.text.method.KeyListener
 import android.util.Log
 import android.view.*
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.content.ContextCompat
@@ -234,6 +235,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
           )*/
 
         //used this to update masterPassword value with updated password
+
     }
 
     private fun observeEvents() {
@@ -465,7 +467,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
                     if (title.isNotBlank() || content.isNotBlank()) {
                         if (viewModel.currentNote.value != null) {  //update note
-                            val updatedNote = viewModel.currentNote.value!!.copy(title = title, content = content)
+                            val updatedNote =
+                                viewModel.currentNote.value!!.copy(title = title, content = content)
                             viewModel.setCurrentNote(updatedNote)
                             viewModel.onUpdateClick(updatedNote)
                             viewModel.setEditMode(false)
@@ -482,9 +485,14 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                                 )
                             )
                         } else {  //create new note
-                            val newNote = viewModel.tempNote.value!!.copy(title = title, content = content)
-                            viewModel.onSaveClick(newNote)
-                            viewModel.setCurrentNote(newNote)
+                            val newNote =
+                                viewModel.tempNote.value!!.copy(title = title, content = content)
+                            var id: Int = 0
+                            viewLifecycleOwner.lifecycleScope.launch {
+                                id = viewModel.onSaveClickAndReturnID(newNote).toInt()
+                            }
+                            val newNoteWithActualId = newNote.copy(_id = id)
+                            viewModel.setCurrentNote(newNoteWithActualId)
                             viewModel.setEditMode(false)
                             //todo here consider @tempNote properties
                             Utils.showSnackBar(
@@ -895,8 +903,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 bottomSheetDialog.setContentView(bottomsheet)
                 bottomSheetDialog.show()
 
-            }
-            else {
+            } else {
                 val alertDialog = MaterialAlertDialogBuilder(requireContext())
                     .setMessage("Delete this note?")
                     .setPositiveButton("Delete") { _, _ ->
@@ -911,7 +918,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                                 "note" to viewModel.currentNote.value
                             )
                         )
-                       // viewModel.enableSaveOnDestroy = false
+                        // viewModel.enableSaveOnDestroy = false
                         findNavController().popBackStack()
                     }
                     .setNegativeButton("Cancel") { dialog, _ ->
@@ -987,9 +994,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
 
                 }
             }
-        }/*else {
-            viewModel.onDeleteClick(viewModel.currentNote.value!!)
-        }*/
+        }
+
         super.onDestroyView()
         _binding = null
     }

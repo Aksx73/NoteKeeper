@@ -17,7 +17,17 @@ class NoteRepositoryImpl @Inject constructor(private val dao: NoteDao) : NoteRep
         return dao.getAllArchiveNotes(query)
     }
 
-    override suspend fun insert(note: Note) = dao.insert(note)
+    override suspend fun insertAndGetID(note: Note): Long {
+        return dao.insertAndGetID(note)
+    }
+
+    override suspend fun insert(note: Note){
+        return dao.insert(note)
+    }
+
+    override suspend fun getNoteById(id: Long) {
+        return dao.getNoteById(id)
+    }
 
     override suspend fun update(note: Note) = dao.update(note)
 
