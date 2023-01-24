@@ -42,6 +42,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 /**
@@ -401,8 +402,9 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                     it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_check_24)
                     it.title = "Save"
                 } else {
-                    it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_edit_24)
-                    it.title = "Edit"
+                    /*it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_edit_24)
+                    it.title = "Edit"*/
+                    menuEdit!!.isVisible = false
                 }
             }
             readOnlyTag.isVisible = !viewModel.editMode.value!!
@@ -460,7 +462,7 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         return when (menuItem.itemId) {
             R.id.action_edit -> {
 
-                if (viewModel.editMode.value == true) {
+               /* if (viewModel.editMode.value == true) {
                     //save note
                     val title = binding.etTitle.text.toString()
                     val content = binding.etContent.text.toString()
@@ -485,14 +487,24 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                                 )
                             )
                         } else {  //create new note
-                            val newNote =
-                                viewModel.tempNote.value!!.copy(title = title, content = content)
-                            var id: Int = 0
-                            viewLifecycleOwner.lifecycleScope.launch {
-                                id = viewModel.onSaveClickAndReturnID(newNote).toInt()
+                            val newNote = viewModel.tempNote.value!!.copy(title = title, content = content)
+                            //viewModel.onSaveClick(newNote)
+                            var id: Long = 0L
+                           *//* viewLifecycleOwner.lifecycleScope.launch {
+                                id = viewModel.onSaveClickAndReturnID(newNote)
+                            }*//*
+                           *//* runBlocking {
+                                viewLifecycleOwner.lifecycleScope.launch {
+                                    viewModel.setCurrentNote(viewModel.getNoteById(id))
+                                }
+                            }*//*
+                            runBlocking {
+                                viewModel.onSaveClick(newNote)
+                                viewLifecycleOwner.lifecycleScope.launch {
+                                    viewModel.setCurrentNote(viewModel.getLastNote())
+                                }
                             }
-                            val newNoteWithActualId = newNote.copy(_id = id)
-                            viewModel.setCurrentNote(newNoteWithActualId)
+                            // viewModel.setCurrentNote(newNoteWithActualId)
                             viewModel.setEditMode(false)
                             //todo here consider @tempNote properties
                             Utils.showSnackBar(
@@ -519,8 +531,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
                 } else {
                     //here we enable editing
                     viewModel.setEditMode(true)
-                }
-
+                }*/
+                viewModel.setEditMode(true)
                 true
             }
             R.id.action_pin -> {

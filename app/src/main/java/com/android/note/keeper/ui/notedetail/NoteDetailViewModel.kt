@@ -8,6 +8,7 @@ import com.android.note.keeper.data.repository.DeletedNoteRepository
 import com.android.note.keeper.data.repository.NoteRepository
 import com.android.note.keeper.ui.notelist.NoteListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -111,6 +112,20 @@ class NoteDetailViewModel @Inject constructor(
     private fun createNote(note: Note) = viewModelScope.launch {
         repository.insert(note)
         _tasksEvent.emit(TasksEvent.OnNoteUpdatedConfirmationMessage("Note added"))
+    }
+
+    suspend fun getNoteById(id: Long): Note {
+        val deferred: Deferred<Note> = viewModelScope.async {
+            repository.getNoteById(id)
+        }
+        return deferred.await()
+    }
+
+    suspend fun getLastNote(): Note {
+        val deferred: Deferred<Note> = viewModelScope.async {
+            repository.getLastNote()
+        }
+        return deferred.await()
     }
 
     private suspend fun createNoteAndReturnID(note: Note): Long {

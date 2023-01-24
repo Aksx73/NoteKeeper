@@ -13,7 +13,9 @@ interface NoteRepository {
 
     suspend fun insert(note: Note)
 
-    suspend fun getNoteById(id: Long)
+    suspend fun getNoteById(id: Long) : Note
+
+    suspend fun getLastNote():Note
 
     suspend fun update(note: Note)
 
