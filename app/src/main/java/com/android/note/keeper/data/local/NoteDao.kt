@@ -28,9 +28,6 @@ interface NoteDao {
     @Query("SELECT * FROM notes_table WHERE _id=:id")
     suspend fun getNoteById(id: Long): Note
 
-    @Query("SELECT * FROM notes_table WHERE _id = (SELECT MAX(_id)  FROM notes_table)")
-    suspend fun getLastNote(): Note
-
     @Update
     suspend fun update(note: Note)
 

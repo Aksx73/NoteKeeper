@@ -15,12 +15,9 @@ interface NoteRepository {
 
     suspend fun getNoteById(id: Long) : Note
 
-    suspend fun getLastNote():Note
-
     suspend fun update(note: Note)
 
     suspend fun delete(note: Note)
 
-    //  suspend fun updatePassword(id: Int, isProtected: Boolean)
 
 }

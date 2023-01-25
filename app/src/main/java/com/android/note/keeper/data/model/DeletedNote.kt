@@ -16,12 +16,6 @@ data class DeletedNote(
     val _id: Int,  //will remain as same for restore purpose
     val title: String,
     val content: String,
-    //val color: String = Constants.COLOR_DEFAULT, //revert back to default
-    //val tag: Int = Constants.TAG_NOTE,
-    //val pin:Boolean = false,  //revert back to default
-    //val markAsComplete : Boolean = false,  //revert back to default
-    //val archived : Boolean = false, //revert back to default
-    //val isPasswordProtected: Boolean = false,
     val created: Long = System.currentTimeMillis()
 ) : Parcelable {
     val formattedDate: String

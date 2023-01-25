@@ -29,10 +29,6 @@ class NoteRepositoryImpl @Inject constructor(private val dao: NoteDao) : NoteRep
         return dao.getNoteById(id)
     }
 
-    override suspend fun getLastNote(): Note {
-        return dao.getLastNote()
-    }
-
     override suspend fun update(note: Note) = dao.update(note)
 
     override suspend fun delete(note: Note) = dao.delete(note)

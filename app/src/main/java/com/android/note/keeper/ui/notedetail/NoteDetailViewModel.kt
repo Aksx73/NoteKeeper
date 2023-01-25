@@ -121,13 +121,6 @@ class NoteDetailViewModel @Inject constructor(
         return deferred.await()
     }
 
-    suspend fun getLastNote(): Note {
-        val deferred: Deferred<Note> = viewModelScope.async {
-            repository.getLastNote()
-        }
-        return deferred.await()
-    }
-
     private suspend fun createNoteAndReturnID(note: Note): Long {
         val id = repository.insertAndGetID(note)
         _tasksEvent.emit(TasksEvent.OnNoteUpdatedConfirmationMessage("Note added"))
