@@ -5,12 +5,12 @@ buildscript {
         coroutinesVersion = "1.6.4"
         hiltVersion = "2.44.1"
         lifecycleVersion = "2.5.1"
-        roomVersion = "2.5.0"
+        roomVersion = "2.4.3"
     }
 
     dependencies {
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$lifecycleVersion"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.5.3"
     }
 }
 
