@@ -21,6 +21,7 @@ import com.android.note.keeper.R
 import com.android.note.keeper.databinding.SettingsActivityBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.color.DynamicColors
 import com.google.android.material.internal.ContextUtils
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -39,6 +40,8 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        DynamicColors.applyToActivityIfAvailable(this)
+
         binding = SettingsActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

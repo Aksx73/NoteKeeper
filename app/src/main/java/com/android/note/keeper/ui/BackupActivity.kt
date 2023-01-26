@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.android.note.keeper.databinding.ActivityAboutBinding
 import com.android.note.keeper.databinding.ActivityBackupBinding
+import com.google.android.material.color.DynamicColors
 
 class BackupActivity : AppCompatActivity() {
 
@@ -11,6 +12,8 @@ class BackupActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        DynamicColors.applyToActivityIfAvailable(this)
+
         binding = ActivityBackupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

@@ -399,9 +399,9 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         if (viewModel.currentDeletedNote.value == null) {
             menuEdit?.let {
                 if (viewModel.editMode.value == true) {
-                    it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_check_24)
+                 /*   it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_check_24)
                     it.title = "Save"
-                } else {
+                } else {*/
                     /*it.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_edit_24)
                     it.title = "Edit"*/
                     menuEdit!!.isVisible = false

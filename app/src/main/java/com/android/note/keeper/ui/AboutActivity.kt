@@ -6,6 +6,7 @@ import com.android.note.keeper.BuildConfig
 import com.android.note.keeper.R
 import com.android.note.keeper.databinding.ActivityAboutBinding
 import com.android.note.keeper.databinding.SettingsActivityBinding
+import com.google.android.material.color.DynamicColors
 
 class AboutActivity : AppCompatActivity() {
 
@@ -13,6 +14,8 @@ class AboutActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        DynamicColors.applyToActivityIfAvailable(this)
+
         binding = ActivityAboutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
