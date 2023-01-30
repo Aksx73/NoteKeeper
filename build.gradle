@@ -4,8 +4,8 @@ buildscript {
     ext {
         coroutinesVersion = "1.6.4"
         hiltVersion = "2.44.1"
-        lifecycleVersion = "2.5.1"
-        roomVersion = "2.4.3"
+        lifecycleVersion = "2.5.3"
+        roomVersion = "2.5.0"
     }
 
     dependencies {
