@@ -31,7 +31,7 @@ class AboutActivity : AppCompatActivity() {
     private fun initViews() {
 
        //todo
-        binding.txtAppVersion.text = "${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})"
+        binding.txtAppVersion.text = "v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
     }
 
 

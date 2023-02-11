@@ -153,9 +153,9 @@
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:layout_marginTop="24dp"
                 android:src="@drawable/ic_app_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -171,7 +171,7 @@
                 android:text="@string/app_name"
                 android:gravity="center"
                 android:layout_marginTop="8dp"
-                android:textAppearance="?textAppearanceTitleMedium"
+                android:textAppearance="?textAppearanceTitleLarge"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -185,6 +185,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="32dp"
                 android:layout_marginTop="2dp"
+                android:textColor="?android:textColorSecondary"
+                android:textAppearance="?textAppearanceLabelLarge"
                 app:layout_constraintEnd_toEndOf="@+id/app_name"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/app_name"
@@ -192,11 +194,13 @@
                 tools:text="6.3.4(1000345)" />
 
             <com.google.android.material.card.MaterialCardView
-                style="@style/Widget.Material3.CardView.Filled"
+                android:id="@+id/card"
+                style="@style/Widget.Material3.CardView.Elevated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="24dp"
+                app:strokeWidth="1dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_app_version">
@@ -280,7 +284,7 @@
                         android:fontFamily="sans-serif"
                         android:gravity="center_vertical"
                         android:padding="16dp"
-                        android:text="Share app"
+                        android:text="Share this app"
                         android:textAppearance="?textAppearanceTitleMedium"
                         app:drawableStartCompat="@drawable/ic_share_24"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -290,6 +294,20 @@
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Made with ❤ by ***"
+                android:layout_margin="64dp"
+                android:gravity="center"
+                android:layout_marginHorizontal="54dp"
+                android:textSize="12sp"
+                android:textColor="?android:textColorSecondary"
+                android:letterSpacing="0.1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/card"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
