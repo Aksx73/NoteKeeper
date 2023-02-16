@@ -1,11 +1,11 @@
 package com.android.note.keeper.util
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.content.res.Resources
 import android.text.InputType
 import android.util.TypedValue
 import android.view.View
@@ -18,7 +18,7 @@ import androidx.annotation.DrawableRes
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
-import com.android.note.keeper.R
+import com.google.android.material.internal.ContextUtils
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.skydoves.balloon.ArrowPositionRules
@@ -120,6 +120,12 @@ object Utils {
         }
         smoothScroller.targetPosition = position
         layoutManager?.startSmoothScroll(smoothScroller)
+    }
+
+    @SuppressLint("RestrictedApi")
+    private fun recreateActivityIfPossible(context: Context) {
+        val activity = ContextUtils.getActivity(context)
+        activity?.recreate()
     }
 
 
