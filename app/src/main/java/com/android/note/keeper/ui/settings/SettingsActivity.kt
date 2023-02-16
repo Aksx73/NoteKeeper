@@ -19,6 +19,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.android.note.keeper.R
 import com.android.note.keeper.databinding.SettingsActivityBinding
+import com.android.note.keeper.util.Utils
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.DynamicColors
@@ -101,6 +102,8 @@ class SettingsActivity : AppCompatActivity() {
 
             content.switchUseSystemColor.setOnCheckedChangeListener { _, isChecked ->
                 viewModel.setDynamicColorEnabled(isChecked)
+                Utils.applyDynamicColors(this@SettingsActivity)
+                Utils.recreateActivityIfPossible(this@SettingsActivity)
                 //recreateActivityIfPossible(this@SettingsActivity);
             }
 
@@ -158,6 +161,7 @@ class SettingsActivity : AppCompatActivity() {
             AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> binding.content.chipGroup.check(R.id.chip_follow_system)
         }
         AppCompatDelegate.setDefaultNightMode(mode)
+        //Utils.recreateActivityIfPossible(this)
     }
 
     private fun bottomSheetUpdateMasterPassword() {

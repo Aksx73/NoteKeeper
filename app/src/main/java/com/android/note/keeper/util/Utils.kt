@@ -2,6 +2,7 @@ package com.android.note.keeper.util
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.res.Configuration
@@ -11,13 +12,11 @@ import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
+import androidx.annotation.*
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.color.DynamicColors
 import com.google.android.material.internal.ContextUtils
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -123,9 +122,13 @@ object Utils {
     }
 
     @SuppressLint("RestrictedApi")
-    private fun recreateActivityIfPossible(context: Context) {
+    fun recreateActivityIfPossible(context: Context) {
         val activity = ContextUtils.getActivity(context)
         activity?.recreate()
+    }
+
+    fun applyDynamicColors(@NonNull context: Context){
+        DynamicColors.applyToActivitiesIfAvailable(context.applicationContext as Application)
     }
 
 

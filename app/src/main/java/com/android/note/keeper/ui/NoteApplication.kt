@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import com.android.note.keeper.data.PreferenceManager
+import com.android.note.keeper.util.Utils
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.flow.first
@@ -22,12 +23,13 @@ class NoteApplication : Application() {
 
         // todo use value from datastore to enable dark mode & dynamic theming
         if (runBlocking { dataStoreManager.dynamicThemingFlow.first() }) {
-                DynamicColors.applyToActivitiesIfAvailable(this)
-        }else{
+            //Utils.applyDynamicColors(this)
+            //DynamicColors.applyToActivitiesIfAvailable(this)
+        } else {
             //todo
         }
 
-        when (runBlocking {dataStoreManager.themeMode.first() }) {
+        when (runBlocking { dataStoreManager.themeMode.first() }) {
             AppCompatDelegate.MODE_NIGHT_NO -> AppCompatDelegate.setDefaultNightMode(
                 AppCompatDelegate.MODE_NIGHT_NO
             )
