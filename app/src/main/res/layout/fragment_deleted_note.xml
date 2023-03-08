@@ -23,13 +23,21 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="150dp"
+        android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableTop="@drawable/ic_notes_24"
-            android:drawablePadding="8dp"
+            android:gravity="center"
+            android:text="¯\_(ツ)_/¯"
+            android:textSize="44dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           android:layout_marginTop="16dp"
             android:text="Empty recycle bin" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
