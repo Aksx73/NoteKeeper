@@ -57,8 +57,14 @@ class SettingsActivity : AppCompatActivity() {
         //used this to update masterPassword value with updated password
         viewModel.masterPasswordLiveData.observe(this) {
             masterPassword = it
-            if (it.isNotBlank()) binding.content.txtCurrentPassword.text = it
-            else binding.content.txtCurrentPassword.text = "no current password"
+            if (it.isNotBlank()) {
+                binding.content.txtCurrentPassword.text = it
+                binding.content.txtPasswordHeader.text = "Change master password"
+
+            } else {
+                binding.content.txtCurrentPassword.text = "no current password"
+                binding.content.txtPasswordHeader.text = "Create master password"
+            }
             Log.d("TAG", "mastPassword live: $masterPassword")
         }
 
@@ -72,7 +78,7 @@ class SettingsActivity : AppCompatActivity() {
             changeTheme(it)
         }
 
-        viewModel.dynamicColorFlow.observe(this){
+        viewModel.dynamicColorFlow.observe(this) {
             binding.content.switchUseSystemColor.isChecked = it
         }
     }
@@ -104,18 +110,18 @@ class SettingsActivity : AppCompatActivity() {
             content.switchUseSystemColor.setOnCheckedChangeListener { _, isChecked ->
                 viewModel.setDynamicColorEnabled(isChecked)
                 Utils.applyDynamicColors(this@SettingsActivity)
-               // Utils.recreateActivityIfPossible(this@SettingsActivity)
+                // Utils.recreateActivityIfPossible(this@SettingsActivity)
                 //recreateActivityIfPossible(this@SettingsActivity);
             }
 
             content.chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
-              //  for (i in checkedIds){
-                    when(checkedIds[0]){
-                        R.id.chip_off -> viewModel.setThemeMode(AppCompatDelegate.MODE_NIGHT_NO)
-                        R.id.chip_on ->  viewModel.setThemeMode(AppCompatDelegate.MODE_NIGHT_YES)
-                        R.id.chip_follow_system ->  viewModel.setThemeMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                    }
-               // }
+                //  for (i in checkedIds){
+                when (checkedIds[0]) {
+                    R.id.chip_off -> viewModel.setThemeMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    R.id.chip_on -> viewModel.setThemeMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    R.id.chip_follow_system -> viewModel.setThemeMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
+                // }
             }
 
 

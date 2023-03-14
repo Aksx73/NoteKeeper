@@ -191,11 +191,10 @@
 
 
         <TextView
-            android:id="@+id/text2"
+            android:id="@+id/txt_password_header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-
             android:layout_marginEnd="8dp"
             android:fontFamily="sans-serif"
             android:text="Change master password"
@@ -215,7 +214,7 @@
             android:text="Current password: "
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView4"
-            app:layout_constraintTop_toBottomOf="@+id/text2" />
+            app:layout_constraintTop_toBottomOf="@+id/txt_password_header" />
 
         <TextView
             android:id="@+id/txt_current_password"
