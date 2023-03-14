@@ -50,7 +50,7 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
 
     val viewModeFlow: Flow<Int> = dataStore.data
         .map { preference ->
-            preference[PREF_VIEW_MODE] ?: SINGLE_COLUMN
+            preference[PREF_VIEW_MODE] ?: MULTI_COLUMN
         }
         .catch { exception ->
             if (exception is IOException) {
