@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="¯\_(ツ)_/¯"
-            android:textSize="44dp" />
+            android:textSize="54dp" />
 
         <TextView
             android:layout_width="wrap_content"

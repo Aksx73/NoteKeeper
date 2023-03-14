@@ -637,6 +637,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
             LayoutInflater.from(context).inflate(R.layout.bs_create_password, null)
         bottomSheetDialog.setCancelable(false)
 
+        val title = bottomsheet.findViewById<TextView>(R.id.txtTitle)
+        val subtitle = bottomsheet.findViewById<TextView>(R.id.txtSubTitle)
         val et_password = bottomsheet.findViewById<TextInputEditText>(R.id.et_addPassword)
         val ly_password = bottomsheet.findViewById<TextInputLayout>(R.id.lyt_addPassword)
         val et_confirm = bottomsheet.findViewById<TextInputEditText>(R.id.et_confirmPassword)
@@ -644,7 +646,8 @@ class NoteDetailFragment : Fragment(R.layout.fragment_note_detail), MenuProvider
         val bt_save = bottomsheet.findViewById<MaterialButton>(R.id.bt_save)
         val bt_cancel = bottomsheet.findViewById<MaterialButton>(R.id.bt_cancel)
 
-        //todo
+        title.text = "Create master password"
+        subtitle.text = "This password will be used to lock/unlock your notes"
 
         bt_save.setOnClickListener {
             if (et_password.text.toString().isNotBlank() && et_confirm.text.toString()
