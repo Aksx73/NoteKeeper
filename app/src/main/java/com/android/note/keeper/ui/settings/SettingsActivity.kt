@@ -114,14 +114,12 @@ class SettingsActivity : AppCompatActivity() {
                 //recreateActivityIfPossible(this@SettingsActivity);
             }
 
-            content.chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
-                //  for (i in checkedIds){
+            content.chipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
                 when (checkedIds[0]) {
                     R.id.chip_off -> viewModel.setThemeMode(AppCompatDelegate.MODE_NIGHT_NO)
                     R.id.chip_on -> viewModel.setThemeMode(AppCompatDelegate.MODE_NIGHT_YES)
                     R.id.chip_follow_system -> viewModel.setThemeMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 }
-                // }
             }
 
 
