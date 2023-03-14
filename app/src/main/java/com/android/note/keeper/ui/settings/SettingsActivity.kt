@@ -73,7 +73,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         viewModel.dynamicColorFlow.observe(this){
-            //binding.content.switchUseSystemColor.isChecked = it
+            binding.content.switchUseSystemColor.isChecked = it
         }
     }
 
@@ -90,6 +90,7 @@ class SettingsActivity : AppCompatActivity() {
         binding.apply {
             content.lytUseSystemColor.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
+
             content.lytChangeMasterPassword.setOnClickListener {
                 bottomSheetUpdateMasterPassword()
             }
@@ -103,7 +104,7 @@ class SettingsActivity : AppCompatActivity() {
             content.switchUseSystemColor.setOnCheckedChangeListener { _, isChecked ->
                 viewModel.setDynamicColorEnabled(isChecked)
                 Utils.applyDynamicColors(this@SettingsActivity)
-                Utils.recreateActivityIfPossible(this@SettingsActivity)
+               // Utils.recreateActivityIfPossible(this@SettingsActivity)
                 //recreateActivityIfPossible(this@SettingsActivity);
             }
 
