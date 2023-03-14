@@ -39,30 +39,30 @@ abstract class NoteDatabase : RoomDatabase() {
                 )
                 dao.insert(
                     Note(
-                        title = "Wash the dishes",
+                        title = "Study data structures and algorithms (DSA)",
                         content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris\n" +
                                 " volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus",
                         isPasswordProtected = true
                     )
                 )
-                dao.insert(Note(title = "Wash the dishes", content = "note description"))
+                dao.insert(Note(title = "Workout everyday", content = "note description"))
                 dao.insert(
                     Note(
-                        title = "Wash the dishes",
+                        title = "Shop for groceries",
                         content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris\n" +
                                 " volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus"
                     )
                 )
                 dao.insert(
                     Note(
-                        title = "Wash the dishes",
+                        title = "Take dog for a walk",
                         content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris\n" +
                                 " volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus",
                         isPasswordProtected = true
                     )
                 )
-                dao.insert(Note(title = "Wash the dishes", content = ""))
-                dao.insert(Note(title = "Wash the dishes", content = ""))
+                dao.insert(Note(title = "Read newspaper", content = ""))
+                dao.insert(Note(title = "Give time for self development", content = ""))
 
             }
         }
