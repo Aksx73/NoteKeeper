@@ -98,7 +98,8 @@
 
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textAppearance="?textAppearanceLabelMedium"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif"
                 tools:text="@tools:sample/date/mmddyy" />
 
         </LinearLayout>
