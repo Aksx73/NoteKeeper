@@ -7,6 +7,10 @@
 <th><a target="_blank" rel="noopener noreferrer" href="https://github.com/Aksx73/NoteKeeper/blob/master/screenshots/Screenshot_20240609-191220.png"><img src="https://github.com/Aksx73/NoteKeeper/blob/master/screenshots/Screenshot_20240609-191220.png?raw=true" alt="sound meter" style="max-width: 100%;"></a></th>
 <th><a target="_blank" rel="noopener noreferrer" href="https://github.com/Aksx73/NoteKeeper/blob/master/screenshots/Screenshot_20240609-191244.png"><img src="https://github.com/Aksx73/NoteKeeper/blob/master/screenshots/Screenshot_20240609-191244.png?raw=true" alt="sound meter" style="max-width: 100%;"></a></th>
 <th><a target="_blank" rel="noopener noreferrer" href="https://github.com/Aksx73/NoteKeeper/blob/master/screenshots/Screenshot_20240609-191131.png"><img src="https://github.com/Aksx73/NoteKeeper/blob/master/screenshots/Screenshot_20240609-191131.png?raw=true" alt="sound meter" style="max-width: 100%;"></a></th>
+</tr>
+</thead>
+<thead>
+<tr>
 <th><a target="_blank" rel="noopener noreferrer" href="https://github.com/Aksx73/NoteKeeper/blob/master/screenshots/Screenshot_20240609-191042.png"><img src="https://github.com/Aksx73/NoteKeeper/blob/master/screenshots/Screenshot_20240609-191042.png?raw=true" alt="sound meter" style="max-width: 100%;"></a></th>
 <th><a target="_blank" rel="noopener noreferrer" href="https://github.com/Aksx73/NoteKeeper/blob/master/screenshots/Screenshot_20240609-191109.png"><img src="https://github.com/Aksx73/NoteKeeper/blob/master/screenshots/Screenshot_20240609-191109.png?raw=true" alt="sound meter" style="max-width: 100%;"></a></th>
 </tr>
